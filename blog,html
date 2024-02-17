@@ -1,1 +1,31 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags and other necessary elements -->
+    <title>Blog - Anil Lama</title>
+    <!-- Include CSS stylesheets -->
+</head>
+<body>
+    <!-- Navigation bar and other header elements -->
+    
+    <!-- Blog content -->
+    <div class="container">
+        <h2>Latest Blog Posts</h2>
+        <div class="blog-post">
+            <h3>Title of Blog Post 1</h3>
+            <p>Date: January 1, 2024</p>
+            <p>Author: Anil Lama</p>
+            <p>This is the content of the first blog post...</p>
+        </div>
+        <div class="blog-post">
+            <h3>Title of Blog Post 2</h3>
+            <p>Date: January 2, 2024</p>
+            <p>Author: Anil Lama</p>
+            <p>This is the content of the second blog post...</p>
+        </div>
+        <!-- More blog posts can be added similarly -->
+    </div>
+    
+    <!-- Footer and other necessary elements -->
+</body>
+</html>
