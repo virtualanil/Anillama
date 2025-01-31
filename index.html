@@ -17,18 +17,123 @@
 
     <!-- Font Awesome Icons Script -->
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: #007bff;
+        }
+
+        .container {
+            padding: 50px 15px;
+        }
+
+        /* Header Styles */
+        .masthead {
+            background: #007bff;
+            color: white;
+            padding: 50px 0;
+        }
+
+        .masthead-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+        }
+
+        .masthead-heading {
+            font-size: 36px;
+        }
+
+        .masthead-subheading {
+            font-size: 18px;
+        }
+
+        .social-nav a {
+            margin: 0 15px;
+            color: white;
+            font-size: 24px;
+            transition: color 0.3s ease;
+        }
+
+        .social-nav a:hover {
+            color: #007bff;
+        }
+
+        /* Section Styles */
+        section {
+            border: 1px solid #ddd;
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* About Section */
+        #about p {
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        #contact a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        #contact a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Education Section */
+        .education-item {
+            margin-bottom: 20px;
+        }
+
+        .education-item h4 {
+            color: #007bff;
+        }
+
+        .education-item p {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body id="page-top">
 
     <!-- Header Section -->
-    <header class="masthead bg-primary text-white text-center">
+    <header class="masthead text-center">
         <div class="container d-flex flex-column align-items-center">
             <!-- Masthead Avatar Image -->
             <img class="masthead-avatar mb-5" src="aaaa.jpg" alt="Anil Lama">
             <!-- Masthead Heading -->
             <h1 class="masthead-heading text-uppercase mb-0">Anil Lama</h1>
             <!-- Masthead Subheading -->
-            <p class="masthead-subheading font-weight-light mb-0">L1 Lead</p>
+            <p class="masthead-subheading font-weight-light mb-0">L1 Lead at Fonepay</p>
 
             <!-- Social Media Navigation -->
             <nav class="social-nav">
@@ -48,8 +153,8 @@
     <!-- Main Content Section -->
     <main>
         <!-- About Section -->
-        <section id="about" class="container py-5">
-            <h2 class="section-title text-center">About Me</h2>
+        <section id="about" class="container">
+            <h2 class="section-title">About Me</h2>
             <p class="lead text-center">
                 Welcome to my portfolio! I am Anil Lama, an L1 Lead at Fonepay, dedicated to driving efficiency and innovation in the digital payment sector. With a strong work ethic and a passion for technology, I thrive in fast-paced environments, ensuring seamless operations and delivering impactful solutions.
             </p>
@@ -59,35 +164,50 @@
             <p>
                 Hardworking and goal-oriented, I am always eager to learn, adapt, and make a meaningful difference in the fintech industry.
             </p>
+            </p>
+                To build career organization, where I can get opportunity to prove my abilities by Accepting the challenges, fulfilling the organization goal and clime the career ladder through continuous learning and commitment.
+            </p>
         </section>
 
         <!-- Awards Section -->
-        <section id="awards" class="bg-light py-5">
-            <div class="container">
-                <h2 class="section-title text-center">Awards & Achievements</h2>
+        <section id="awards" class="container">
+            <h2 class="section-title">Awards & Achievements</h2>
 
-                <div class="award-item mb-4">
-                    <h3>Quarterly Impact Award - 2024</h3>
-                    <p>
-                        I am honored to have received the Quarterly Impact Award, a recognition of my dedication and contributions at Fonepay. This achievement reflects my commitment to excellence, problem-solving, and driving meaningful results.
-                    </p>
-                </div>
+            <div class="award-item mb-4">
+                <h3>Quarterly Impact Award - 2024</h3>
+                <p>
+                    I am honored to have received the Quarterly Impact Award, a recognition of my dedication and contributions at Fonepay. This achievement reflects my commitment to excellence, problem-solving, and driving meaningful results.
+                </p>
+            </div>
 
-                <div class="award-item mb-4">
-                    <h3>Nepali Typing Center: My First Project</h3>
-                    <p>
-                        I successfully launched and managed the Nepali Typing Center, which is now running smoothly on Google Marketplace. Through strategic SEO optimization, I ensured high visibility, making it easier for users to find and utilize our services.
-                    </p>
-                    <p>
-                        This project reflects my expertise in digital presence management, leveraging search engine optimization (SEO) techniques to enhance reach and engagement. My dedication to quality and efficiency has contributed to the platform’s success.
-                    </p>
-                </div>
+            <div class="award-item mb-4">
+                <h3>Nepali Typing Center: My First Project</h3>
+                <p>
+                    I successfully launched and managed the Nepali Typing Center, which is now running smoothly on Google Marketplace. Through strategic SEO optimization, I ensured high visibility, making it easier for users to find and utilize our services.
+                </p>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="container">
+            <h2 class="section-title">Education</h2>
+
+            <div class="education-item">
+                <h4>Bachelor in Socail Work (BSW)</h4>
+                <p><strong>Tribhuvan University</strong> - 2020 to 2025</p>
+                <p>Bachelor last yera running and aprox it will be conmplete on 2025 july</p>
+            </div>
+
+            <div class="education-item">
+                <h4>Higher Secondary Education (12th Grade)</h4>
+                <p><strong>Unique Collage</strong> - 2018 to 2020</p>
+                <p>Studied a diverse curriculum with a focus on social work, rural development, and sociology</p>
             </div>
         </section>
 
         <!-- Experience Section -->
-        <section id="experience" class="container py-5">
-            <h2 class="section-title text-center">Experience</h2>
+        <section id="experience" class="container">
+            <h2 class="section-title">Experience</h2>
 
             <div class="experience-item mb-4">
                 <h3>Manish Enterprises (2075-5-18 to 2078-12-25)</h3>
@@ -112,35 +232,17 @@
         </section>
 
         <!-- Contact Section -->
-        <section id="contact" class="bg-dark text-white py-5">
-            <div class="container text-center">
-                <h2 class="section-title">Contact</h2>
-                <p>Email: <a href="mailto:lanil9033@gmail.com" class="text-white">lanil9033@gmail.com</a></p>
-                <p>Contact Number: <a href="tel:+9779851359109" class="text-white">+977 9851359109</a></p>
-            </div>
+        <section id="contact" class="container">
+            <h2 class="section-title">Contact</h2>
+            <p>Email: <a href="mailto:lanil9033@gmail.com">lanil9033@gmail.com</a></p>
+            <p>Contact Number: <a href="tel:+9779851359109">+977 9851359109</a></p>
         </section>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-primary text-white text-center py-4">
+    <footer>
         <p>&copy; 2024 Anil Lama. All Rights Reserved.</p>
     </footer>
 
-    <!-- Optional: Include JS files -->
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-
-    <!-- CSS for Social Media Icons -->
-    <style>
-        .social-nav a {
-            margin: 0 15px;
-            color: white;
-            font-size: 24px;
-            transition: color 0.3s ease;
-        }
-
-        .social-nav a:hover {
-            color: #007bff; /* Hover color */
-        }
-    </style>
 </body>
 </html>
