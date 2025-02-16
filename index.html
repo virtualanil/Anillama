@@ -11,139 +11,82 @@
     <!-- Linking Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
 
+    <!-- Linking CSS files -->
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+
     <!-- Font Awesome Icons Script -->
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         /* Global Styles */
         body {
             font-family: 'Lato', sans-serif;
-            background-color: #f4f4f9;
+            background-color: #001f3f;
             color: #333;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
         }
 
-        h1, h2, h3, h4, h5, h6 {
+        h2 {
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
             color: #001f3f;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            padding: 50px 15px;
         }
 
         /* Header Styles */
         .masthead {
             background: #001f3f;
             color: white;
-            padding: 60px 0;
-            text-align: center;
+            padding: 50px 0;
         }
 
-        .masthead-avatar {
-            width: 150px;
-            height: 150px;
+  .masthead-avatar {
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
-            border: 5px solid #fff;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
+            border: 5px solid #fff;
         }
+
 
         .masthead-heading {
-            font-size: 2.5rem;
-            margin: 10px 0;
+            font-size: 36px;
         }
 
         .masthead-subheading {
-            font-size: 1.2rem;
-            font-weight: 300;
-            margin-bottom: 20px;
+            font-size: 18px;
         }
 
         .social-nav a {
             margin: 0 15px;
             color: white;
-            font-size: 1.5rem;
+            font-size: 24px;
             transition: color 0.3s ease;
         }
 
         .social-nav a:hover {
-            color: #ff6f61;
+            color: #001f3f;
         }
 
         /* Section Styles */
         section {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px 0;
+            border: 1px solid #ddd;
+            margin-bottom: 30px;
             padding: 30px;
+            border-radius: 10px;
+            background-color: white;
         }
 
         .section-title {
             text-align: center;
-            margin-bottom: 30px;
-            font-size: 2rem;
-            color: #001f3f;
+            margin-bottom: 20px;
         }
 
         /* About Section */
         #about p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            text-align: justify;
-        }
-
-        /* Awards Section */
-        .award-item {
-            margin-bottom: 20px;
-        }
-
-        .award-item h3 {
-            color: #001f3f;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .award-item p {
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        /* Education Section */
-        .education-item {
-            margin-bottom: 20px;
-        }
-
-        .education-item h4 {
-            color: #001f3f;
-            font-size: 1.3rem;
-            margin-bottom: 5px;
-        }
-
-        .education-item p {
-            font-size: 1rem;
-            margin: 5px 0;
-        }
-
-        /* Experience Section */
-        .experience-item {
-            margin-bottom: 20px;
-        }
-
-        .experience-item h3 {
-            color: #001f3f;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .experience-item p {
-            font-size: 1rem;
             line-height: 1.6;
         }
 
@@ -151,7 +94,6 @@
         #contact a {
             color: #001f3f;
             text-decoration: none;
-            font-weight: 600;
         }
 
         #contact a:hover {
@@ -164,45 +106,37 @@
             color: white;
             padding: 20px;
             text-align: center;
-            margin-top: 40px;
         }
 
         footer p {
             margin: 0;
-            font-size: 1rem;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .masthead-heading {
-                font-size: 2rem;
-            }
+        /* Education Section */
+        .education-item {
+            margin-bottom: 20px;
+        }
 
-            .masthead-subheading {
-                font-size: 1rem;
-            }
+        .education-item h4 {
+            color: #001f3f;
+        }
 
-            .section-title {
-                font-size: 1.8rem;
-            }
-
-            #about p {
-                font-size: 1rem;
-            }
+        .education-item p {
+            margin: 5px 0;
         }
     </style>
 </head>
 <body id="page-top">
 
     <!-- Header Section -->
-    <header class="masthead">
-        <div class="container">
+    <header class="masthead text-center">
+        <div class="container d-flex flex-column align-items-center">
             <!-- Masthead Avatar Image -->
-            <img class="masthead-avatar" src="lama.jpg" alt="Anil Lama">
+            <img class="masthead-avatar mb-5" src="lama.jpg" alt="Anil Lama">
             <!-- Masthead Heading -->
-            <h1 class="masthead-heading">Anil Lama (अनिल लामा)</h1>
+            <h1 class="masthead-heading text-uppercase mb-0">Anil Lama(अनिल लामा)</h1>
             <!-- Masthead Subheading -->
-            <p class="masthead-subheading">L1 Lead</p>
+            <p class="masthead-subheading font-weight-light mb-0">L1 Lead</p>
 
             <!-- Social Media Navigation -->
             <nav class="social-nav">
@@ -224,7 +158,7 @@
         <!-- About Section -->
         <section id="about" class="container">
             <h2 class="section-title">About Me</h2>
-            <p>
+            <p class="lead text-center">
                 Welcome to my portfolio! I am Anil Lama, an L1 Lead at Fonepay, dedicated to driving efficiency and innovation in the digital payment sector. With a strong work ethic and a passion for technology, I thrive in fast-paced environments, ensuring seamless operations and delivering impactful solutions.
             </p>
             <p>
@@ -233,8 +167,8 @@
             <p>
                 Hardworking and goal-oriented, I am always eager to learn, adapt, and make a meaningful difference in the fintech industry.
             </p>
-            <p>
-                To build a career in an organization where I can get the opportunity to prove my abilities by accepting challenges, fulfilling organizational goals, and climbing the career ladder through continuous learning and commitment.
+            </p>
+                To build career organization, where I can get opportunity to prove my abilities by Accepting the challenges, fulfilling the organization goal and clime the career ladder through continuous learning and commitment.
             </p>
         </section>
 
@@ -242,14 +176,14 @@
         <section id="awards" class="container">
             <h2 class="section-title">Awards & Achievements</h2>
 
-            <div class="award-item">
+            <div class="award-item mb-4">
                 <h3>Quarterly Impact Award - 2024</h3>
                 <p>
                     I am honored to have received the Quarterly Impact Award, a recognition of my dedication and contributions at Fonepay. This achievement reflects my commitment to excellence, problem-solving, and driving meaningful results.
                 </p>
             </div>
 
-            <div class="award-item">
+            <div class="award-item mb-4">
                 <h3>Nepali Typing Center: My First Project</h3>
                 <p>
                     I successfully launched and managed the Nepali Typing Center, which is now running smoothly on Google Marketplace. Through strategic SEO optimization, I ensured high visibility, making it easier for users to find and utilize our services.
@@ -262,15 +196,15 @@
             <h2 class="section-title">Education</h2>
 
             <div class="education-item">
-                <h4>Bachelor in Social Work (BSW)</h4>
+                <h4>Bachelor in Socail Work (BSW)</h4>
                 <p><strong>Tribhuvan University</strong> - 2020 to 2025</p>
-                <p>Bachelor's last year running, and it will be completed by July 2025.</p>
+                <p>Bachelor last year running and aprox it will be complete on 2025 july</p>
             </div>
 
             <div class="education-item">
                 <h4>Higher Secondary Education (12th Grade)</h4>
-                <p><strong>Unique College</strong> - 2018 to 2020</p>
-                <p>Studied a diverse curriculum with a focus on social work, rural development, and sociology.</p>
+                <p><strong>Unique Collage</strong> - 2018 to 2020</p>
+                <p>Studied a diverse curriculum with a focus on social work, rural development, and sociology</p>
             </div>
         </section>
 
@@ -278,21 +212,21 @@
         <section id="experience" class="container">
             <h2 class="section-title">Experience</h2>
 
-            <div class="experience-item">
+            <div class="experience-item mb-4">
                 <h3>Manish Enterprises (2075-5-18 to 2078-12-25)</h3>
                 <p>
                     I worked at Manish Enterprises as an Accountant and Marketing Manager for 4 years. I was responsible for building customer relationships and providing top-notch services. Additionally, I contributed to various technical aspects of DIY product development.
                 </p>
             </div>
 
-            <div class="experience-item">
+            <div class="experience-item mb-4">
                 <h3>Fonepay Payment Service, Pulchwok, Lalitpur (2078-12-30 to present)</h3>
                 <p>
                     As an L1 Lead at Fonepay, I play a key role in ensuring seamless digital payment operations, optimizing processes, and contributing to the company's growth through innovation and efficiency.
                 </p>
             </div>
 
-            <div class="experience-item">
+            <div class="experience-item mb-4">
                 <h3>Roshi Handicraft, Kavrepalanchok (2079-3-26 to 2079-11-15)</h3>
                 <p>
                     At Roshi Handicraft, I worked as a manager overseeing various projects. I was responsible for organizing training for women empowerment initiatives and enhancing my personal and professional skills along the way.
