@@ -1,29 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags and necessary elements -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Anil Lama's professional portfolio showcasing experience and achievements in the fintech industry.">
     <meta name="author" content="Anil Lama">
     <title>Anil Lama - Portfolio</title>
+
+    <!-- Linking Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Linking CSS files -->
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons Script -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
     <style>
+        /* Global Styles */
         body {
             font-family: 'Lato', sans-serif;
-            background-color: #f4f4f9;
+            background-color: #001f3f;
             color: #333;
-            margin: 0;
-            padding: 0;
         }
 
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: #001f3f;
+        }
+
+        .container {
+            padding: 50px 15px;
+        }
+
+        /* Header Styles */
         .masthead {
-            background: linear-gradient(135deg, #4b79a1 0%, #283e51 100%);
+            background: #001f3f;
             color: white;
-            padding: 100px 0;
-            text-align: center;
+            padding: 50px 0;
         }
 
-        .masthead-avatar {
+  .masthead-avatar {
             width: 200px;
             height: 200px;
             border-radius: 50%;
@@ -31,40 +51,223 @@
             border: 5px solid #fff;
         }
 
+
         .masthead-heading {
-            font-size: 48px;
-            margin: 20px 0;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
+            font-size: 36px;
         }
 
         .masthead-subheading {
-            font-size: 24px;
-            font-weight: 300;
+            font-size: 18px;
         }
 
         .social-nav a {
-            margin: 0 10px;
+            margin: 0 15px;
             color: white;
-            font-size: 30px;
+            font-size: 24px;
             transition: color 0.3s ease;
         }
 
         .social-nav a:hover {
-            color: #ffd700;
+            color: #001f3f;
+        }
+
+        /* Section Styles */
+        section {
+            border: 1px solid #ddd;
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* About Section */
+        #about p {
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        #contact a {
+            color: #001f3f;
+            text-decoration: none;
+        }
+
+        #contact a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #001f3f;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Education Section */
+        .education-item {
+            margin-bottom: 20px;
+        }
+
+        .education-item h4 {
+            color: #001f3f;
+        }
+
+        .education-item p {
+            margin: 5px 0;
         }
     </style>
 </head>
-<body>
-    <header class="masthead">
-        <img class="masthead-avatar" src="lama.jpg" alt="Anil Lama">
-        <h1 class="masthead-heading">Anil Lama</h1>
-        <p class="masthead-subheading">L1 Lead at Fonepay</p>
-        <nav class="social-nav">
-            <a href="https://www.youtube.com/@anillama9033" target="_blank"><i class="fab fa-youtube"></i></a>
-            <a href="https://www.facebook.com/bijaymoktan.87/photos/a.103631004563483/719882452938332/?__tn__=%3C" target="_blank"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://www.instagram.com/nepalitypingcenter?igshid=ZzVxam43N3l6aWs1" target="_blank"><i class="fab fa-instagram"></i></a>
-        </nav>
+<body id="page-top">
+
+    <!-- Header Section -->
+    <header class="masthead text-center">
+        <div class="container d-flex flex-column align-items-center">
+            <!-- Masthead Avatar Image -->
+            <img class="masthead-avatar mb-5" src="lama.jpg" alt="Anil Lama">
+            <!-- Masthead Heading -->
+            <h1 class="masthead-heading text-uppercase mb-0">Anil Lama(अनिल लामा)</h1>
+            <!-- Masthead Subheading -->
+            <p class="masthead-subheading font-weight-light mb-0">L1 Lead</p>
+
+            <!-- Social Media Navigation -->
+            <nav class="social-nav">
+                <a href="https://www.youtube.com/@anillama9033" aria-label="YouTube" target="_blank">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="https://www.facebook.com/bijaymoktan.87/photos/a.103631004563483/719882452938332/?__tn__=%3C" aria-label="Facebook" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/nepalitypingcenter?igsh=ZzVxam43N3l6aWs1" aria-label="Instagram" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </nav>
+        </div>
     </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <!-- About Section -->
+        <section id="about" class="container">
+            <h2 class="section-title">About Me</h2>
+            <p class="lead text-center">
+                Welcome to my portfolio! I am Anil Lama, an L1 Lead at Fonepay, dedicated to driving efficiency and innovation in the digital payment sector. With a strong work ethic and a passion for technology, I thrive in fast-paced environments, ensuring seamless operations and delivering impactful solutions.
+            </p>
+            <p>
+                My role at Fonepay allows me to collaborate with teams, optimize processes, and contribute to the growth of digital transactions. I take pride in my ability to solve challenges effectively, maintain high professional standards, and continuously strive for excellence.
+            </p>
+            <p>
+                Hardworking and goal-oriented, I am always eager to learn, adapt, and make a meaningful difference in the fintech industry.
+            </p>
+            </p>
+                To build career organization, where I can get opportunity to prove my abilities by Accepting the challenges, fulfilling the organization goal and clime the career ladder through continuous learning and commitment.
+            </p>
+        </section>
+
+        <!-- Awards Section -->
+        <section id="awards" class="container">
+            <h2 class="section-title">Awards & Achievements</h2>
+
+            <div class="award-item mb-4">
+                <h3>Quarterly Impact Award - 2024</h3>
+                <p>
+                    I am honored to have received the Quarterly Impact Award, a recognition of my dedication and contributions at Fonepay. This achievement reflects my commitment to excellence, problem-solving, and driving meaningful results.
+                </p>
+            </div>
+
+            <div class="award-item mb-4">
+                <h3>Nepali Typing Center: My First Project</h3>
+                <p>
+                    I successfully launched and managed the Nepali Typing Center, which is now running smoothly on Google Marketplace. Through strategic SEO optimization, I ensured high visibility, making it easier for users to find and utilize our services.
+                </p>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="container">
+            <h2 class="section-title">Education</h2>
+
+            <div class="education-item">
+                <h4>Bachelor in Socail Work (BSW)</h4>
+                <p><strong>Tribhuvan University</strong> - 2020 to 2025</p>
+                <p>Bachelor last year running and aprox it will be complete on 2025 july</p>
+            </div>
+
+            <div class="education-item">
+                <h4>Higher Secondary Education (12th Grade)</h4>
+                <p><strong>Unique Collage</strong> - 2018 to 2020</p>
+                <p>Studied a diverse curriculum with a focus on social work, rural development, and sociology</p>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="container">
+            <h2 class="section-title">Experience</h2>
+
+            <div class="experience-item mb-4">
+                <h3>Manish Enterprises (2075-5-18 to 2078-12-25)</h3>
+                <p>
+                    I worked at Manish Enterprises as an Accountant and Marketing Manager for 4 years. I was responsible for building customer relationships and providing top-notch services. Additionally, I contributed to various technical aspects of DIY product development.
+                </p>
+            </div>
+
+            <div class="experience-item mb-4">
+                <h3>Fonepay Payment Service, Pulchwok, Lalitpur (2078-12-30 to present)</h3>
+                <p>
+                    As an L1 Lead at Fonepay, I play a key role in ensuring seamless digital payment operations, optimizing processes, and contributing to the company's growth through innovation and efficiency.
+                </p>
+            </div>
+
+            <div class="experience-item mb-4">
+                <h3>Roshi Handicraft, Kavrepalanchok (2079-3-26 to 2079-11-15)</h3>
+                <p>
+                    At Roshi Handicraft, I worked as a manager overseeing various projects. I was responsible for organizing training for women empowerment initiatives and enhancing my personal and professional skills along the way.
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="container">
+            <h2 class="section-title">Contact</h2>
+            <p>Email: <a href="mailto:lanil9033@gmail.com">lanil9033@gmail.com</a></p>
+            <p>Contact Number: <a href="tel:+9779851359109">+977 9851359109</a></p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Anil Lama. All Rights Reserved.</p>
+    </footer>
+
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
