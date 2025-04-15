@@ -1,6 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>12-Hour Digital Clock</title>
+  <style>
+    #clock-widget {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background-color: #f9f9f9;
+      color: #333;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    #clock {
+      font-weight: 600;
+    }
+
+    #date {
+      font-size: 0.7rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <!-- Other page content -->
+
+  <div id="clock-widget">
+    <div id="clock">00:00:00 AM</div>
+    <div id="date">Loading...</div>
+  </div>
+
+  <script>
+    function updateTimeAndDate() {
+      const now = new Date();
+
+      // 12-hour formatting
+      let hours = now.getHours();
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+
+      hours = hours % 12;
+      hours = hours ? hours : 12; // 0 becomes 12
+      const hourStr = hours.toString().padStart(2, '0');
+
+      document.getElementById('clock').textContent = `${hourStr}:${minutes}:${seconds} ${ampm}`;
+
+      // Short readable date
+      const options = { weekday: 'short', month: 'short', day: 'numeric' };
+      document.getElementById('date').textContent = now.toLocaleDateString(undefined, options);
+    }
+
+    setInterval(updateTimeAndDate, 1000);
+    updateTimeAndDate();
+  </script>
+</body>
+</html>
+
     <!-- Meta tags and necessary elements -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
