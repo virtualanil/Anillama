@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
   <meta charset="UTF-8">
-  <title>12-Hour Digital Clock</title>
+  <title>Nepali Date and Time</title>
   <style>
     #clock-widget {
       position: fixed;
@@ -31,12 +28,19 @@
       font-size: 0.7rem;
       color: #666;
     }
+
+    #nepali-date {
+      font-size: 0.7rem;
+      color: #444;
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
   <!-- Other page content -->
 
   <div id="clock-widget">
+    <div id="nepali-date">नेपाली मिति लोड हुँदैछ...</div>
     <div id="clock">00:00:00 AM</div>
     <div id="date">Loading...</div>
   </div>
@@ -45,7 +49,7 @@
     function updateTimeAndDate() {
       const now = new Date();
 
-      // 12-hour formatting
+      // 12-hour clock formatting
       let hours = now.getHours();
       const minutes = now.getMinutes().toString().padStart(2, '0');
       const seconds = now.getSeconds().toString().padStart(2, '0');
@@ -57,9 +61,19 @@
 
       document.getElementById('clock').textContent = `${hourStr}:${minutes}:${seconds} ${ampm}`;
 
-      // Short readable date
+      // English short readable date
       const options = { weekday: 'short', month: 'short', day: 'numeric' };
       document.getElementById('date').textContent = now.toLocaleDateString(undefined, options);
+
+      // Basic placeholder for Nepali Date (replace with actual conversion if needed)
+      const nepaliDate = getNepaliDatePlaceholder(now);
+      document.getElementById('nepali-date').textContent = nepaliDate;
+    }
+
+    // Placeholder function — use actual Nepali calendar logic or library here
+    function getNepaliDatePlaceholder(date) {
+      // You can replace this with a real Nepali date converter or API
+      return "२०८१ बैशाख २, मंगलबार"; // Example static Nepali date
     }
 
     setInterval(updateTimeAndDate, 1000);
@@ -67,6 +81,7 @@
   </script>
 </body>
 </html>
+
 
     <!-- Meta tags and necessary elements -->
     <meta charset="UTF-8">
