@@ -81,12 +81,6 @@
 
     setInterval(updateTimeAndDate, 1000);
     updateTimeAndDate();
-    
-  const flag = document.getElementById('nepal-flag');
-  window.addEventListener('scroll', () => {
-    flag.classList.toggle('hide-flag', window.scrollY > 50);
-    <img id="nepal-flag" src="nepal_flag.gif.gif" alt="Nepal Flag" />
-  });
   </script>
 </body>
 </html>
@@ -224,25 +218,9 @@
     border-radius: 5px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
-  #nepal-flag {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100px;
-    height: auto;
-    pointer-events: none;
-    animation: wave 3s ease-in-out infinite;
-    transform-origin: 20% 50%;
-    transition: opacity 0.3s ease;
-  }
-  @keyframes wave {
-    0% { transform: rotate(0deg); }
-    50% { transform: rotate(2deg); }
-    100% { transform: rotate(0deg); }
-  }
-  .hide-flag {
-    opacity: 0;
-  }
+
+
+
     </style>
 </head>
 <body id="page-top">
