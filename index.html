@@ -1,39 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- ✅ Paste your Facebook verification code here -->
-  <meta name="facebook-domain-verification" content="ob5abwu1o745czjhdf7psuzo2vf870" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-30TJT4D1LD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-30TJT4D1LD');
-</script>
-  <!-- ====== Meta & Title ====== -->
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Anil Lama's professional portfolio showcasing experience and achievements in the fintech industry." />
-  <meta name="author" content="Anil Lama" />
-  <title>Anil Lama – Portfolio</title>
-
-  <!-- ====== Favicon ====== -->
-  <link rel="icon" href="Logo.png" type="image/png" />
-
-  <!-- ====== Google Fonts ====== -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
-
-  <!-- ====== External CSS ====== -->
-  <link href="css/styles.css" rel="stylesheet" />
-  <link href="css/custom.css" rel="stylesheet" />
-
-  <!-- ====== Font‑Awesome ====== -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-  <!-- ====== Page‑level Styles ====== -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anil Lama Portfolio</title>
   <style>
+ <style>
     /* ---------- Clock widget ---------- */
     #clock-widget {
       position: fixed;
@@ -85,110 +57,229 @@
       color: #001f3f;
     }
     .container { padding: 50px 15px; }
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    /* ---------- Header ---------- */
-    .masthead {
-      background: #001f3f;
-      color: white;
-      padding: 50px 0;
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      line-height: 1.6;
+      scroll-behavior: smooth;
     }
-    .masthead-avatar {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      border: 5px solid #fff;
-    }
-    .masthead-heading { font-size: 36px; }
-    .masthead-subheading { font-size: 18px; }
-    .social-nav a {
-      margin: 0 15px;
-      color: white;
-      font-size: 24px;
-      transition: color 0.3s ease;
-    }
-    .social-nav a:hover { color: #001f3f; }
 
-    /* ---------- Sections ---------- */
-    section {
-      border: 1px solid #ddd;
-      margin-bottom: 30px;
-      padding: 30px;
-      border-radius: 10px;
-      background-color: white;
-    }
-    .section-title {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    #about p { line-height: 1.6; }
-    #contact a {
-      color: #001f3f;
+    a {
       text-decoration: none;
+      color: inherit;
     }
-    #contact a:hover { text-decoration: underline; }
 
-    /* ---------- Footer ---------- */
+    /* Header */
+    header {
+      background-color: #0d47a1; /* Classic Nepali Blue */
+      color: #fff;
+      padding: 30px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #ffca28, #ff7043, #ab47bc, #26a69a);
+      animation: gradientBorder 5s infinite linear;
+    }
+
+    @keyframes gradientBorder {
+      0% {
+        background-position: 0% 50%;
+      }
+      100% {
+        background-position: 100% 50%;
+      }
+    }
+
+    header img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      object-fit: cover;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    header img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    header h1 {
+      font-size: 2em;
+      margin-bottom: 8px;
+    }
+
+    header h2 {
+      font-weight: normal;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+    }
+
+    nav {
+      margin-top: 15px;
+    }
+
+    nav a {
+      display: inline-block;
+      margin: 0 15px;
+      padding: 8px 12px;
+      font-weight: 600;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.2);
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    nav a:hover {
+      background-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Sections */
+    section {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 25px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+    }
+
+    section h2 {
+      color: #0d47a1;
+      margin-bottom: 20px;
+      font-size: 1.8em;
+      position: relative;
+    }
+
+    /* Animated underline for section titles */
+    section h2::after {
+      content: "";
+      display: block;
+      width: 50px;
+      height: 3px;
+      background-color: #ffca28;
+      margin-top: 8px;
+      border-radius: 2px;
+      animation: underlineAnim 2s infinite alternate;
+    }
+
+    @keyframes underlineAnim {
+      0% {
+        width: 20px;
+        opacity: 0.5;
+      }
+      100% {
+        width: 50px;
+        opacity: 1;
+      }
+    }
+
+    /* Content cards */
+    .card {
+      background: #fafafa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      transform: translateY(-3px);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: #0d47a1;
+      color: #fff;
+      border-radius: 5px;
+      font-weight: 600;
+      margin-top: 20px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .btn:hover {
+      background-color: #1565c0;
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
     footer {
-      background-color: #001f3f;
-      color: white;
+      background-color: #0d47a1;
+      color: #fff;
       padding: 20px;
       text-align: center;
+      margin-top: 50px;
     }
-    footer p { margin: 0; }
 
-    /* ---------- Education ---------- */
-    .education-item { margin-bottom: 20px; }
-    .education-item h4 { color: #001f3f; }
-    .education-item p { margin: 5px 0; }
-
-    /* ---------- Certificates ---------- */
-    .certificate-img {
-      width: 100%;
-      max-width: 400px;
-      display: block;
-      margin: 15px auto;
-      border-radius: 5px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    /* Responsive */
+    @media(max-width: 768px){
+      header, section {
+        padding: 20px;
+      }
+      nav a {
+        display: block;
+        margin: 10px 0;
+      }
     }
   </style>
 </head>
-<body id="page-top">
-  <!-- ====== Nepal Flag ====== -->
-  <img id="nepal-flag" src="nepal_flag.gif.gif" alt="Nepal Flag" />
+<body>
 
-  <!-- ====== Clock Widget ====== -->
-  <div id="clock-widget">
-    <div id="nepali-date">नेपाली मिति लोड हुँदैछ...</div>
-    <div id="clock">00:00:00 AM</div>
-    <div id="date">Loading…</div>
-  </div>
-
-  <!-- ====== Header ====== -->
-  <header class="masthead text-center">
-    <div class="container d-flex flex-column align-items-center">
-      <img class="masthead-avatar mb-5" src="Amal.jpg" alt="Anil Lama" />
-      <h1 class="masthead-heading text-uppercase mb-0">Anil Lama (अनिल लामा)</h1>
-      <p class="masthead-subheading font-weight-light mb-0">Founder / Nepali Typing Center / L1 Lead</p>
-
-      <!-- Social Media Links -->
+<header>
+  <img src="https://via.placeholder.com/120" alt="Anil Lama" />
+  <h1>ANIL LAMA (अनिल लामा)</h1>
+  <h2>Founder / Nepali Typing Center / Lead</h2>
+   <!-- Social Media Links -->
       <nav class="social-nav">
         <a href="https://www.youtube.com/@anillama9033" aria-label="YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
         <a href="https://www.facebook.com/profile.php?id=100005158245674" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
         <a href="https://www.linkedin.com/in/anil-l-3b0a23236/" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
         <a href="https://www.instagram.com/anil.moktan07?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-      </nav>
-    </div>
-  </header>
+  <nav>
+    <a href="#about">About Me</a>
+    <a href="#awards">Awards & Achievements</a>
+    <a href="#education">Education</a>
+    <a href="#training">Training & Certifications</a>
+    <a href="#experience">Experience</a>
+    <a href="#contact">Contact</a>
+    <a href="#Nepali Typing Converter">Nepali Typing Converter</a>
+  </nav>
 
-  <!-- ====== Main ====== -->
-  <main>
-    <!-- === About === -->
-    <section id="about" class="container">
-      <h2 class="section-title">About Me</h2>
-      <p class="lead text-center">
-        Welcome to my portfolio! I am Anil Lama, an L1 Lead at Fonepay, dedicated to driving efficiency and innovation in the digital payment sector. With a strong work ethic and a passion for technology, I thrive in fast-paced environments, ensuring seamless operations and delivering impactful solutions.
-      </p>
+</header>
+
+<!-- About Me -->
+<section id="about">
+  <h2>About Me</h2>
+  <p> Welcome to my portfolio! I am Anil Lama, an L1 Lead at Fonepay, dedicated to driving efficiency and innovation in the digital payment sector. With a strong work ethic and a passion for technology, I thrive in fast-paced environments, ensuring seamless operations and delivering impactful solutions.
+ </p>
       <p>
         My role at Fonepay allows me to collaborate with teams, optimize processes, and contribute to the growth of digital transactions. I take pride in my ability to solve challenges effectively, maintain high professional standards, and continuously strive for excellence.
       </p>
@@ -198,109 +289,109 @@
       <p>
         To build a career in an organization where I can prove my abilities by accepting challenges, fulfilling organizational goals, and climbing the career ladder through continuous learning and commitment.
       </p>
-    </section>
 
-    <!-- === Awards === -->
-    <section id="awards" class="container">
-      <h2 class="section-title">Awards & Achievements</h2>
+</section>
 
-      <div class="award-item mb-4">
-        <h3>Quarterly Impact Award – 2024</h3>
-        <p>
+<!-- Awards & Achievements -->
+<section id="awards">
+  <h2>Awards & Achievements</h2>
+  <div class="card">
+    <h3>Quarterly Impact Award - 2024</h3>
+    <p>
           I am honored to have received the Quarterly Impact Award, recognizing my dedication and contributions at Fonepay. This achievement reflects my commitment to excellence, problem‑solving, and driving meaningful results. <a href="https://www.linkedin.com/posts/fonepaynepal_hardwork-dedication-impact-activity-7339135682180800513-Jhej/?utm_source=share&utm_medium=member_desktop&rcm=ACoAADriUHQB5BX_7Tab0Y0KOWYze98IrMmN4wA" target="_blank">Click Here</a>
         </p>
-      </div>
+</div>
 
-      <div class="award-item mb-4">
-        <h3>Nepali Typing Center – My First Project</h3>
-        <p>
-          I successfully launched and manage the Nepali Typing Center, which is now running smoothly on Google Marketplace. Through strategic SEO optimization, I ensured high visibility, making it easier for users to find and utilize our services. <a href="https://g.co/kgs/sqaEEzb" target="_blank">CHECK HERE</a>
+     <div class="card">
+    <h3>Nepali Typing Center - My First Project</h3>
+    <p>I successfully launched and manage the Nepali Typing Center, which is now running smoothly on Google Marketplace. Through strategic SEO optimization, I ensured high visibility, making it easier for users to find and utilize our services. <a href="https://g.co/kgs/sqaEEzb" target="_blank">Check Here</a>
         </p>
-      </div>
-    </section>
+    
+  </div>
+</section>
 
-    <!-- === Education === -->
-    <section id="education" class="container">
-      <h2 class="section-title">Education</h2>
+<!-- Education -->
+<section id="education">
+  <h2>Education</h2>
 
-      <div class="education-item">
-        <h4>Bachelor in Social Work (BSW)</h4>
-        <p><strong>Tribhuvan University</strong> – 2020 – 2025 (expected)</p>
+  <div class="card">
+    <h3>Bachelor in Social Work (BSW)</h3>
+    <p><strong>Tribhuvan University</strong> – 2020 – 2025 (expected)</p>
         <p>Currently in final year; anticipated completion July 2025.</p>
-      </div>
+  </div>
 
-      <div class="education-item">
-        <h4>Higher Secondary Education (12th Grade)</h4>
-        <p><strong>Unique College</strong> – 2018 – 2020</p>
+  <div class="card">
+    <h3>Higher Secondary Education (12th Grade)</h3>
+    <p><strong>Unique College</strong> – 2018 – 2020</p>
         <p>Completed a diverse curriculum with focus on social work, rural development, and sociology.</p>
-      </div>
-    </section>
+  </div>
+</section>
 
-    <!-- === Training & Certifications === -->
-    <section id="training" class="container">
-      <h2 class="section-title">Training & Certifications</h2>
-
-      <div class="training-item mb-4">
-        <h4>Microsoft Excel 101 Event</h4>
+<!-- Training & Certifications -->
+<section id="training">
+  <h2>Training & Certifications</h2>
+  <div class="card">
+     <h4>Microsoft Excel 101 Event</h4>
         <p><strong>Satyava Digital Class</strong> – Completed 2023</p>
         <img src="excel.png" alt="Microsoft Excel Certificate" class="certificate-img" />
       </div>
 
-      <div class="training-item mb-4">
-        <h4>Photoshop & Editing (Basic)</h4>
-        <p>
-          I have learned Photoshop and image editing through self‑study on YouTube, enabling me to create visually appealing graphics, edit images, and enhance digital content. These skills improve branding, marketing materials, and professional visuals for various projects.
-        </p>
-        
-      </div>
-      <div class="training-item mb-4">
-        <h4>Google Analytics Certification
-Issued by Google / Skillshop</h4>
+  <div class="card">
+    <h3>Google Analytics Certification</h3>
+    <h4>Issued by Google / Skillshop</h4>
         <p>
           Demonstrated proficiency in setting up, tracking, analyzing, and interpreting data using Google Analytics. Gained expertise in performance measurement, audience insights, and optimization of digital marketing strategies based on analytics data.
         </p>
          <img src="Google Analytics.png" alt="Google Analytics Certification" class="certificate-img" />
       </div>
-    </section>
+<div class="card">
+    <h3>Photoshop & Editing (Basic)</h3>
+    <p>I have learned Photoshop and image editing through self‑study on YouTube, enabling me to create visually appealing graphics, edit images, and enhance digital content. These skills improve branding, marketing materials, and professional visuals for various projects.</p>
+  </div>
+</section>
+<!-- Experience -->
+<section id="Experience">
+  <h2>Experience</h2>
 
-    <!-- === Experience === -->
-    <section id="experience" class="container">
-      <h2 class="section-title">Experience</h2>
-
-      <div class="experience-item mb-4">
-        <h3>Manish Enterprises – Accountant & Marketing Manager (2075‑05‑18 – 2078‑12‑25)</h3>
+  <div class="card">
+    <h3>Manish Enterprises – Accountant & Marketing Manager (2075‑05‑18 – 2078‑12‑25)</h3>
         <p>
           Managed accounting operations and marketing initiatives for four years. Responsible for building customer relationships, providing top‑notch services, and contributing to technical aspects of DIY product development.
         </p>
-      </div>
+  </div>
 
-      <div class="experience-item mb-4">
-        <h3>Fonepay Payment Service, Pulchowk, Lalitpur – L1 Lead (2078‑12‑30 – Present)</h3>
+  <div class="card">
+     <h3>Fonepay Payment Service, Pulchowk, Lalitpur – L1 Lead (2078‑12‑30 – Present)</h3>
         <p>
           Key role in ensuring seamless digital payment operations, optimizing processes, and contributing to company growth through innovation and efficiency.
         </p>
-      </div>
+  </div>
 
-      <div class="experience-item mb-4">
-        <h3>Roshi Handicraft, Kavrepalanchok – Manager (2079‑03‑26 – 2079‑11‑15)</h3>
+<div class="card">
+    <h3>Roshi Handicraft, Kavrepalanchok – Manager (2079‑03‑26 – 2079‑11‑15)</h3>
         <p>
           Oversaw multiple projects, organized training for women empowerment initiatives, and enhanced personal and professional skills.
         </p>
-      </div>
-    </section>
+  </div>
 
-    <!-- === Contact === -->
-    <section id="contact" class="container">
-      <h2 class="section-title">Contact</h2>
-      <p>Email: <a href="mailto:lanil9033@gmail.com">lanil9033@gmail.com</a></p>
-      <p>Contact Number: <a href="tel:+9779851359109">+977 9851359109</a></p>
-    </section>
+</section>
 
-    <!-- === Nepali Typing Converter === -->
-    <section id="nepali-typing-converter" style="width: 100%; background-color: #f9f9f9; padding: 60px 0;">
-      <div style="width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-        <h2 style="font-size: 32px; font-weight: 600; text-align: center; margin-bottom: 30px; color: #333;">Nepali Typing Converter</h2>
-        <div style="width: 100%; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); padding: 24px;">
+<!-- Contact -->
+<section id="Contact">
+  <h2>Contact</h2>
+
+  <div class="card">
+      <h4>Email: <a href="mailto:lanil9033@gmail.com">lanil9033@gmail.com</h4></p>
+      <h4>Contact Number: <a href="tel:+9779851359109">+977 9851359109</a></h4>
+    
+  </div>
+</section>
+
+<!-- Nepali Typing Converter-->
+<section id="Nepali Typing Converter">
+  <h2>Nepali Typing Converter</h2>
+     <section id="nepali-typing-converter">
+<h3 style="font-size: 32px; font-weight: 600; text-align: center; margin-bottom: 30px; color: #333;">Unicode Converter</h3>
           <iframe src="https://www.ashesh.com.np/linknepali-unicode3.php?api=492041p542" width="100%" height="360" frameborder="0" scrolling="no" style="border-radius: 8px; width: 100%;"></iframe>
           <p style="font-size: 12px; color: #888; text-align: center; margin-top: 12px;">© Nepali Unicode</p>
         </div>
@@ -308,40 +399,14 @@ Issued by Google / Skillshop</h4>
     </section>
   </main>
 
-  <!-- ====== Footer ====== -->
+    
+  </div>
+</section>
+
+ <!-- ====== Footer ====== -->
   <footer>
-    <p>&copy; 2024 Anil Lama. All Rights Reserved.</p>
+    <p>&copy; 2025 Anil Lama. All Rights Reserved.</p>
   </footer>
 
-  <!-- ====== Scripts ====== -->
-  <script>
-    /* ===== Clock ===== */
-    function updateTimeAndDate() {
-      const now = new Date();
-      let hours = now.getHours();
-      const minutes = now.getMinutes().toString().padStart(2, '0');
-      const seconds = now.getSeconds().toString().padStart(2, '0');
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12;
-      document.getElementById('clock').textContent = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds} ${ampm}`;
-      document.getElementById('date').textContent = now.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
-      document.getElementById('nepali-date').textContent = getNepaliDatePlaceholder(now);
-    }
-    function getNepaliDatePlaceholder() {
-      return 'साल २०८२'; // placeholder – replace with real conversion if needed
-    }
-    setInterval(updateTimeAndDate, 1000);
-    updateTimeAndDate();
-
-    /* ===== Flag hide on scroll ===== */
-    const flag = document.getElementById('nepal-flag');
-    window.addEventListener('scroll', () => {
-      flag.classList.toggle('hide-flag', window.scrollY > 50);
-    });
-    /* ===== Auto Redirect to Nepali Typing Center ===== */
-    setTimeout(function() {
-      window.location.href = 'blog,html';
-    }, 3000); // Redirect after 3 seconds
-  </script>
 </body>
 </html>
