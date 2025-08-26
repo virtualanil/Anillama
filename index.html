@@ -3,69 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Welcome to anil lama portfolio</title>
+  <meta name="description" content="Anil Lama Portfolio - Founder of Nepali Typing Center, L1 Lead at Fonepay, and Digital Payment Enthusiast." />
+  <meta name="author" content="Anil Lama" />
+  <title>Anil Lama | Portfolio</title>
+  
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
- <style>
-    /* ---------- Clock widget ---------- */
-    #clock-widget {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      background: #f9f9f9;
-      color: #333;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      z-index: 1000;
-      text-align: right;
-      line-height: 1.4;
-    }
-    #clock { font-weight: 600; }
-    #date { font-size: 0.7rem; color: #666; }
-    #nepali-date { font-size: 0.7rem; color: #444; font-weight: 500; }
-
-    /* ---------- Nepal flag ---------- */
-    #nepal-flag {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100px;
-      height: auto;
-      pointer-events: none;
-      animation: wave 3s ease-in-out infinite;
-      transform-origin: 20% 50%;
-      transition: opacity 0.3s ease;
-    }
-    @keyframes wave {
-      0% { transform: rotate(0deg); }
-      50% { transform: rotate(2deg); }
-      100% { transform: rotate(0deg); }
-    }
-    .hide-flag { opacity: 0; }
-
-    /* ---------- Global ---------- */
-    body {
-      font-family: "Lato", sans-serif;
-      background-color: #001f3f;
-      color: #333;
-    }
-    h2 {
-      font-family: "Montserrat", sans-serif;
-      font-weight: 700;
-      color: #001f3f;
-    }
-    .container { padding: 50px 15px; }
-    /* Reset */
+    /* ---------- Reset ---------- */
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: "Poppins", sans-serif;
       background-color: #f4f6f8;
       color: #333;
       line-height: 1.6;
@@ -75,145 +29,116 @@
     a {
       text-decoration: none;
       color: inherit;
+      transition: color 0.3s ease;
     }
 
-    /* Header */
+    a:hover {
+      color: #1565c0;
+    }
+
+    /* ---------- Header ---------- */
     header {
-      background-color: #0d47a1; /* Classic Nepali Blue */
+      background-color: #0d47a1;
       color: #fff;
       padding: 30px 20px;
       text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    header::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(90deg, #ffca28, #ff7043, #ab47bc, #26a69a);
-      animation: gradientBorder 5s infinite linear;
-    }
-
-    @keyframes gradientBorder {
-      0% {
-        background-position: 0% 50%;
-      }
-      100% {
-        background-position: 100% 50%;
-      }
     }
 
     header img {
-      width: 120px;
-      height: 120px;
+      width: 130px;
+      height: 130px;
       border-radius: 50%;
-      border: 3px solid #fff;
+      border: 4px solid #fff;
       object-fit: cover;
       margin-bottom: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       transition: transform 0.3s, box-shadow 0.3s;
     }
+
     header img:hover {
       transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     }
 
     header h1 {
-      font-size: 2em;
+      font-size: 2.2rem;
       margin-bottom: 8px;
     }
 
     header h2 {
-      font-weight: normal;
-      font-size: 1.2em;
+      font-weight: 400;
+      font-size: 1.1rem;
       margin-bottom: 15px;
     }
 
-    nav {
-      margin-top: 15px;
+    /* ---------- Social Links ---------- */
+    .social-nav {
+      margin-top: 10px;
     }
 
-    nav a {
-      display: inline-block;
-      margin: 0 15px;
-      padding: 8px 12px;
-      font-weight: 600;
-      border-radius: 4px;
-      background-color: rgba(255, 255, 255, 0.2);
-      transition: background-color 0.3s, transform 0.3s;
+    .social-nav a {
+      margin: 0 8px;
+      font-size: 1.3rem;
+      color: #fff;
+      transition: color 0.3s ease;
     }
 
-    nav a:hover {
-      background-color: rgba(255, 255, 255, 0.4);
-      transform: translateY(-2px);
+    .social-nav a:hover {
+      color: #ffca28;
     }
 
-    /* Sections */
+    /* ---------- Sections ---------- */
     section {
       max-width: 1000px;
       margin: 40px auto;
       padding: 25px;
       background-color: #fff;
       border-radius: 10px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     section:hover {
       transform: translateY(-5px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
     }
 
     section h2 {
       color: #0d47a1;
+      font-size: 1.8rem;
       margin-bottom: 20px;
-      font-size: 1.8em;
-      position: relative;
+      border-bottom: 3px solid #ffca28;
+      display: inline-block;
+      padding-bottom: 5px;
     }
 
-    /* Animated underline for section titles */
-    section h2::after {
-      content: "";
-      display: block;
-      width: 50px;
-      height: 3px;
-      background-color: #ffca28;
-      margin-top: 8px;
-      border-radius: 2px;
-      animation: underlineAnim 2s infinite alternate;
-    }
-
-    @keyframes underlineAnim {
-      0% {
-        width: 20px;
-        opacity: 0.5;
-      }
-      100% {
-        width: 50px;
-        opacity: 1;
-      }
-    }
-
-    /* Content cards */
+    /* ---------- Cards ---------- */
     .card {
       background: #fafafa;
-      padding: 20px;
+      padding: 18px;
       border-radius: 8px;
       margin-top: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      transition: box-shadow 0.3s, transform 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
     }
 
     .card:hover {
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
       transform: translateY(-3px);
     }
 
-    /* Buttons */
+    /* ---------- Certificates ---------- */
+    .certificate-img {
+      width: 80%;
+      max-width: 350px;
+      display: block;
+      margin: 12px auto;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ---------- Buttons ---------- */
     .btn {
       display: inline-block;
       padding: 12px 25px;
@@ -222,7 +147,7 @@
       border-radius: 5px;
       font-weight: 600;
       margin-top: 20px;
-      transition: background-color 0.3s, transform 0.2s;
+      transition: all 0.3s ease;
     }
 
     .btn:hover {
@@ -230,182 +155,217 @@
       transform: translateY(-2px);
     }
 
-    /* Footer */
+    /* ---------- Footer ---------- */
     footer {
       background-color: #0d47a1;
       color: #fff;
-      padding: 20px;
+      padding: 20px 15px;
       text-align: center;
       margin-top: 50px;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
     }
 
-    /* Responsive */
-    @media(max-width: 768px){
-      header, section {
-        padding: 20px;
+    .footer-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 25px;
+      margin-bottom: 10px;
+    }
+
+    .footer-container a {
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      padding: 5px 8px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    /* Icon Color */
+    .footer-container a i {
+      color: #ffca28;
+      transition: transform 0.3s ease;
+    }
+
+    /* Hover Effect */
+    .footer-container a:hover {
+      color: #ffca28;
+    }
+
+    .footer-container a:hover i {
+      transform: rotate(15deg) scale(1.2);
+    }
+
+    /* Underline Animation */
+    .footer-container a::after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      bottom: -3px;
+      left: 0;
+      background-color: #ffca28;
+      transition: width 0.3s ease-in-out;
+    }
+
+    .footer-container a:hover::after {
+      width: 100%;
+    }
+
+    footer p {
+      font-size: 0.85rem;
+      color: #ccc;
+      margin-top: 8px;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 768px) {
+      header img {
+        width: 100px;
+        height: 100px;
       }
-      nav a {
-        display: block;
-        margin: 10px 0;
+
+      .footer-container {
+        flex-direction: column;
+        gap: 12px;
       }
     }
   </style>
-</head>
+</head>	
 <body>
 
-<header>
-  <img src="Amal.jpg" alt="Anil Lama" />
-  <h1>ANIL LAMA (अनिल लामा)</h1>
-  <h2>Founder / Nepali Typing Center / Lead</h2>
-   <!-- Social Media Links -->
-      <nav class="social-nav">
-        <a href="https://www.youtube.com/@anillama9033" aria-label="YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=100005158245674" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.linkedin.com/in/anil-l-3b0a23236/" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
-        <a href="https://www.instagram.com/anil.moktan07?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-  <nav>
-    <a href="#about">About Me</a>
-    <a href="#awards">Awards & Achievements</a>
-    <a href="#education">Education</a>
-    <a href="#training">Training & Certifications</a>
-    <a href="#experience">Experience</a>
-    <a href="#contact">Contact</a>
-    <a href="#Nepali Typing Converter">Nepali Typing Converter</a>
-  </nav>
+  <!-- Header -->
+  <header>
+    </div>
+    <img src="Amal.jpg" alt="Anil Lama" />
+    <h1>ANIL LAMA (अनिल लामा)</h1>
+    <h2>Founder | Nepali Typing Center | L1 Lead at Fonepay</h2>
 
-</header>
+    <!-- Social Media Links -->
+    <div class="social-nav">
+      <a href="https://www.youtube.com/@anillama9033" target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.facebook.com/profile.php?id=100005158245674" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.linkedin.com/in/anil-l-3b0a23236/" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://www.instagram.com/anil.moktan07" target="_blank"><i class="fab fa-instagram"></i></a>
+    </div>
+<div class="footer-container">
+      <a href="#about"><i class="fas fa-user"></i> About</a>
+      <a href="#awards"><i class="fas fa-award"></i> Awards</a>
+      <a href="#education"><i class="fas fa-graduation-cap"></i> Education</a>
+      <a href="#training"><i class="fas fa-certificate"></i> Certifications</a>
+      <a href="#experience"><i class="fas fa-briefcase"></i> Experience</a>
+      <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+      <a href="#typing"><i class="fas fa-keyboard"></i> Typing Tool</a>
+  </header>
 
-<!-- About Me -->
-<section id="about">
-  <h2>About Me</h2>
-  <p> Welcome to my portfolio! I am Anil Lama, an L1 Lead at Fonepay, dedicated to driving efficiency and innovation in the digital payment sector. With a strong work ethic and a passion for technology, I thrive in fast-paced environments, ensuring seamless operations and delivering impactful solutions.
- </p>
-      <p>
-        My role at Fonepay allows me to collaborate with teams, optimize processes, and contribute to the growth of digital transactions. I take pride in my ability to solve challenges effectively, maintain high professional standards, and continuously strive for excellence.
-      </p>
-      <p>
-        Hard‑working and goal‑oriented, I am always eager to learn, adapt, and make a meaningful difference in the fintech industry.
-      </p>
-      <p>
-        To build a career in an organization where I can prove my abilities by accepting challenges, fulfilling organizational goals, and climbing the career ladder through continuous learning and commitment.
-      </p>
-
-</section>
-
-<!-- Awards & Achievements -->
-<section id="awards">
-  <h2>Awards & Achievements</h2>
-  <div class="card">
-    <h3>Quarterly Impact Award - 2024</h3>
+  <!-- About Section -->
+  <section id="about">
+    <h2>About Me</h2>
     <p>
-          I am honored to have received the Quarterly Impact Award, recognizing my dedication and contributions at Fonepay. This achievement reflects my commitment to excellence, problem‑solving, and driving meaningful results. <a href="https://www.linkedin.com/posts/fonepaynepal_hardwork-dedication-impact-activity-7339135682180800513-Jhej/?utm_source=share&utm_medium=member_desktop&rcm=ACoAADriUHQB5BX_7Tab0Y0KOWYze98IrMmN4wA" target="_blank">Click Here</a>
-        </p>
-</div>
+      Welcome to my portfolio! I am <strong>Anil Lama</strong>, as an L1 Lead at Fonepay, dedicated to driving efficiency and innovation in the digital payment sector. With a strong work ethic and a passion for technology, I thrive in fast-paced environments, ensuring seamless operations and delivering impactful solutions.
+    </p>
+    <p>
+      I enjoy solving challenges, improving processes, and continuously enhancing digital experiences.
+    </p>
+  </section>
 
-     <div class="card">
-    <h3>Nepali Typing Center - My First Project</h3>
-    <p>I successfully launched and manage the Nepali Typing Center, which is now running smoothly on Google Marketplace. Through strategic SEO optimization, I ensured high visibility, making it easier for users to find and utilize our services. <a href="https://g.co/kgs/sqaEEzb" target="_blank">Check Here</a>
-        </p>
-    
-  </div>
-</section>
+  <!-- Awards Section -->
+  <section id="awards">
+    <h2>Awards & Achievements</h2>
+    <div class="card">
+      <h3>Quarterly Impact Award - 2024</h3>
+      <p>
+        I am honored to have received the Quarterly Impact Award, recognizing my dedication and contributions at Fonepay.  
+        <a href="https://www.linkedin.com/posts/fonepaynepal_hardwork-dedication-impact-activity-7339135682180800513-Jhej/" target="_blank"><strong>View Achievement</strong></a>
+      </p>
+    </div>
+    <div class="card">
+      <h3>Nepali Typing Center</h3>
+      <p>
+        I successfully launched and manage the Nepali Typing Center, which is now running smoothly on Google Marketplace.  
+        <a href="https://g.co/kgs/sqaEEzb" target="_blank"><strong>Check It Out</strong></a>
+      </p>
+    </div>
+  </section>
 
-<!-- Education -->
-<section id="education">
-  <h2>Education</h2>
+  <!-- Education -->
+  <section id="education">
+    <h2>Education</h2>
+    <div class="card">
+      <h3>Bachelor in Social Work (BSW)</h3>
+      <p>Tribhuvan University | 2020 – 2025 (Expected)</p>
+    </div>
+    <div class="card">
+      <h3>Higher Secondary (12th Grade)</h3>
+      <p>Unique College | 2018 – 2020</p>
+    </div>
+  </section>
 
-  <div class="card">
-    <h3>Bachelor in Social Work (BSW)</h3>
-    <p><strong>Tribhuvan University</strong> – 2020 – 2025 (expected)</p>
-        <p>Currently in final year; anticipated completion July 2025.</p>
-  </div>
+  <!-- Training & Certifications -->
+  <section id="training">
+    <h2>Training & Certifications</h2>
+    <div class="card">
+      <h3>Microsoft Excel 101</h3>
+      <p>Satyava Digital Class – 2023</p>
+      <img src="excel.png" alt="Microsoft Excel Certificate" class="certificate-img" />
+    </div>
+    <div class="card">
+      <h3>Google Analytics Certification</h3>
+      <p>Issued by Google Skillshop</p>
+      <img src="Google Analytics.png" alt="Google Analytics Certificate" class="certificate-img" />
+    </div>
+    <div class="card">
+      <h3>Photoshop & Editing (Basic)</h3>
+      <p>I have learned Photoshop and image editing through self-study on YouTube, enabling me to create visually appealing graphics, edit images, and enhance digital content.</p>
+    </div>
+  </section>
 
-  <div class="card">
-    <h3>Higher Secondary Education (12th Grade)</h3>
-    <p><strong>Unique College</strong> – 2018 – 2020</p>
-        <p>Completed a diverse curriculum with focus on social work, rural development, and sociology.</p>
-  </div>
-</section>
+  <!-- Experience -->
+  <section id="experience">
+    <h2>Experience</h2>
+    <div class="card">
+      <h3>Manish Enterprises | Accountant & Marketing Manager</h3>
+      <p>2018 – 2022</p>
+      <p>Managed accounting operations and marketing initiatives for four years. Responsible for building customer relationships, providing top-notch services, and contributing to technical aspects of DIY product development.</p>
+    </div>
+    <div class="card">
+      <h3>Roshi Handicraft | Manager</h3>
+      <p>2022</p>
+      <p>Oversaw multiple projects, organized training for women empowerment initiatives, and enhanced personal and professional skills.</p>
+    </div>
+    <div class="card">
+      <h3>Fonepay | L1 Lead</h3>
+      <p>2022 – Present</p>
+      <p>Key role in ensuring seamless digital payment operations, optimizing processes, and contributing to company growth through innovation and efficiency.</p>
+    </div>
+  </section>
 
-<!-- Training & Certifications -->
-<section id="training">
-  <h2>Training & Certifications</h2>
-  <div class="card">
-     <h4>Microsoft Excel 101 Event</h4>
-        <p><strong>Satyava Digital Class</strong> – Completed 2023</p>
-        <img src="excel.png" alt="Microsoft Excel Certificate" class="certificate-img" />
-      </div>
+  <!-- Contact -->
+  <section id="contact">
+    <h2>Contact</h2>
+    <div class="card">
+      <p><strong>Email:</strong> <a href="mailto:lanil9033@gmail.com">lanil9033@gmail.com</a></p>
+      <p><strong>Phone:</strong> <a href="tel:+9779851359109">+977 9851359109</a></p>
+    </div>
+  </section>
 
-  <div class="card">
-    <h3>Google Analytics Certification</h3>
-    <h4>Issued by Google / Skillshop</h4>
-        <p>
-          Demonstrated proficiency in setting up, tracking, analyzing, and interpreting data using Google Analytics. Gained expertise in performance measurement, audience insights, and optimization of digital marketing strategies based on analytics data.
-        </p>
-         <img src="Google Analytics.png" alt="Google Analytics Certification" class="certificate-img" />
-      </div>
-<div class="card">
-    <h3>Photoshop & Editing (Basic)</h3>
-    <p>I have learned Photoshop and image editing through self‑study on YouTube, enabling me to create visually appealing graphics, edit images, and enhance digital content. These skills improve branding, marketing materials, and professional visuals for various projects.</p>
-  </div>
-</section>
-<!-- Experience -->
-<section id="Experience">
-  <h2>Experience</h2>
+  <!-- Nepali Typing Tool -->
+  <section id="typing">
+    <h2>Nepali Typing Converter</h2>
+    <iframe src="https://www.ashesh.com.np/linknepali-unicode3.php?api=492041p542"
+            width="100%" height="360" frameborder="0" scrolling="no"
+            style="border-radius: 8px;"></iframe>
+    <p style="font-size: 12px; text-align: center; margin-top: 8px; color: #888;">© Nepali Unicode</p>
+  </section>
 
-  <div class="card">
-    <h3>Manish Enterprises – Accountant & Marketing Manager (2075‑05‑18 – 2078‑12‑25)</h3>
-        <p>
-          Managed accounting operations and marketing initiatives for four years. Responsible for building customer relationships, providing top‑notch services, and contributing to technical aspects of DIY product development.
-        </p>
-  </div>
-
-  <div class="card">
-     <h3>Fonepay Payment Service, Pulchowk, Lalitpur – L1 Lead (2078‑12‑30 – Present)</h3>
-        <p>
-          Key role in ensuring seamless digital payment operations, optimizing processes, and contributing to company growth through innovation and efficiency.
-        </p>
-  </div>
-
-<div class="card">
-    <h3>Roshi Handicraft, Kavrepalanchok – Manager (2079‑03‑26 – 2079‑11‑15)</h3>
-        <p>
-          Oversaw multiple projects, organized training for women empowerment initiatives, and enhanced personal and professional skills.
-        </p>
-  </div>
-
-</section>
-
-<!-- Contact -->
-<section id="Contact">
-  <h2>Contact</h2>
-
-  <div class="card">
-      <h4>Email: <a href="mailto:lanil9033@gmail.com">lanil9033@gmail.com</h4></p>
-      <h4>Contact Number: <a href="tel:+9779851359109">+977 9851359109</a></h4>
-    
-  </div>
-</section>
-
-<!-- Nepali Typing Converter-->
-<section id="Nepali Typing Converter">
-  <h2>Nepali Typing Converter</h2>
-     <section id="nepali-typing-converter">
-<h3 style="font-size: 32px; font-weight: 600; text-align: center; margin-bottom: 30px; color: #333;">Unicode Converter</h3>
-          <iframe src="https://www.ashesh.com.np/linknepali-unicode3.php?api=492041p542" width="100%" height="360" frameborder="0" scrolling="no" style="border-radius: 8px; width: 100%;"></iframe>
-          <p style="font-size: 12px; color: #888; text-align: center; margin-top: 12px;">© Nepali Unicode</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-    
-  </div>
-</section>
-
- <!-- ====== Footer ====== -->
+  <!-- Footer -->
   <footer>
-    <p>&copy; 2025 Anil Lama. All Rights Reserved.</p>
+    <p>&copy; 2025 Anil Lama | All Rights Reserved.</p>
   </footer>
 
 </body>
