@@ -12,12 +12,7 @@
 
   <style>
     /* ---------- Reset ---------- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: "Poppins", sans-serif;
       background-color: #f4f6f8;
@@ -25,16 +20,8 @@
       line-height: 1.6;
       scroll-behavior: smooth;
     }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-      transition: color 0.3s ease;
-    }
-
-    a:hover {
-      color: #1565c0;
-    }
+    a { text-decoration: none; color: inherit; transition: color 0.3s ease; }
+    a:hover { color: #1565c0; }
 
     /* ---------- Header ---------- */
     header {
@@ -43,7 +30,6 @@
       padding: 30px 20px;
       text-align: center;
     }
-
     header img {
       width: 130px;
       height: 130px;
@@ -51,25 +37,17 @@
       border: 4px solid #fff;
       object-fit: cover;
       margin-bottom: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
       transition: transform 0.3s, box-shadow 0.3s;
     }
+    header img:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+    header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+    header h2 { font-weight: 400; font-size: 1.1rem; margin-bottom: 15px; }
 
-    header img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    header h1 {
-      font-size: 2.2rem;
-      margin-bottom: 8px;
-    }
-
-    header h2 {
-      font-weight: 400;
-      font-size: 1.1rem;
-      margin-bottom: 15px;
-    }
+    /* ---------- Social Links ---------- */
+    .social-nav { margin-top: 10px; }
+    .social-nav a { margin: 0 8px; font-size: 1.3rem; color: #fff; transition: color 0.3s ease; }
+    .social-nav a:hover { color: #ffca28; }
 
     /* ---------- Sections ---------- */
     section {
@@ -78,15 +56,10 @@
       padding: 25px;
       background-color: #fff;
       border-radius: 10px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
-    section:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    }
-
+    section:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.2); }
     section h2 {
       color: #0d47a1;
       font-size: 1.8rem;
@@ -102,14 +75,10 @@
       padding: 18px;
       border-radius: 8px;
       margin-top: 15px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
       transition: all 0.3s ease;
     }
-
-    .card:hover {
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-      transform: translateY(-3px);
-    }
+    .card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.15); transform: translateY(-3px); }
 
     /* ---------- Certificates ---------- */
     .certificate-img {
@@ -119,7 +88,27 @@
       margin: 12px auto;
       border-radius: 8px;
       border: 1px solid #ddd;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-block;
+      padding: 8px 18px;
+      background-color: #0d47a1;
+      color: #fff;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      text-align: center;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #1565c0;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.25);
     }
 
     /* ---------- Footer ---------- */
@@ -129,24 +118,64 @@
       padding: 20px 15px;
       text-align: center;
       margin-top: 50px;
-      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
     }
-
-    footer p {
-      font-size: 0.85rem;
-      color: #ccc;
-      margin-top: 8px;
+    .footer-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 25px;
+      margin-bottom: 10px;
     }
+    .footer-container a {
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      padding: 5px 8px;
+      transition: all 0.3s ease-in-out;
+    }
+    .footer-container a i { color: #ffca28; transition: transform 0.3s ease; }
+    .footer-container a:hover { color: #ffca28; }
+    .footer-container a:hover i { transform: rotate(15deg) scale(1.2); }
+    .footer-container a::after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      bottom: -3px;
+      left: 0;
+      background-color: #ffca28;
+      transition: width 0.3s ease-in-out;
+    }
+    .footer-container a:hover::after { width: 100%; }
+    footer p { font-size: 0.85rem; color: #ccc; margin-top: 8px; }
 
     /* ---------- Responsive ---------- */
     @media (max-width: 768px) {
-      header img {
-        width: 100px;
-        height: 100px;
-      }
+      header img { width: 100px; height: 100px; }
+      .footer-container { flex-direction: column; gap: 12px; }
     }
   </style>
-</head>	
+
+  <!-- Scroll to top on refresh -->
+  <script>
+    window.addEventListener("load", () => {
+      // Scroll to top
+      window.scrollTo(0, 0);
+
+      // Remove hash if any
+      if (window.location.hash) {
+        history.replaceState(null, null, window.location.pathname);
+      }
+    });
+  </script>
+
+</head>
 <body>
 
   <!-- Header -->
@@ -154,17 +183,30 @@
     <img src="Amal.jpg" alt="Anil Lama" />
     <h1>ANIL LAMA (अनिल लामा)</h1>
     <h2>Founder | Nepali Typing Center | L1 Lead at Fonepay</h2>
+
+    <div class="social-nav">
+      <a href="https://www.youtube.com/@anillama9033" target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.facebook.com/profile.php?id=100005158245674" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.linkedin.com/in/anil-l-3b0a23236/" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://www.instagram.com/anil.moktan07" target="_blank"><i class="fab fa-instagram"></i></a>
+    </div>
+
+    <div class="footer-container">
+      <a href="#about"><i class="fas fa-user"></i> About</a>
+      <a href="#awards"><i class="fas fa-award"></i> Awards</a>
+      <a href="#education"><i class="fas fa-graduation-cap"></i> Education</a>
+      <a href="#training"><i class="fas fa-certificate"></i> Certifications</a>
+      <a href="#experience"><i class="fas fa-briefcase"></i> Experience</a>
+      <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+      <a href="#typing"><i class="fas fa-keyboard"></i> Typing Tool</a>
+    </div>
   </header>
 
   <!-- About Section -->
   <section id="about">
     <h2>About Me</h2>
-    <p>
-      Welcome to my portfolio! I am <strong>Anil Lama</strong>, as an L1 Lead at Fonepay, dedicated to driving efficiency and innovation in the digital payment sector. With a strong work ethic and a passion for technology, I thrive in fast-paced environments, ensuring seamless operations and delivering impactful solutions.
-    </p>
-    <p>
-      I enjoy solving challenges, improving processes, and continuously enhancing digital experiences.
-    </p>
+    <p>Welcome to my portfolio! I am <strong>Anil Lama</strong>, as an L1 Lead at Fonepay, dedicated to driving efficiency and innovation in the digital payment sector. With a strong work ethic and a passion for technology, I thrive in fast-paced environments, ensuring seamless operations and delivering impactful solutions.</p>
+    <p>I enjoy solving challenges, improving processes, and continuously enhancing digital experiences.</p>
   </section>
 
   <!-- Awards Section -->
@@ -172,21 +214,18 @@
     <h2>Awards & Achievements</h2>
     <div class="card">
       <h3>Quarterly Impact Award - 2024</h3>
-      <p>
-        I am honored to have received the Quarterly Impact Award, recognizing my dedication and contributions at Fonepay.  
-        <a href="https://www.linkedin.com/posts/fonepaynepal_hardwork-dedication-impact-activity-7339135682180800513-Jhej/" target="_blank"><strong>View Achievement</strong></a>
-      </p>
+      <p>I am honored to have received the Quarterly Impact Award, recognizing my dedication and contributions at Fonepay.</p>
+      <a href="https://www.linkedin.com/posts/fonepaynepal_hardwork-dedication-impact-activity-7339135682180800513-Jhej/" target="_blank" class="btn">View Achievement</a>
     </div>
+
     <div class="card">
       <h3>Nepali Typing Center</h3>
-      <p>
-        I successfully launched and manage the Nepali Typing Center, which is now running smoothly on Google Marketplace.  
-        <a href="https://g.co/kgs/sqaEEzb" target="_blank"><strong>Check It Out</strong></a>
-      </p>
+      <p>I successfully launched and manage the Nepali Typing Center, which is now running smoothly on Google Marketplace.</p>
+      <a href="https://g.co/kgs/sqaEEzb" target="_blank" class="btn">Check It Out</a>
     </div>
   </section>
 
-  <!-- Education -->
+  <!-- Education Section -->
   <section id="education">
     <h2>Education</h2>
     <div class="card">
@@ -199,7 +238,7 @@
     </div>
   </section>
 
-  <!-- Training & Certifications -->
+  <!-- Training Section -->
   <section id="training">
     <h2>Training & Certifications</h2>
     <div class="card">
@@ -218,7 +257,7 @@
     </div>
   </section>
 
-  <!-- Experience -->
+  <!-- Experience Section -->
   <section id="experience">
     <h2>Experience</h2>
     <div class="card">
@@ -238,7 +277,7 @@
     </div>
   </section>
 
-  <!-- Contact -->
+  <!-- Contact Section -->
   <section id="contact">
     <h2>Contact</h2>
     <div class="card">
@@ -247,7 +286,7 @@
     </div>
   </section>
 
-  <!-- Nepali Typing Tool -->
+  <!-- Nepali Typing Tool Section -->
   <section id="typing">
     <h2>Nepali Typing Converter</h2>
     <iframe src="https://www.ashesh.com.np/linknepali-unicode3.php?api=492041p542"
