@@ -1,40 +1,573 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags and other necessary elements -->
-    <title>Blog - Anil Lama</title>
-    <!-- Include CSS stylesheets -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepali Typing Center | Professional Typing Services</title>
+    <!-- Importing Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Importing FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --primary-color: #0056b3; /* Professional Blue */
+            --secondary-color: #dc143c; /* Nepali Flag Red Accent */
+            --dark-text: #333333;
+            --light-text: #666666;
+            --bg-light: #f9f9f9;
+            --white: #ffffff;
+            --shadow: 0 5px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background-color: var(--white);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- UTILITIES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-radius: 5px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #004494;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #b01132;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark-text);
+            margin-bottom: 10px;
+        }
+
+        .section-title span {
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--secondary-color);
+            margin: 0 auto;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo span {
+            color: var(--secondary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* --- HERO SECTION --- */
+        #hero {
+            background: linear-gradient(rgba(0, 86, 179, 0.9), rgba(0, 86, 179, 0.8)), url('https://picsum.photos/seed/typing/1920/1080');
+            background-size: cover;
+            background-position: center;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        /* --- SERVICES --- */
+        #services {
+            padding: 80px 0;
+            background-color: var(--bg-light);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: var(--white);
+            padding: 40px 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .service-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .service-card p {
+            color: var(--light-text);
+        }
+
+        /* --- PRICING --- */
+        #pricing {
+            padding: 80px 0;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .price-card {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .price-card.featured {
+            background-color: var(--primary-color);
+            color: var(--white);
+            transform: scale(1.05);
+            border: none;
+            box-shadow: var(--shadow);
+        }
+
+        .price-card.featured p, 
+        .price-card.featured h3 {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 20px 0;
+            color: var(--dark-text);
+        }
+
+        .price-card.featured .price {
+            color: var(--white);
+        }
+
+        .price span {
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .features-list {
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .features-list li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features-list li i {
+            color: var(--secondary-color);
+        }
+
+        /* --- CONTACT --- */
+        #contact {
+            padding: 80px 0;
+            background-color: var(--bg-light);
+        }
+
+        .contact-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 50px;
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            margin-right: 20px;
+        }
+
+        .contact-form {
+            flex: 1;
+            min-width: 300px;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #222;
+            color: #fff;
+            padding: 50px 0 20px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .footer-links {
+            margin-bottom: 30px;
+        }
+
+        .footer-links a {
+            margin: 0 15px;
+            color: #ccc;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .copyright {
+            border-top: 1px solid #444;
+            padding-top: 20px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; /* In a real app, add JS to toggle */
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            .price-card.featured {
+                transform: scale(1);
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation bar and other header elements -->
-    
-    <!-- Blog content -->
-    <div class="container">
-        <h2>Latest Blog Posts</h2>
-        <div class="blog-post">
-            <h3>How Online Helpers Are Streamlining Our Digital Lives</h3>
-            <p>Date: January 15, 2024</p>
-            <p>Author: Anil Lama</p>
-            <p>In today's fast-paced world, the digital landscape is constantly evolving, and with it comes a multitude of tasks and responsibilities. Enter the online helper – a digital ally designed to simplify our lives and boost productivity.In today's fast-paced world, the digital landscape is constantly evolving, and with it comes a multitude of tasks and responsibilities. Enter the online helper – a digital ally designed to simplify our lives and boost productivity.
-Introduction:
-Online helpers, ranging from productivity tools to virtual assistants, play a vital role in our daily routines. They offer solutions to complex problems, streamline workflows, and empower users to achieve more in less time.Main Points:
 
-Productivity Tools: From task management apps to note-taking software, productivity tools keep us organized and focused. They help us prioritize tasks, set deadlines, and collaborate seamlessly with others.
-Virtual Assistants: Virtual assistants like Siri, Alexa, and Google Assistant are always at our beck and call, ready to answer questions, schedule appointments, and perform tasks with just a simple voice command.
-Collaborative Platforms: Online collaborative platforms such as Google Workspace and Microsoft Teams facilitate teamwork by providing shared workspaces, real-time editing capabilities, and communication channels.
-Conclusion:
-Online helpers have become indispensable companions in our digital lives, offering efficiency, convenience, and innovation at our fingertips. By harnessing the power of these tools and platforms, we can navigate the complexities of the digital world with ease.
-
-Call to Action:
-Have you experienced the benefits of online helpers in your daily routine? Share your favorite tools and tips in the comments below, and let's continue to empower each other in our digital journeys.
-
-Publish and Promote:
-Once you're satisfied with your post, hit the publish button and share it across your social networks. Together, let's embrace the era of online helpers and unlock new possibilities in our digital endeavors.</p>
-
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">Nepali<span>Typing</span>Center</a>
+                <ul class="nav-links">
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
         </div>
-        <!-- More blog posts can be added similarly -->
-    </div>
-    
-    <!-- Footer and other necessary elements -->
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="hero">
+            <div class="container hero-content">
+                <h1>Fast & Accurate Typing Services in Nepal</h1>
+                <p>We specialize in Nepali and English typing for government documents, forms, thesis, and legal papers.</p>
+                <a href="#contact" class="btn btn-secondary">Start Your Order</a>
+                <a href="#services" class="btn" style="margin-left: 10px; background-color: transparent; border: 2px solid #fff;">View Services</a>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Our Services</h2>
+                    <span></span>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-keyboard"></i></div>
+                        <h3>Nepali & English Typing</h3>
+                        <p>Professional typing for official documents, applications, and manuscripts with high accuracy.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-file-pdf"></i></div>
+                        <h3>PDF to Word</h3>
+                        <p>Convert your non-editable PDF documents into editable Word/Excel formats while keeping formatting.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-id-card"></i></div>
+                        <h3>Form Filling</h3>
+                        <p>We help fill out complicated online forms for Loksewa, Passport, and Visa applications.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Simple Pricing</h2>
+                    <span></span>
+                </div>
+                <div class="pricing-grid">
+                    <!-- Standard -->
+                    <div class="price-card">
+                        <h3>Standard</h3>
+                        <div class="price">Rs. 95<span>/page</span></div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> English Typing</li>
+                            <li><i class="fas fa-check"></i> Basic Formatting</li>
+                            <li><i class="fas fa-check"></i> 24hr Delivery</li>
+                        </ul>
+                        <a href="#contact" class="btn">Choose Plan</a>
+                    </div>
+                    <!-- Premium -->
+                    <div class="price-card featured">
+                        <h3>Premium</h3>
+                        <div class="price">Rs. 500<span>/page</span></div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Nepali (Preeti/Unicode)</li>
+                            <li><i class="fas fa-check"></i> Complex Formatting</li>
+                            <li><i class="fas fa-check"></i> Scanned PDF to Word</li>
+                            <li><i class="fas fa-check"></i> Express Delivery</li>
+                        </ul>
+                        <a href="#contact" class="btn btn-secondary">Choose Plan</a>
+                    </div>
+                    <!-- Bulk -->
+                    <div class="price-card">
+                        <h3>Project / Thesis</h3>
+                        <div class="price">Negotiable</div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Complete Thesis Typing</li>
+                            <li><i class="fas fa-check"></i> Cover Page Design</li>
+                            <li><i class="fas fa-check"></i> Print Ready PDF</li>
+                        </ul>
+                        <a href="#contact" class="btn">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Contact Us</h2>
+                    <span></span>
+                </div>
+                <div class="contact-wrapper">
+                    <!-- Info Side -->
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                            <div>
+                                <h4>Phone</h4>
+                                <p>+977 9851359109</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                            <div>
+                                <h4>Email</h4>
+                                <p>nepalitypingcenter@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div>
+                                <h4>Location</h4>
+                                <p>Kathmandu, Nepal (Remote Work)</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-clock"></i></div>
+                            <div>
+                                <h4>Opening Hours</h4>
+                                <p>Sun - Sat: 9:00 AM - 7:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Side -->
+                    <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you! This is a demo form. In a real website, this would send an email.');">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message / Requirements</label>
+                            <textarea id="message" rows="5" placeholder="Describe your typing needs..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+            </div>
+            <p class="copyright">&copy; 2023 Anil Lama. All Rights Reserved.</p>
+        </div>
+    </footer>
+
 </body>
 </html>
