@@ -1,573 +1,397 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nepali Typing Center | Professional Typing Services</title>
-    <!-- Importing Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- Importing FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* --- CSS VARIABLES & RESET --- */
-        :root {
-            --primary-color: #0056b3; /* Professional Blue */
-            --secondary-color: #dc143c; /* Nepali Flag Red Accent */
-            --dark-text: #333333;
-            --light-text: #666666;
-            --bg-light: #f9f9f9;
-            --white: #ffffff;
-            --shadow: 0 5px 15px rgba(0,0,0,0.1);
-            --transition: all 0.3s ease;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nepali Typing Center</title>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        html {
-            scroll-behavior: smooth;
-        }
+<!-- SEO -->
+<meta name="description" content="Fast & Accurate Nepali & English typing, PDF to Word, Thesis Typing, and Form Filling services in Nepal.">
+<meta name="keywords" content="Nepali typing, Unicode typing, typing service Nepal, PDF to Word Nepal, thesis typing Nepal, government form typing, PDF to Word, typing, Near Me, Nepali typing center">
+<meta name="author" content="Nepali Typing Center">
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.6;
-            color: var(--dark-text);
-            background-color: var(--white);
-        }
+<style>
+:root{
+--primary:#0057ff;
+--accent:#ff1744;
+--glass:rgba(255,255,255,.08); /* Slightly more transparent */
+--shadow:0 25px 50px rgba(0,0,0,.15);
+--hover-glow:0 0 30px rgba(0,87,255,.6);
+}
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+font-family:'Poppins',sans-serif;
+background:#020b2c;
+color:white;
+overflow-x:hidden;
+}
 
-        ul {
-            list-style: none;
-        }
+/* HEADER */
+header{
+position:sticky;top:0;z-index:1000;
+background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
+box-shadow:0 10px 25px rgba(0,0,0,.4);
+}
+.container{max-width:1200px;margin:auto;padding:0 25px;}
+nav{display:flex;justify-content:space-between;align-items:center;height:80px;}
+.logo{
+font-size:1.7rem;font-weight:700;
+background:linear-gradient(90deg,#fff,#91c2ff);
+-webkit-background-clip:text;color:transparent;
+}
+.logo span{color:var(--accent);}
+.nav-links{display:flex;gap:30px;}
+.nav-links a{color:white;font-weight:500;transition:.3s;}
+.nav-links a:hover{color:#91c2ff;}
+.mobile-menu-btn{display:none;color:white;font-size:1.7rem;cursor:pointer;}
 
-        /* --- UTILITIES --- */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+/* HERO */
+#hero{
+height:85vh;display:flex;align-items:center;text-align:center;
+/* Using a generic dark background since local file won't load */
+background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('https://picsum.photos/seed/tech/1920/1080') center/cover no-repeat;
+position:relative;
+}
+.hero-content{position:relative;z-index:2;}
+.hero-content h1{
+font-size:3.2rem;background:linear-gradient(90deg,#6e00ff,#00b2ff,#ff1744);
+-webkit-background-clip:text;color:transparent;
+animation:titleGlow 6s infinite alternate;
+}
+@keyframes titleGlow{0%{letter-spacing:0px;}100%{letter-spacing:1.5px;}}
+.hero-content p{font-size:1.2rem;opacity:1;margin:15px 0 30px;color:white;}
+.btn{
+padding:12px 32px;border-radius:999px;border:none;cursor:pointer;font-weight:600;
+background:linear-gradient(135deg,#0057ff,#6e00ff);color:white;
+box-shadow:0 0 20px rgba(0,132,255,.4);transition:.4s;
+}
+.btn:hover{
+transform:translateY(-3px) scale(1.03);
+box-shadow:0 0 35px rgba(0,132,255,.7);
+}
+.btn-secondary{
+background:linear-gradient(135deg,#ff1744,#ff5f7b);
+box-shadow:0 0 20px rgba(255,23,68,.4);
+}
 
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background-color: var(--primary-color);
-            color: var(--white);
-            border-radius: 5px;
-            font-weight: 600;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-        }
+/* SECTIONS */
+section{padding:90px 0;}
+.section-title{text-align:center;margin-bottom:60px;}
+.section-title h2{font-size:2.6rem;color:white;}
+.section-title span{display:block;width:80px;height:4px;background:var(--accent);margin:10px auto;}
 
-        .btn:hover {
-            background-color: #004494;
-            transform: translateY(-2px);
-        }
+/* GLASS CARD */
+.glass{
+background:var(--glass);
+backdrop-filter:blur(12px);
+border-radius:18px;
+border:1px solid rgba(255,255,255,.15);
+box-shadow:var(--shadow);
+transition:transform 0.3s, box-shadow 0.3s;
+}
 
-        .btn-secondary {
-            background-color: var(--secondary-color);
-        }
+/* SERVICES */
+.services-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:30px;
+}
+.service-card{padding:45px 35px;text-align:center;color:white;position:relative;overflow:hidden;transition:.4s;}
+.service-card:hover{transform:translateY(-10px) scale(1.02);}
+.service-card::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(0,89,255,.2),rgba(255,23,68,.2));opacity:0;transition:.4s;}
+.service-card:hover::after{opacity:1;}
+.service-icon{font-size:3.2rem;color:var(--accent);margin-bottom:15px;}
+.service-card h3{color:white;font-size:1.4rem;margin-bottom:5px;}
+.service-card p{color:white;}
 
-        .btn-secondary:hover {
-            background-color: #b01132;
-        }
+/* PRICING CARDS */
+.pricing-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:30px;
+}
+.price-card{
+padding:45px;text-align:center;background:rgba(255,255,255,0.05);
+border-radius:20px;backdrop-filter:blur(15px);
+border:1px solid rgba(255,255,255,.15);
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+transition:all 0.3s ease;color:white;
+}
+.price-card:hover{
+transform:translateY(-10px) scale(1.03);
+box-shadow:0 0 35px rgba(0,132,255,.6);
+}
+.price-card h3{font-size:1.8rem;color:white;margin-bottom:15px;}
+.price{font-size:2rem;color:white;margin:15px 0;}
+.features-list{list-style:none;text-align:left;margin:20px 0;padding:0;}
+.features-list li{margin:12px 0;font-size:0.95rem;color:white;display:flex;align-items:center;gap:10px;}
+.features-list i{color:var(--accent);}
+.price-card .btn{margin-top:15px;width:100%;padding:10px;}
 
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-        }
+/* CONTACT SECTION - FIXED ALIGNMENT */
+#contact{background:#020b2c;padding:90px 0;}
+.contact-wrapper{
+display:flex;
+justify-content:center; /* Centers the card horizontally */
+align-items:center;     /* Centers content vertically */
+flex-wrap:wrap;
+gap:40px;
+}
 
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--dark-text);
-            margin-bottom: 10px;
-        }
+.contact-card{
+/* Fixed sizing and structure */
+width: 100%;
+max-width: 450px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(15px);
+border-radius:20px;
+padding:50px 40px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+border:1px solid rgba(255,255,255,.1);
+margin: 0 auto; /* Ensures center if alone */
+}
 
-        .section-title span {
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: var(--secondary-color);
-            margin: 0 auto;
-        }
+.contact-card-header{
+text-align: center;
+margin-bottom: 40px;
+}
+.contact-card-header i{
+font-size:3rem;color:var(--accent);margin-bottom:15px;
+display:block;
+}
+.contact-card-header h3{
+font-size:1.8rem;font-weight:600;color:white;
+}
 
-        /* --- HEADER --- */
-        header {
-            background: var(--white);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+/* The list container */
+.contact-items-list{
+display: flex;
+flex-direction: column;
+gap: 25px; /* Space between each item */
+}
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 80px;
-        }
+.contact-item{
+display: flex;
+align-items: center; /* Vertically centers icon and text */
+gap: 20px;          /* Space between icon and text */
+}
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
+.contact-icon{
+width:55px;
+height:55px;
+border-radius:50%;
+background:var(--primary);
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+font-size:1.4rem;
+flex-shrink:0; /* Prevents icon from squishing */
+}
 
-        .logo span {
-            color: var(--secondary-color);
-        }
+.contact-text{
+display: flex;
+flex-direction: column;
+justify-content: center;
+}
 
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
+.contact-text h4{
+font-size:1.1rem;
+font-weight:600;
+color:white;
+margin-bottom: 4px;
+}
+.contact-text p{
+font-size:0.95rem;
+color:rgba(255,255,255,0.7); /* Slightly lighter for hierarchy */
+margin: 0;
+}
 
-        .nav-links a {
-            font-weight: 500;
-            transition: var(--transition);
-        }
+/* FOOTER */
+footer{background:#000;padding:45px 0;text-align:center;color:white;}
+.reveal{opacity:0;transform:translateY(40px);transition:.7s;}
+.show{opacity:1;transform:translateY(0);}
 
-        .nav-links a:hover {
-            color: var(--primary-color);
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* --- HERO SECTION --- */
-        #hero {
-            background: linear-gradient(rgba(0, 86, 179, 0.9), rgba(0, 86, 179, 0.8)), url('https://picsum.photos/seed/typing/1920/1080');
-            background-size: cover;
-            background-position: center;
-            height: 80vh;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: var(--white);
-        }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-
-        /* --- SERVICES --- */
-        #services {
-            padding: 80px 0;
-            background-color: var(--bg-light);
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .service-card {
-            background: var(--white);
-            padding: 40px 30px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .service-icon {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-
-        .service-card h3 {
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .service-card p {
-            color: var(--light-text);
-        }
-
-        /* --- PRICING --- */
-        #pricing {
-            padding: 80px 0;
-        }
-
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .price-card {
-            border: 1px solid #eee;
-            border-radius: 10px;
-            padding: 40px;
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .price-card.featured {
-            background-color: var(--primary-color);
-            color: var(--white);
-            transform: scale(1.05);
-            border: none;
-            box-shadow: var(--shadow);
-        }
-
-        .price-card.featured p, 
-        .price-card.featured h3 {
-            color: rgba(255,255,255,0.9);
-        }
-
-        .price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 20px 0;
-            color: var(--dark-text);
-        }
-
-        .price-card.featured .price {
-            color: var(--white);
-        }
-
-        .price span {
-            font-size: 1rem;
-            font-weight: 400;
-        }
-
-        .features-list {
-            margin: 30px 0;
-            text-align: left;
-        }
-
-        .features-list li {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .features-list li i {
-            color: var(--secondary-color);
-        }
-
-        /* --- CONTACT --- */
-        #contact {
-            padding: 80px 0;
-            background-color: var(--bg-light);
-        }
-
-        .contact-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 50px;
-        }
-
-        .contact-info {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .contact-icon {
-            width: 60px;
-            height: 60px;
-            background-color: var(--primary-color);
-            color: var(--white);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            margin-right: 20px;
-        }
-
-        .contact-form {
-            flex: 1;
-            min-width: 300px;
-            background: var(--white);
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        /* --- FOOTER --- */
-        footer {
-            background-color: #222;
-            color: #fff;
-            padding: 50px 0 20px;
-            text-align: center;
-        }
-
-        .footer-logo {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-
-        .footer-links {
-            margin-bottom: 30px;
-        }
-
-        .footer-links a {
-            margin: 0 15px;
-            color: #ccc;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--secondary-color);
-        }
-
-        .copyright {
-            border-top: 1px solid #444;
-            padding-top: 20px;
-            color: #888;
-            font-size: 0.9rem;
-        }
-
-        /* --- RESPONSIVE --- */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none; /* In a real app, add JS to toggle */
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-            .price-card.featured {
-                transform: scale(1);
-            }
-        }
-    </style>
+/* MOBILE */
+@media(max-width:768px){
+.nav-links{position:absolute;top:80px;right:0;width:100%;background:#000;padding:20px 0;display:none;flex-direction:column;text-align:center;}
+.nav-links.active{display:flex;}
+.mobile-menu-btn{display:block;}
+.hero-content h1{font-size:2.4rem;}
+.price-card{max-width:90%;margin:auto;margin-bottom:20px;}
+.contact-card{padding: 30px;}
+.contact-item { gap: 15px; }
+.contact-icon { width: 45px; height: 45px; font-size: 1.2rem; }
+}
+</style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <nav>
-                <a href="#" class="logo">Nepali<span>Typing</span>Center</a>
-                <ul class="nav-links">
-                    <li><a href="#hero">Home</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#pricing">Pricing</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                <div class="mobile-menu-btn">
-                    <i class="fas fa-bars"></i>
-                </div>
-            </nav>
-        </div>
-    </header>
+<header>
+<div class="container">
+<nav>
+<a class="logo">Nepali<span>Typing</span>Center</a>
+<ul class="nav-links">
+<li><a href="#hero">Home</a></li>
+<li><a href="#services">Services</a></li>
+<li><a href="#pricing">Pricing</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+<div class="mobile-menu-btn"><i class="fa fa-bars"></i></div>
+</nav>
+</div>
+</header>
 
-    <!-- Main Content -->
-    <main>
-        <!-- Hero Section -->
-        <section id="hero">
-            <div class="container hero-content">
-                <h1>Fast & Accurate Typing Services in Nepal</h1>
-                <p>We specialize in Nepali and English typing for government documents, forms, thesis, and legal papers.</p>
-                <a href="#contact" class="btn btn-secondary">Start Your Order</a>
-                <a href="#services" class="btn" style="margin-left: 10px; background-color: transparent; border: 2px solid #fff;">View Services</a>
-            </div>
-        </section>
+<!-- HERO -->
+<section id="hero">
+<div class="container hero-content">
+<h1>Professional Nepali & English Typing Services</h1>
+<p>Government • Legal • Thesis • Documents • Online Forms</p>
 
-        <!-- Services Section -->
-        <section id="services">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Our Services</h2>
-                    <span></span>
-                </div>
-                <div class="services-grid">
-                    <div class="service-card">
-                        <div class="service-icon"><i class="fas fa-keyboard"></i></div>
-                        <h3>Nepali & English Typing</h3>
-                        <p>Professional typing for official documents, applications, and manuscripts with high accuracy.</p>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-icon"><i class="fas fa-file-pdf"></i></div>
-                        <h3>PDF to Word</h3>
-                        <p>Convert your non-editable PDF documents into editable Word/Excel formats while keeping formatting.</p>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-icon"><i class="fas fa-id-card"></i></div>
-                        <h3>Form Filling</h3>
-                        <p>We help fill out complicated online forms for Loksewa, Passport, and Visa applications.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+<a href="#contact" class="btn btn-secondary">Start Now</a>
+<a href="#services" class="btn" style="margin-left:10px;border:2px solid white;background:transparent;">Explore Services</a>
+</div>
+</section>
 
-        <!-- Pricing Section -->
-        <section id="pricing">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Simple Pricing</h2>
-                    <span></span>
-                </div>
-                <div class="pricing-grid">
-                    <!-- Standard -->
-                    <div class="price-card">
-                        <h3>Standard</h3>
-                        <div class="price">Rs. 95<span>/page</span></div>
-                        <ul class="features-list">
-                            <li><i class="fas fa-check"></i> English Typing</li>
-                            <li><i class="fas fa-check"></i> Basic Formatting</li>
-                            <li><i class="fas fa-check"></i> 24hr Delivery</li>
-                        </ul>
-                        <a href="#contact" class="btn">Choose Plan</a>
-                    </div>
-                    <!-- Premium -->
-                    <div class="price-card featured">
-                        <h3>Premium</h3>
-                        <div class="price">Rs. 500<span>/page</span></div>
-                        <ul class="features-list">
-                            <li><i class="fas fa-check"></i> Nepali (Preeti/Unicode)</li>
-                            <li><i class="fas fa-check"></i> Complex Formatting</li>
-                            <li><i class="fas fa-check"></i> Scanned PDF to Word</li>
-                            <li><i class="fas fa-check"></i> Express Delivery</li>
-                        </ul>
-                        <a href="#contact" class="btn btn-secondary">Choose Plan</a>
-                    </div>
-                    <!-- Bulk -->
-                    <div class="price-card">
-                        <h3>Project / Thesis</h3>
-                        <div class="price">Negotiable</div>
-                        <ul class="features-list">
-                            <li><i class="fas fa-check"></i> Complete Thesis Typing</li>
-                            <li><i class="fas fa-check"></i> Cover Page Design</li>
-                            <li><i class="fas fa-check"></i> Print Ready PDF</li>
-                        </ul>
-                        <a href="#contact" class="btn">Contact Us</a>
-                    </div>
-                </div>
-            </div>
-        </section>
+<!-- SERVICES -->
+<section id="services">
+<div class="container">
+<div class="section-title">
+<h2>Our Services</h2><span></span>
+</div>
 
-        <!-- Contact Section -->
-        <section id="contact">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Contact Us</h2>
-                    <span></span>
-                </div>
-                <div class="contact-wrapper">
-                    <!-- Info Side -->
-                    <div class="contact-info">
-                        <div class="contact-item">
-                            <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
-                            <div>
-                                <h4>Phone</h4>
-                                <p>+977 9851359109</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                            <div>
-                                <h4>Email</h4>
-                                <p>nepalitypingcenter@gmail.com</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                            <div>
-                                <h4>Location</h4>
-                                <p>Kathmandu, Nepal (Remote Work)</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon"><i class="fas fa-clock"></i></div>
-                            <div>
-                                <h4>Opening Hours</h4>
-                                <p>Sun - Sat: 9:00 AM - 7:00 PM</p>
-                            </div>
-                        </div>
-                    </div>
+<div class="services-grid">
+<div class="service-card glass reveal">
+<div class="service-icon"><i class="fas fa-keyboard"></i></div>
+<h3>Nepali & English Typing</h3>
+<p>Fast & accurate typing for official and personal documents.</p>
+</div>
 
-                    <!-- Form Side -->
-                    <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you! This is a demo form. In a real website, this would send an email.');">
-                        <div class="form-group">
-                            <label for="name">Full Name</label>
-                            <input type="text" id="name" placeholder="Enter your name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" placeholder="Enter your email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message / Requirements</label>
-                            <textarea id="message" rows="5" placeholder="Describe your typing needs..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn">Send Message</button>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </main>
+<div class="service-card glass reveal">
+<div class="service-icon"><i class="fas fa-file-pdf"></i></div>
+<h3>PDF to Word</h3>
+<p>Edit scanned & locked PDF documents easily.</p>
+</div>
 
-    <!-- Footer -->
-    <footer>
-            </div>
-            <p class="copyright">&copy; 2023 Anil Lama. All Rights Reserved.</p>
-        </div>
-    </footer>
+<div class="service-card glass reveal">
+<div class="service-icon"><i class="fas fa-id-card"></i></div>
+<h3>Form Filling</h3>
+<p>Driving License, NID, and Online Applications.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+<div class="container">
+<div class="section-title">
+<h2>Simple Pricing</h2><span></span>
+</div>
+
+<div class="pricing-grid">
+<div class="price-card glass reveal">
+<h3>Standard</h3>
+<div class="price">Rs. 95/page</div>
+<ul class="features-list">
+<li><i class="fa fa-check"></i> English Typing</li>
+<li><i class="fa fa-check"></i> Basic Formatting</li>
+<li><i class="fa fa-check"></i> 24hr Delivery</li>
+</ul>
+<a href="#contact" class="btn">Choose Plan</a>
+</div>
+
+<div class="price-card featured glass reveal">
+<h3>Premium</h3>
+<div class="price">Rs. 500/page</div>
+<ul class="features-list">
+<li><i class="fa fa-check"></i> Nepali Unicode / Preeti</li>
+<li><i class="fa fa-check"></i> Complex Formatting</li>
+<li><i class="fa fa-check"></i> Express Delivery</li>
+</ul>
+<a href="#contact" class="btn btn-secondary">Choose Plan</a>
+</div>
+
+<div class="price-card glass reveal">
+<h3>Thesis / Project</h3>
+<div class="price">Negotiable</div>
+<ul class="features-list">
+<li><i class="fa fa-check"></i> Full Project Typing</li>
+<li><i class="fa fa-check"></i> Cover Design</li>
+<li><i class="fa fa-check"></i> Print Ready</li>
+</ul>
+<a href="#contact" class="btn">Contact Us</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+<div class="container">
+<div class="section-title">
+<h2>Contact Us</h2><span></span>
+</div>
+
+<div class="contact-wrapper reveal">
+<div class="contact-card glass">
+<div class="contact-card-header">
+<i class="fas fa-address-book"></i>
+<h3>Nepali Typing Center</h3>
+</div>
+
+<!-- Fixed Structure for Proper Alignment -->
+<div class="contact-items-list">
+<div class="contact-item">
+<div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+<div class="contact-text">
+<h4>Phone</h4>
+<p>+977 9851359109</p>
+</div>
+</div>
+
+<div class="contact-item">
+<div class="contact-icon"><i class="fas fa-envelope"></i></div>
+<div class="contact-text">
+<h4>Email</h4>
+<p>nepalitypingcenter@gmail.com</p>
+</div>
+</div>
+
+<div class="contact-item">
+<div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+<div class="contact-text">
+<h4>Location</h4>
+<p>Kathmandu, Nepal</p>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+<footer>
+<p>© 2026 Nepali Typing Center — All Rights Reserved</p>
+</footer>
+
+<script>
+// Mobile Menu
+const btn=document.querySelector(".mobile-menu-btn");
+const nav=document.querySelector(".nav-links");
+btn.addEventListener("click",()=>nav.classList.toggle("active"));
+
+// Scroll Reveal
+const observer=new IntersectionObserver(entries=>{
+entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("show");});
+});
+document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+</script>
 
 </body>
 </html>
