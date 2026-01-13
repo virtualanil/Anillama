@@ -1,1 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepali Typing Center | Typing Services</title>
+    <!-- Fonts: Outfit for Headings, Inter for Body -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Fast & Accurate Nepali & English typing, PDF to Word, Thesis Typing, and Form Filling services in Nepal.">
+    <meta name="keywords" content="Nepali typing, Unicode typing, typing service Nepal, PDF to Word Nepal, thesis typing Nepal">
+    <meta name="theme-color" content="#050A1F">
 
+    <style>
+        :root {
+            --bg-dark: #050A1F;
+            --bg-card: rgba(20, 30, 60, 0.6);
+            --primary: #00F0FF; /* Neon Cyan */
+            --secondary: #7000FF; /* Neon Purple */
+            --accent: #FF0055; /* Neon Pink */
+            --text-main: #ffffff;
+            --text-muted: #a0aabf;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+
+        /* --- RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- UTILITIES --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 25px; }
+        .flex-center { display: flex; justify-content: center; align-items: center; }
+        .gradient-text {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(5, 10, 31, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: var(--glass-border);
+            transition: 0.3s;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--primary);
+            transition: 0.3s;
+        }
+        
+        .nav-links a:hover::after { width: 100%; }
+
+        .mobile-menu-btn { display: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+        /* --- HERO SECTION --- */
+        #hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* Animated Background */
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(112, 0, 255, 0.15), transparent 60%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 240, 255, 0.1), transparent 40%);
+            animation: pulseBg 10s ease-in-out infinite alternate;
+            z-index: -1;
+        }
+
+        @keyframes pulseBg {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-20px, 20px) scale(1.1); }
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease 0.2s backwards;
+        }
+
+        .btn {
+            padding: 14px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.6);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            margin-left: 15px;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* --- SECTIONS COMMON --- */
+        section { padding: 100px 0; }
+        .section-title {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+        .section-title h2 { font-size: 2.5rem; margin-bottom: 15px; }
+        .section-title .line {
+            width: 60px; height: 4px;
+            background: var(--gradient); 
+            margin: 0 auto;
+            border-radius: 2px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* --- 3D ANIMATED CARDS (Services & Pricing) --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            perspective: 1000px; /* Enable 3D space */
+        }
+
+        .card-3d {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: var(--glass-border);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.1s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
+
+        /* Inner shine effect */
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.1), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .card-3d:hover::before { opacity: 1; }
+
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            transform: translateZ(30px); /* Pushes icon out of card in 3D */
+            transition: 0.3s;
+        }
+
+        .card-3d:hover .card-icon { color: var(--accent); text-shadow: 0 0 15px var(--accent); }
+
+        .card-3d h3 { font-size: 1.5rem; margin-bottom: 15px; transform: translateZ(20px); }
+        .card-3d p { color: var(--text-muted); transform: translateZ(15px); }
+
+        /* Pricing Specifics */
+        .price-tag {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin: 20px 0;
+            transform: translateZ(20px);
+        }
+        
+        .features-list { text-align: left; margin: 20px 0; transform: translateZ(15px); }
+        .features-list li { margin-bottom: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 10px; }
+        .features-list i { color: var(--primary); }
+
+        .featured-card {
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+        }
+
+        /* --- TRANSLITERATOR UI --- */
+        #converter-section {
+            background: rgba(0,0,0,0.3);
+            border-radius: 30px;
+            padding: 50px;
+            border: var(--glass-border);
+            margin-top: 50px;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .input-box textarea {
+            width: 100%;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            resize: none;
+            transition: 0.3s;
+        }
+
+        .input-box textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary);
+            animation: bounceArrow 2s infinite;
+        }
+
+        @keyframes bounceArrow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* --- CONTACT --- */
+        .contact-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .contact-info { flex: 1; min-width: 300px; }
+        .contact-card-ui {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 15px;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+
+        .contact-card-ui:hover {
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .c-icon {
+            width: 50px; height: 50px;
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.2rem;
+        }
+
+        .c-text h4 { color: white; margin-bottom: 5px; }
+        .c-text p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* --- FOOTER --- */
+        footer {
+            border-top: var(--glass-border);
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* --- ANIMATIONS --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .tool-grid { grid-template-columns: 1fr; }
+            .arrow { transform: rotate(90deg); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed; top: 80px; left: 0; width: 100%;
+                background: var(--bg-dark); flex-direction: column;
+                padding: 40px; text-align: center;
+                transform: translateY(-100%); transition: 0.4s;
+            }
+            .nav-links.active { transform: translateY(0); }
+            .mobile-menu-btn { display: block; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .contact-wrapper { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">Nepali<span class="gradient-text">Typing</span>Center</a>
+                <ul class="nav-links">
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section id="hero">
+        <div class="container hero-content">
+            <h1>Professional <span class="gradient-text">Nepali & English</span><br>Typing Services</h1>
+            <p>Government • Legal • Thesis • PDF to Word • Online Forms</p>
+            <div>
+                <a href="#contact" class="btn btn-primary">Start Now <i class="fas fa-arrow-right"></i></a>
+                <a href="#services" class="btn btn-outline">Explore Services</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES (Animated Cards) -->
+    <section id="services">
+        <div class="container">
+            <div class="section-title reveal">
+                <h2>Our Services</h2>
+                <div class="line"></div>
+            </div>
+            
+            <div class="grid-container">
+                <!-- Card 1 -->
+                <div class="card-3d tilt-element">
+                    <i class="fas fa-keyboard card-icon"></i>
+                    <h3>Nepali & English Typing</h3>
+                    <p>High-speed, accurate typing for official documents, legal papers, and personal manuscripts.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="card-3d tilt-element">
+                    <i class="fas fa-file-pdf card-icon"></i>
+                    <h3>PDF to Word</h3>
+                    <p>We convert scanned or locked PDFs into fully editable Word documents preserving the original format.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="card-3d tilt-element">
+                    <i class="fas fa-id-card card-icon"></i>
+                    <h3>Form Filling</h3>
+                    <p>Hassle-free filling of Driving License, NID, VISA, and government online application forms.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING (Animated Cards) -->
+    <section id="pricing">
+        <div class="container">
+            <div class="section-title reveal">
+                <h2>Simple Pricing</h2>
+                <div class="line"></div>
+            </div>
+
+            <div class="grid-container">
+                <!-- Standard -->
+                <div class="card-3d tilt-element">
+                    <h3>Standard</h3>
+                    <div class="price-tag">Rs. 95<span style="font-size:1rem;color:var(--text-muted)">/page</span></div>
+                    <ul class="features-list">
+                        <li><i class="fas fa-check"></i> English Typing</li>
+                        <li><i class="fas fa-check"></i> Basic Formatting</li>
+                        <li><i class="fas fa-check"></i> 24hr Delivery</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline" style="width:100%">Choose Plan</a>
+                </div>
+
+                <!-- Premium (Featured) -->
+                <div class="card-3d featured-card tilt-element">
+                    <div style="position:absolute; top:0; right:0; background:var(--primary); color:black; padding:5px 15px; border-radius:0 20px 0 20px; font-size:0.8rem; font-weight:700;">POPULAR</div>
+                    <h3>Premium</h3>
+                    <div class="price-tag">Rs. 500<span style="font-size:1rem;color:var(--text-muted)">/page</span></div>
+                    <ul class="features-list">
+                        <li><i class="fas fa-check"></i> Nepali Unicode / Preeti</li>
+                        <li><i class="fas fa-check"></i> Complex Formatting</li>
+                        <li><i class="fas fa-check"></i> Express Delivery</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary" style="width:100%">Choose Plan</a>
+                </div>
+
+                <!-- Thesis -->
+                <div class="card-3d tilt-element">
+                    <h3>Thesis / Project</h3>
+                    <div class="price-tag">Negotiable</div>
+                    <ul class="features-list">
+                        <li><i class="fas fa-check"></i> Full Project Typing</li>
+                        <li><i class="fas fa-check"></i> Cover Design</li>
+                        <li><i class="fas fa-check"></i> Print Ready</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline" style="width:100%">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT & TOOL -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-title reveal">
+                <h2>Contact & Tools</h2>
+                <div class="line"></div>
+            </div>
+
+            <div class="contact-wrapper">
+                <!-- Contact Info -->
+                <div class="contact-info">
+                    <div class="contact-card-ui reveal">
+                        <div class="c-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="c-text">
+                            <h4>Phone</h4>
+                            <p>+977 9851359109</p>
+                        </div>
+                    </div>
+                    <div class="contact-card-ui reveal">
+                        <div class="c-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="c-text">
+                            <h4>Email</h4>
+                            <p>nepalitypingcenter@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-card-ui reveal">
+                        <div class="c-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="c-text">
+                            <h4>Location</h4>
+                            <p>Kathmandu, Nepal</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transliterator Tool (Styled) -->
+                <div class="tool-wrapper" style="flex: 1; width:100%;">
+                    <div id="converter-section">
+<h2 style="text-align:center; margin-bottom:20px;">Nepali Typing Tool</h2>
+                        <h3 style="text-align:center; margin-bottom:20px;">Roman English → Nepali unicode</h3>
+                        <div class="tool-grid">
+                            <div class="input-box">
+                                <textarea id="engIn" placeholder="Type here... (e.g., ke chha, namaste)"></textarea>
+                            </div>
+                            <div class="arrow"><i class="fas fa-arrow-right"></i></div>
+                            <div class="input-box">
+                                <textarea id="nepOut" readonly placeholder="Nepali Unicode...."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Nepali Typing Center — All Rights Reserved</p>
+            <div style="margin-top:10px;">
+                <a href="#" style="margin:0 10px;"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" style="margin:0 10px;"><i class="fab fa-instagram"></i></a>
+                <a href="#" style="margin:0 10px;"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LOGIC SCRIPT -->
+    <script>
+        // 1. Mobile Menu Logic
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = menuBtn.querySelector('i');
+            if(navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close menu on link click
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuBtn.querySelector('i').classList.add('fa-bars');
+                menuBtn.querySelector('i').classList.remove('fa-times');
+            });
+        });
+
+        // 2. Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // 3. 3D Tilt Effect Logic (The "Animated Card" Requirement)
+        const cards = document.querySelectorAll('.tilt-element');
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Calculate center
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Rotate logic (max 10 degrees)
+                const rotateX = ((y - centerY) / centerY) * -5; 
+                const rotateY = ((x - centerX) / centerX) * 5;
+
+                // Apply transformation
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                
+                // Move shine effect
+                card.style.setProperty('--x', `${x}px`);
+                card.style.setProperty('--y', `${y}px`);
+            });
+
+            // Reset on mouse leave
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+            });
+        });
+
+        // 4. User's Transliterator Logic (Preserved)
+        class NepaliTransliterator{
+            constructor(){
+                this.v={a:'अ',aa:'आ',i:'इ',ee:'ई',u:'उ',oo:'ऊ',e:'ए',ai:'ऐ',o:'ओ',au:'औ',ri:'ऋ'};
+                this.m={a:'ा',aa:'ा',i:'ि',ee:'ी',u:'ु',oo:'ू',e:'े',ai:'ै',o:'ो',au:'ौ',ri:'ृ'};
+                this.c={k:'क',kh:'ख',g:'ग',gh:'घ',ng:'ङ',ch:'च',chh:'छ',j:'ज',jh:'झ',ny:'ञ', t:'त',th:'थ',d:'द',dh:'ध',n:'न',T:'ट',Th:'ठ',D:'ड',Dh:'ढ',N:'ण',p:'प',ph:'फ', b:'ब',bh:'भ',m:'म',y:'य',r:'र',l:'ल',w:'व',v:'व',sh:'श',s:'स',h:'ह', ksh:'क्ष',tr:'त्र',gy:'ज्ञ',dny:'ज्ञ'};
+                this.o={' ':' ','.':'.',',':',','?':'?','!':'!',0:'०',1:'१',2:'२',3:'३',4:'४',5:'५',6:'६',7:'७',8:'८',9:'९'};
+                this.keys=[...Object.keys(this.v),...Object.keys(this.m),...Object.keys(this.c),...Object.keys(this.o)].sort((a,b)=>b.length-a.length);
+            }
+            translate(t){
+                if(!t) return "";
+                let r="",i=0,last=false;
+                while(i<t.length){
+                    let ok=false;
+                    for(let k of this.keys){
+                        if(t.substr(i,k.length).toLowerCase()===k.toLowerCase()){
+                            if(this.v[k]){r+=last?this.m[k]:this.v[k];last=false;ok=true;i+=k.length;break;}
+                            if(this.c[k]){r+=this.c[k];last=true;ok=true;i+=k.length;break;}
+                            if(this.o[k]){r+=this.o[k];last=false;ok=true;i+=k.length;break;}
+                        }
+                    }
+                    if(!ok){r+=t[i];last=false;i++;}
+                }
+                return r;
+            }
+        }
+        const tr=new NepaliTransliterator();
+        document.getElementById("engIn").addEventListener("input",e=>{
+            document.getElementById("nepOut").value=tr.translate(e.target.value);
+        });
+    </script>
+</body>
+</html>
