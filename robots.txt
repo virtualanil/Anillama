@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://anillama.com.np/sitemap.xml
