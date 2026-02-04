@@ -5,25 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Tags for Google and Social Media -->
-    <title>Neon Type Defender - Free 3D Typing Shooter Game</title>
-    <meta name="description" content="Play Neon Type Defender, a free 3D typing shooter game. Improve your WPM and accuracy while defending the system from cyber enemies in a neon retro-future world.">
-    <meta name="keywords" content="typing game, shooter game, WPM game, HTML5 game, browser game, educational game, cyberpunk, neon, free online game">
+    <title>Typing Defender - 3D Typing Shooter Game</title>
+    <meta name="description" content="Play Neon Type Defender, a free 3D typing shooter game, Typing game, Test game. Improve your WPM and accuracy while defending system from cyber enemies in a neon retro-future world.">
+    <meta name="keywords" content="typing game, shooter game, WPM game, HTML5 game, browser game, educational game, cyberpunk, neon, free online game,test game, typing games, games">
     <meta name="author" content="Anil Lama">
     <meta name="robots" content="index, follow">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yourwebsite.com/">
-    <meta property="og:title" content="Neon Type Defender - 3D Typing Shooter">
+    <meta property="og:url" content="https://anillama.com.np/typinggame/">
+    <meta property="og:title" content="Typing Defender - 3D Typing Shooter">
     <meta property="og:description" content="Type to destroy incoming enemies. Test your typing speed in this intense arcade experience.">
-    <meta property="og:image" content="https://picsum.photos/seed/neondefender/1200/630">
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://yourwebsite.com/">
-    <meta property="twitter:title" content="Neon Type Defender - 3D Typing Shooter">
-    <meta property="twitter:description" content="Type to destroy incoming enemies. Test your typing speed in this intense arcade experience.">
-    <meta property="twitter:image" content="https://picsum.photos/seed/neondefender/1200/630">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap');
@@ -233,24 +226,24 @@
 
     <!-- START SCREEN -->
     <div class="modal" id="startScreen">
-        <h1>NEON TYPE DEFENDER</h1>
+        <h1>TYPING DEFENDER</h1>
         <h2>BY ANIL LAMA</h2>
-        <p class="subtitle">Type the words to destroy enemies.<br>
+        <p class="subtitle">Type words to destroy enemies.<br>
         <strong>SMART TARGETING:</strong> If multiple words start the same (e.g. "select" & "server"), type until they differ to lock the correct one. <br>
-        Typing a wrong letter resets your combo.<br>Press ESC or P to Pause.</p>
-        <button class="btn" onclick="game.start()">INITIALIZE SYSTEM</button>
+        Typing a wrong letter resets your combo.<br>Press ESC to Pause.<br> Press <strong>SPACE</strong> Button for Upgrade the Level.</p>
+        <button class="btn" onclick="game.start()">START GAME</button>
     </div>
 
     <!-- PAUSE SCREEN -->
     <div class="modal hidden" id="pauseScreen">
-        <h1>SYSTEM PAUSED</h1>
-        <h2>Awaiting Input</h2>
+        <h1>GAME PAUSED</h1>
+        <h2>Game Rokyo!!</h2>
         <button class="btn" onclick="game.togglePause()">RESUME</button>
     </div>
 
     <!-- GAME OVER SCREEN -->
     <div class="modal hidden" id="gameOverScreen">
-        <h1 style="color: var(--danger); -webkit-text-fill-color: var(--danger);">SYSTEM FAILURE</h1>
+        <h1 style="color: var(--danger); -webkit-text-fill-color: var(--danger);">GAME OVER</h1>
         <div class="stats-grid">
             <div class="stat-box">
                 <div class="stat-label">FINAL SCORE</div>
@@ -269,7 +262,7 @@
                 <div class="stat-value" id="finalWords">0</div>
             </div>
         </div>
-        <button class="btn" onclick="game.restart()">REBOOT SYSTEM</button>
+        <button class="btn" onclick="game.restart()">TRY AGAIN</button>
     </div>
 </div>
 
@@ -352,7 +345,7 @@ const WORD_LIST = [
   "screen","input","output","mouse","keyboard","touch","gesture","click","scroll",
   "zoom","pan",
   "array","object","string","number","boolean","null","undefined","function","method","class",
-  "module","import","export","default","async","await","promise","callback","event","listener",
+  "module","import","export","default","rajesh","await","promise","callback","event","listener",
   "state","props","mount","unmount","effect","layout","theme","style","color","font",
   "border","margin","padding","radius","opacity","layer","panel","window","dialog",
   "modal","alert","confirm","prompt","toast","notify","message","status","success",
@@ -391,7 +384,10 @@ class Game {
         
         this.state = 'MENU';
         this.lastTime = 0;
-        this.pauseTime = 0; // Used to correct delta time after pause
+        this.pauseTime = 0;
+        
+        // NEW: Store spawn timer ID to control it on Pause/Resume
+        this.spawnTimer = null;
         
         this.player = new Player(this);
         this.enemies = [];
@@ -408,16 +404,16 @@ class Game {
         
         this.shake = 0;
         
-        // NEW: Global Input Buffer (Fixes the Select/Server bug)
+        // Global Input Buffer
         this.currentInput = ""; 
 
         this.resize();
         window.addEventListener('resize', () => this.resize());
         document.addEventListener('keydown', (e) => this.handleInput(e));
         
-        // Pause Listener
+        // Pause Listener - ONLY ESC
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
+            if (e.key === 'Escape') {
                 this.togglePause();
             }
         });
@@ -434,20 +430,31 @@ class Game {
 
     togglePause() {
         if (this.state === 'PLAYING') {
+            // PAUSE
             this.state = 'PAUSED';
             this.pauseTime = performance.now();
             document.getElementById('pauseScreen').classList.remove('hidden');
             if (AudioSys.ctx) AudioSys.ctx.suspend();
+            
+            // STOP the spawn timer
+            if (this.spawnTimer) {
+                clearTimeout(this.spawnTimer);
+                this.spawnTimer = null;
+            }
+
         } else if (this.state === 'PAUSED') {
+            // RESUME
             this.state = 'PLAYING';
             document.getElementById('pauseScreen').classList.add('hidden');
             
             // Adjust lastTime to account for time spent paused
-            // This prevents a huge 'dt' (delta time) jump when resuming
             const pauseDuration = performance.now() - this.pauseTime;
             this.lastTime += pauseDuration;
             
             if (AudioSys.ctx) AudioSys.ctx.resume();
+            
+            // RESTART the spawn timer
+            this.spawnEnemy();
         }
     }
 
@@ -469,6 +476,12 @@ class Game {
     }
 
     reset() {
+        // Clear spawn timer if restarting
+        if (this.spawnTimer) {
+            clearTimeout(this.spawnTimer);
+            this.spawnTimer = null;
+        }
+
         this.enemies = [];
         this.bullets = [];
         this.particles = [];
@@ -484,6 +497,7 @@ class Game {
     }
 
     spawnEnemy() {
+        // If we are not playing, stop the chain (unless it's a temp pause handled by togglePause)
         if (this.state !== 'PLAYING') return;
         
         const word = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
@@ -495,7 +509,9 @@ class Game {
         this.enemies.push(new Enemy(x, y, word, speed, type));
         
         const nextSpawn = Math.max(800, 2000 - (this.difficultyMultiplier * 200));
-        setTimeout(() => this.spawnEnemy(), nextSpawn);
+        
+        // Store the timer ID so we can clear it on Pause
+        this.spawnTimer = setTimeout(() => this.spawnEnemy(), nextSpawn);
     }
 
     handleInput(e) {
@@ -530,10 +546,6 @@ class Game {
                 this.currentInput = remainingMatches.length > 0 ? prospectiveInput : "";
             } else {
                 // Partial matches only (Ambiguity or continuing a word)
-                // Logic for "Select" vs "Server": 
-                // If buffer="se", matches=["select", "server"].
-                // User types 'l'. prospective="sel". matches=["select"].
-                // Logic automatically narrows down target.
                 
                 this.currentInput = prospectiveInput;
                 AudioSys.playKeystroke();
@@ -628,6 +640,12 @@ class Game {
 
     gameOver() {
         this.state = 'GAMEOVER';
+        // Clear spawn timer on game over
+        if (this.spawnTimer) {
+            clearTimeout(this.spawnTimer);
+            this.spawnTimer = null;
+        }
+
         const elapsedMin = (Date.now() - this.startTime) / 60000;
         const finalWpm = elapsedMin > 0 ? Math.floor((this.wordsTyped) / elapsedMin) : 0;
         const accuracy = this.totalKeystrokes > 0 
@@ -712,7 +730,7 @@ class Game {
                 });
             }
         } else if (this.state === 'PAUSED' || this.state === 'GAMEOVER' || this.state === 'MENU') {
-            // If not playing (paused, game over, menu), we still draw the entities
+            // If not playing (paused, game over, menu), we still draw entities
             // but we don't call update() so they stay frozen in place
             this.player.draw(this.ctx);
 
