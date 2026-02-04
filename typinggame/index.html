@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Tags for Google and Social Media -->
-    <title>Typing Defender - Free 3D Typing Shooter Game</title>
+    <title>Neon Type Defender - Free 3D Typing Shooter Game</title>
     <meta name="description" content="Play Neon Type Defender, a free 3D typing shooter game. Improve your WPM and accuracy while defending the system from cyber enemies in a neon retro-future world.">
     <meta name="keywords" content="typing game, shooter game, WPM game, HTML5 game, browser game, educational game, cyberpunk, neon, free online game">
     <meta name="author" content="Anil Lama">
@@ -188,6 +188,7 @@
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            pointer-events: auto;
         }
 
         .btn:hover {
@@ -230,17 +231,26 @@
         <div class="hud-combo" id="comboDisplay">COMBO x1</div>
     </div>
 
+    <!-- START SCREEN -->
     <div class="modal" id="startScreen">
-        <h1>TYPING DEFENDER</h1>
-        <h2>BY ANIL </h2>
+        <h1>NEON TYPE DEFENDER</h1>
+        <h2>BY ANIL LAMA</h2>
         <p class="subtitle">Type the words to destroy enemies.<br>
         <strong>SMART TARGETING:</strong> If multiple words start the same (e.g. "select" & "server"), type until they differ to lock the correct one. <br>
-        Typing a wrong letter resets your combo.<br> Press SPACE Button For Level Up</p>
-        <button class="btn" onclick="game.start()">START GAME</button>
+        Typing a wrong letter resets your combo.<br>Press ESC or P to Pause.</p>
+        <button class="btn" onclick="game.start()">INITIALIZE SYSTEM</button>
     </div>
 
+    <!-- PAUSE SCREEN -->
+    <div class="modal hidden" id="pauseScreen">
+        <h1>SYSTEM PAUSED</h1>
+        <h2>Awaiting Input</h2>
+        <button class="btn" onclick="game.togglePause()">RESUME</button>
+    </div>
+
+    <!-- GAME OVER SCREEN -->
     <div class="modal hidden" id="gameOverScreen">
-        <h1 style="color: var(--danger); -webkit-text-fill-color: var(--danger);">GAME OVER</h1>
+        <h1 style="color: var(--danger); -webkit-text-fill-color: var(--danger);">SYSTEM FAILURE</h1>
         <div class="stats-grid">
             <div class="stat-box">
                 <div class="stat-label">FINAL SCORE</div>
@@ -259,7 +269,7 @@
                 <div class="stat-value" id="finalWords">0</div>
             </div>
         </div>
-        <button class="btn" onclick="game.restart()">TRY AGAIN</button>
+        <button class="btn" onclick="game.restart()">REBOOT SYSTEM</button>
     </div>
 </div>
 
@@ -336,10 +346,10 @@ const WORD_LIST = [
   "database","query","select","insert","update","delete","compile","execute","render",
   "debug","deploy","commit","push","pull","merge","branch","build","test","optimize",
   "thread","process","memory","cache","buffer","stream","packet","socket","router",
-  "switch","gateway","domain","anil","ping","trace","latency","bandwidth","signal",
+  "switch","gateway","domain","host","ping","trace","latency","bandwidth","signal",
   "sensor","camera","vision","audio","image","scalar","random","sample","filter",
-  "noise","smooth","sharp","pixel","saroj","motion","engine","driver","device",
-  "screen","input","output","mouse","keyboard","parth","gesture","click","scroll",
+  "noise","smooth","sharp","pixel","frame","motion","engine","driver","device",
+  "screen","input","output","mouse","keyboard","touch","gesture","click","scroll",
   "zoom","pan",
   "array","object","string","number","boolean","null","undefined","function","method","class",
   "module","import","export","default","async","await","promise","callback","event","listener",
@@ -381,6 +391,7 @@ class Game {
         
         this.state = 'MENU';
         this.lastTime = 0;
+        this.pauseTime = 0; // Used to correct delta time after pause
         
         this.player = new Player(this);
         this.enemies = [];
@@ -404,6 +415,13 @@ class Game {
         window.addEventListener('resize', () => this.resize());
         document.addEventListener('keydown', (e) => this.handleInput(e));
         
+        // Pause Listener
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
+                this.togglePause();
+            }
+        });
+
         requestAnimationFrame((t) => this.loop(t));
     }
 
@@ -414,14 +432,35 @@ class Game {
         this.player.x = this.width / 2;
     }
 
+    togglePause() {
+        if (this.state === 'PLAYING') {
+            this.state = 'PAUSED';
+            this.pauseTime = performance.now();
+            document.getElementById('pauseScreen').classList.remove('hidden');
+            if (AudioSys.ctx) AudioSys.ctx.suspend();
+        } else if (this.state === 'PAUSED') {
+            this.state = 'PLAYING';
+            document.getElementById('pauseScreen').classList.add('hidden');
+            
+            // Adjust lastTime to account for time spent paused
+            // This prevents a huge 'dt' (delta time) jump when resuming
+            const pauseDuration = performance.now() - this.pauseTime;
+            this.lastTime += pauseDuration;
+            
+            if (AudioSys.ctx) AudioSys.ctx.resume();
+        }
+    }
+
     start() {
         AudioSys.init();
         document.getElementById('startScreen').classList.add('hidden');
         document.getElementById('gameOverScreen').classList.add('hidden');
+        document.getElementById('pauseScreen').classList.add('hidden');
         
         this.reset();
         this.state = 'PLAYING';
         this.startTime = Date.now();
+        this.lastTime = performance.now();
         this.spawnEnemy();
     }
 
@@ -621,6 +660,7 @@ class Game {
 
         this.drawGrid();
 
+        // Only run update logic if playing
         if (this.state === 'PLAYING') {
             this.player.update(dt);
             this.player.draw(this.ctx);
@@ -671,6 +711,24 @@ class Game {
                     this.ctx.setLineDash([]);
                 });
             }
+        } else if (this.state === 'PAUSED' || this.state === 'GAMEOVER' || this.state === 'MENU') {
+            // If not playing (paused, game over, menu), we still draw the entities
+            // but we don't call update() so they stay frozen in place
+            this.player.draw(this.ctx);
+
+            // Determine matches based on current buffer (needed for draw)
+            const activeMatches = this.enemies.filter(e => 
+                this.currentInput.length > 0 && e.word.startsWith(this.currentInput)
+            );
+
+            this.enemies.forEach((enemy) => {
+                const isMatch = activeMatches.includes(enemy);
+                const isLocked = isMatch && activeMatches.length === 1;
+                enemy.draw(this.ctx, this.currentInput, isMatch, isLocked);
+            });
+            
+            this.bullets.forEach((b) => b.draw(this.ctx));
+            this.particles.forEach((p) => p.draw(this.ctx));
         }
 
         this.ctx.restore();
@@ -938,4 +996,4 @@ const game = new Game();
 
 </script>
 </body>
-</html>	
+</html>
