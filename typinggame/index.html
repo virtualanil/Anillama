@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Type Defender - 3D Typing Shooter</title>
+    
+    <!-- SEO Tags for Google and Social Media -->
+    <title>Typing Defender - Free 3D Typing Shooter Game</title>
+    <meta name="description" content="Play Neon Type Defender, a free 3D typing shooter game. Improve your WPM and accuracy while defending the system from cyber enemies in a neon retro-future world.">
+    <meta name="keywords" content="typing game, shooter game, WPM game, HTML5 game, browser game, educational game, cyberpunk, neon, free online game">
+    <meta name="author" content="Anil Lama">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/">
+    <meta property="og:title" content="Neon Type Defender - 3D Typing Shooter">
+    <meta property="og:description" content="Type to destroy incoming enemies. Test your typing speed in this intense arcade experience.">
+    <meta property="og:image" content="https://picsum.photos/seed/neondefender/1200/630">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourwebsite.com/">
+    <meta property="twitter:title" content="Neon Type Defender - 3D Typing Shooter">
+    <meta property="twitter:description" content="Type to destroy incoming enemies. Test your typing speed in this intense arcade experience.">
+    <meta property="twitter:image" content="https://picsum.photos/seed/neondefender/1200/630">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap');
 
@@ -80,6 +101,29 @@
             transition: opacity 0.2s, transform 0.1s;
         }
 
+        /* Current Input Display (shows what you are typing) */
+        .current-input {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--type-font);
+            font-size: 2rem;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+            letter-spacing: 5px;
+            opacity: 0.8;
+            pointer-events: none;
+            transition: transform 0.1s;
+        }
+        
+        .current-input span {
+            color: #fff;
+            background: var(--danger);
+            padding: 0 5px;
+            border-radius: 4px;
+        }
+
         .modal {
             position: absolute;
             top: 0;
@@ -114,6 +158,14 @@
             text-align: center;
         }
 
+        h2 {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px var(--primary);
+            font-weight: 400;
+        }
+
         p.subtitle {
             font-family: var(--type-font);
             color: #aaa;
@@ -121,6 +173,7 @@
             margin-bottom: 40px;
             text-align: center;
             max-width: 600px;
+            line-height: 1.6;
         }
 
         .btn {
@@ -166,6 +219,9 @@
 <div id="game-container">
     <canvas id="gameCanvas"></canvas>
 
+    <!-- Visual Input Buffer -->
+    <div class="current-input" id="inputBufferDisplay"></div>
+
     <div class="ui-layer" id="hud">
         <div class="hud-top">
             <div class="hud-stat">SCORE: <span id="scoreDisplay">0</span></div>
@@ -176,13 +232,15 @@
 
     <div class="modal" id="startScreen">
         <h1>TYPING DEFENDER</h1>
-        <h2>ANIL LAMA</h2>
-        <p class="subtitle">Type the words to destroy enemies.<br>Typing a wrong letter resets the word.<br>Press SPACE BUTTON to Level Up</p>
-        <button class="btn" onclick="game.start()">START</button>
+        <h2>BY ANIL </h2>
+        <p class="subtitle">Type the words to destroy enemies.<br>
+        <strong>SMART TARGETING:</strong> If multiple words start the same (e.g. "select" & "server"), type until they differ to lock the correct one. <br>
+        Typing a wrong letter resets your combo.<br> Press SPACE Button For Level Up</p>
+        <button class="btn" onclick="game.start()">INITIALIZE SYSTEM</button>
     </div>
 
     <div class="modal hidden" id="gameOverScreen">
-        <h1 style="color: var(--danger); -webkit-text-fill-color: var(--danger);">MISSION FAILED</h1>
+        <h1 style="color: var(--danger); -webkit-text-fill-color: var(--danger);">GAME OVER</h1>
         <div class="stats-grid">
             <div class="stat-box">
                 <div class="stat-label">FINAL SCORE</div>
@@ -201,7 +259,7 @@
                 <div class="stat-value" id="finalWords">0</div>
             </div>
         </div>
-        <button class="btn" onclick="game.restart()">Reboot System</button>
+        <button class="btn" onclick="game.restart()">TRY AGAIN</button>
     </div>
 </div>
 
@@ -266,17 +324,52 @@ const AudioSys = {
 };
 
 const WORD_LIST = [
-    "shell", "alpha", "bravo", "target", "vector", "laser", "shield", "plasma", "orbit", 
-    "space", "planet", "meteor", "rocket", "alien", "ufo", "robot", "cyborg",
-    "neon", "pulse", "matrix", "data", "link", "node", "grid", "flash", "spark",
-    "blast", "fire", "storm", "wind", "rain", "thunder", "light", "dark", "shadow",
-    "ghost", "spirit", "soul", "mind", "power", "energy", "force", "speed", "agility",
-    "defense", "attack", "strike", "guard", "protect", "save", "rescue", "mission",
-    "command", "control", "system", "network", "server", "client", "proxy", "access",
-    "denied", "allowed", "secure", "lock", "key", "cipher", "code", "hack", "breach",
-    "firewall", "virus", "malware", "spyware", "trojan", "worm", "botnet", "root",
-    "kernel", "shell", "bash", "script", "python", "java", "html", "css", "web",
-    "internet", "cloud", "server", "database", "query", "select", "insert", "update"
+  "shell","alpha","bravo","target","vector","laser","shield","plasma","orbit","space",
+  "planet","meteor","rocket","alien","ufo","robot","cyborg","neon","pulse","matrix",
+  "data","link","node","grid","flash","spark","blast","fire","storm","wind","rain",
+  "thunder","light","dark","shadow","ghost","spirit","soul","mind","power","energy",
+  "force","speed","agility","defense","attack","strike","guard","protect","save",
+  "rescue","mission","command","control","system","network","server","client","proxy",
+  "access","denied","allowed","secure","lock","key","cipher","code","hack","breach",
+  "firewall","virus","malware","spyware","trojan","worm","botnet","root","kernel",
+  "bash","script","python","java","html","css","web","internet","cloud","server",
+  "database","query","select","insert","update","delete","compile","execute","render",
+  "debug","deploy","commit","push","pull","merge","branch","build","test","optimize",
+  "thread","process","memory","cache","buffer","stream","packet","socket","router",
+  "switch","gateway","domain","host","ping","trace","latency","bandwidth","signal",
+  "sensor","camera","vision","audio","image","scalar","random","sample","filter",
+  "noise","smooth","sharp","pixel","frame","motion","engine","driver","device",
+  "screen","input","output","mouse","keyboard","touch","gesture","click","scroll",
+  "zoom","pan","lama","Anil","Parth","Saroj",
+  "array","object","string","number","boolean","null","undefined","function","method","class",
+  "module","import","export","default","async","await","promise","callback","event","listener",
+  "state","props","mount","unmount","effect","layout","theme","style","color","font",
+  "border","margin","padding","radius","opacity","layer","panel","window","dialog",
+  "modal","alert","confirm","prompt","toast","notify","message","status","success",
+  "error","warning","info","retry","cancel","submit","reset","start","pause","resume",
+  "stop","finish","score","level","stage","round","timer","clock","second","minute",
+  "hour","day","night","dawn","dusk","sun","moon","star","galaxy","cosmos","comet",
+  "asteroid","gravity","vacuum","beacon","radar","probe","drone","pilot","crew","fleet",
+  "station","cargo","supply","fuel","thrust","angle","radius","circle","square","triangle",
+  "polygon","point","line","plane","curve","slope","axis","origin","scale","ratio","factor",
+  "value","limit","range","min","max","total","count","index","offset","length","width",
+  "height","depth","volume","mass","weight","density","tempo","rhythm","pattern","cycle",
+  "loop","repeat","break","continue","return","yield","throw","catch","try","finally",
+  "check","verify","validate","sanitize","escape","encode","decode","encrypt","decrypt",
+  "token","session","cookie","header","payload","request","response","route","path",
+  "param","query","body","json","xml","yaml","text","binary","queue","stack","heap","tree",
+  "graph","edge","vertex","weight","cost","pathway","bridge","tunnel","portal","gate",
+  "door","keypad","button","toggle","slider","knob","lever","handle","grip","touchpad",
+  "cursor","pointer","caret","select","focus","blur","hover","drag","drop","copy","paste",
+  "cut","undo","redo","saveas","backup","restore","sync","share","publish","release",
+  "version","patch","minor","major","stable","beta","legacy","modern","future","design",
+  "model","schema","wireframe","mockup","prototype","draft","final","review","approve",
+  "reject","conflict","resolve","history","tag","issue","ticket","bug","fix","hotfix",
+  "crash","freeze","lag","delay","jitter","glitch","fault","monitor","metrics","profile",
+  "benchmark","tune","refactor","cleanup","organize","format","lint","bundle","minify",
+  "compress","prefetch","lazyload","repaint","reflow","animate","transition","transform",
+  "rotate","translate","skew","tilt","center","align","justify","wrap","nowrap","truncate",
+  "ellipsis","overflow","scrollbar","viewport","container","wrapper"
 ];
 
 class Game {
@@ -303,8 +396,10 @@ class Game {
         this.difficultyMultiplier = 1;
         
         this.shake = 0;
-        this.targetEnemy = null;
         
+        // NEW: Global Input Buffer (Fixes the Select/Server bug)
+        this.currentInput = ""; 
+
         this.resize();
         window.addEventListener('resize', () => this.resize());
         document.addEventListener('keydown', (e) => this.handleInput(e));
@@ -344,8 +439,9 @@ class Game {
         this.totalKeystrokes = 0;
         this.missedKeystrokes = 0;
         this.difficultyMultiplier = 1;
-        this.targetEnemy = null;
+        this.currentInput = "";
         this.updateHUD();
+        this.updateInputDisplay();
     }
 
     spawnEnemy() {
@@ -366,71 +462,74 @@ class Game {
     handleInput(e) {
         if (this.state !== 'PLAYING') return;
         
-        if (e.key.length > 1 && e.key !== 'Backspace' && e.key !== 'Enter') return;
-        
+        // Allow only single characters (letters), ignore control keys unless specified
+        if (e.key.length !== 1) return;
         const key = e.key.toLowerCase();
+        
+        // Only accept letters
+        if (!/[a-z]/.test(key)) return;
+
         this.totalKeystrokes++;
         
-        let handled = false;
-
-        // 1. If we have a locked target, strictly check the next character
-        if (this.targetEnemy && this.enemies.includes(this.targetEnemy)) {
-            const nextChar = this.targetEnemy.word[this.targetEnemy.typedIndex];
+        // 1. Create prospective new input string
+        const prospectiveInput = this.currentInput + key;
+        
+        // 2. Find all enemies that START WITH this prospective input
+        const matches = this.enemies.filter(enemy => enemy.word.startsWith(prospectiveInput));
+        
+        if (matches.length > 0) {
+            // VALID KEYSTROKE
             
-            if (key === nextChar) {
-                this.processCorrectHit(this.targetEnemy);
-                handled = true;
+            // Check for exact matches (destruction)
+            const exactMatches = matches.filter(enemy => enemy.word === prospectiveInput);
+            
+            if (exactMatches.length > 0) {
+                // Destroy all exact matches
+                exactMatches.forEach(enemy => this.destroyEnemy(enemy));
+                // If there are still partial matches (e.g. two "select" words), keep buffer, else clear
+                const remainingMatches = matches.filter(enemy => enemy.word !== prospectiveInput);
+                this.currentInput = remainingMatches.length > 0 ? prospectiveInput : "";
             } else {
-                // Typo on locked target: Reset everything for strictness
-                this.missedKeystrokes++;
-                this.breakCombo();
-                AudioSys.playError();
-                this.createFloatingText(this.targetEnemy.x, this.targetEnemy.y - 20, "RESET", "red");
-                handled = true;
+                // Partial matches only (Ambiguity or continuing a word)
+                // Logic for "Select" vs "Server": 
+                // If buffer="se", matches=["select", "server"].
+                // User types 'l'. prospective="sel". matches=["select"].
+                // Logic automatically narrows down target.
+                
+                this.currentInput = prospectiveInput;
+                AudioSys.playKeystroke();
+                
+                // Visual feedback: Shoot at ALL matching enemies (cool factor)
+                matches.forEach(match => {
+                    this.createBullet(this.player.x, this.player.y - 40, match.x, match.y);
+                });
             }
+            
         } else {
-            // 2. No target locked: Find a new word starting with this key
-            // We only lock words that are fully reset (typedIndex === 0)
-            const match = this.enemies.find(en => en.word.startsWith(key) && en.typedIndex === 0);
+            // INVALID KEYSTROKE
+            this.missedKeystrokes++;
+            this.breakCombo();
+            AudioSys.playError();
             
-            if (match) {
-                this.targetEnemy = match;
-                match.isLocked = true;
-                this.processCorrectHit(match);
-                handled = true;
-            } else {
-                // Typo on no target
-                this.missedKeystrokes++;
-                // Optional: small error sound?
-            }
+            // Optional: Shake screen on error
+            this.shake = 3;
         }
-    }
-
-    processCorrectHit(enemy) {
-        AudioSys.playKeystroke();
         
-        // Shoot bullet
-        this.createBullet(this.player.x, this.player.y - 40, enemy.x + (enemy.typedIndex * 12), enemy.y);
-        
-        enemy.typedIndex++;
-        
-        if (enemy.typedIndex === enemy.word.length) {
-            this.destroyEnemy(enemy);
-        }
+        this.updateHUD();
+        this.updateInputDisplay();
     }
 
     destroyEnemy(enemy) {
-        this.score += 10 * this.combo * (enemy.type === 'ARMORED' ? 2 : 1);
+        this.score += 10 * (1 + Math.floor(this.combo / 5)) * (enemy.type === 'ARMORED' ? 2 : 1);
         this.combo++;
         this.wordsTyped++;
-        this.difficultyMultiplier += 0.05;
+        this.difficultyMultiplier += 0.02;
         
         AudioSys.playExplosion();
-        this.createExplosion(enemy.x, enemy.y, enemy.type === 'ARMORED' ? '#ff8800' : '#00f3ff');
+        this.createExplosion(enemy.x, enemy.y, enemy.type === 'ARMORED' ? '#ffaa00' : '#00f3ff');
         this.shake = 5;
         
         this.enemies = this.enemies.filter(e => e !== enemy);
-        if (this.targetEnemy === enemy) this.targetEnemy = null;
         
         this.updateHUD();
         this.animateCombo();
@@ -438,13 +537,8 @@ class Game {
 
     breakCombo() {
         this.combo = 0;
-        this.targetEnemy = null;
-        // CRITICAL FIX: Reset progress of ALL enemies to prevent partial locking bug
-        this.enemies.forEach(e => {
-            e.isLocked = false;
-            e.typedIndex = 0; // Force reset
-        });
-        this.updateHUD();
+        this.currentInput = ""; // Reset input on error
+        this.updateInputDisplay();
     }
 
     createBullet(sx, sy, tx, ty) {
@@ -457,9 +551,20 @@ class Game {
             this.particles.push(new Particle(x, y, color));
         }
     }
-    
-    createFloatingText(x, y, text, color) {
-        // Simplified for this version
+
+    updateInputDisplay() {
+        const el = document.getElementById('inputBufferDisplay');
+        if (!this.currentInput) {
+            el.style.opacity = 0;
+        } else {
+            el.style.opacity = 0.8;
+            // Highlight typed part
+            el.innerHTML = this.currentInput;
+            el.style.transform = "translateX(-50%) scale(1.1)";
+            setTimeout(() => {
+                el.style.transform = "translateX(-50%) scale(1)";
+            }, 50);
+        }
     }
 
     animateCombo() {
@@ -520,9 +625,17 @@ class Game {
             this.player.update(dt);
             this.player.draw(this.ctx);
 
+            // Determine matches based on current buffer
+            const activeMatches = this.enemies.filter(e => 
+                this.currentInput.length > 0 && e.word.startsWith(this.currentInput)
+            );
+
             this.enemies.forEach((enemy, index) => {
                 enemy.update(dt);
-                enemy.draw(this.ctx);
+                // Pass currentInput to draw to handle highlighting logic
+                const isMatch = activeMatches.includes(enemy);
+                const isLocked = isMatch && activeMatches.length === 1; // Only lock visually if unique
+                enemy.draw(this.ctx, this.currentInput, isMatch, isLocked);
                 
                 if (enemy.y > this.height - 50) {
                     this.createExplosion(this.player.x, this.player.y, '#ff0000');
@@ -541,16 +654,22 @@ class Game {
                 p.draw(this.ctx);
                 if (p.life <= 0) this.particles.splice(i, 1);
             });
-            
-            if (this.targetEnemy && this.enemies.includes(this.targetEnemy)) {
-                this.ctx.beginPath();
-                this.ctx.moveTo(this.player.x, this.player.y - 20);
-                this.ctx.lineTo(this.targetEnemy.x, this.targetEnemy.y);
-                this.ctx.strokeStyle = 'rgba(0, 243, 255, 0.2)';
-                this.ctx.lineWidth = 1;
-                this.ctx.setLineDash([5, 5]);
-                this.ctx.stroke();
-                this.ctx.setLineDash([]);
+
+            // Draw targeting lines to all active matches
+            if (activeMatches.length > 0) {
+                activeMatches.forEach(target => {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.player.x, this.player.y - 20);
+                    this.ctx.lineTo(target.x, target.y);
+                    // If unique match, solid line. If multiple, faint dashed line.
+                    this.ctx.strokeStyle = activeMatches.length === 1 
+                        ? 'rgba(0, 243, 255, 0.4)' 
+                        : 'rgba(0, 243, 255, 0.1)';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.setLineDash([5, 5]);
+                    this.ctx.stroke();
+                    this.ctx.setLineDash([]);
+                });
             }
         }
 
@@ -584,7 +703,6 @@ class Player {
         this.y = game.height - 80;
         this.width = 50;
         this.height = 50;
-        this.tilt = 0;
     }
 
     update(dt) {
@@ -633,8 +751,6 @@ class Enemy {
         this.word = word;
         this.type = type;
         this.speed = speed;
-        this.typedIndex = 0;
-        this.isLocked = false;
         this.wobbleOffset = Math.random() * Math.PI * 2;
     }
 
@@ -643,15 +759,33 @@ class Enemy {
         this.wobbleOffset += dt * 2;
     }
 
-    draw(ctx) {
+    draw(ctx, inputBuffer, isMatch, isLocked) {
         ctx.save();
         ctx.translate(this.x + (Math.sin(this.wobbleOffset) * 5), this.y);
 
-        const color = this.isLocked ? '#ff0055' : (this.type === 'ARMORED' ? '#ffaa00' : '#ffffff');
-        ctx.shadowBlur = this.isLocked ? 20 : 10;
-        ctx.shadowColor = color;
+        // Determine Color
+        let baseColor = '#ffffff';
+        let glowColor = 'rgba(255, 255, 255, 0.2)';
         
-        ctx.strokeStyle = color;
+        if (this.type === 'ARMORED') {
+            baseColor = '#ffaa00';
+            glowColor = 'rgba(255, 170, 0, 0.2)';
+        }
+
+        if (isMatch) {
+            if (isLocked) {
+                baseColor = '#ff0055'; // Red when locked uniquely
+                glowColor = 'rgba(255, 0, 85, 0.4)';
+            } else {
+                baseColor = '#00f3ff'; // Cyan when multiple match (Ambiguous)
+                glowColor = 'rgba(0, 243, 255, 0.4)';
+            }
+        }
+
+        ctx.shadowBlur = isMatch ? 20 : 10;
+        ctx.shadowColor = baseColor;
+        
+        ctx.strokeStyle = baseColor;
         ctx.lineWidth = 2;
         ctx.fillStyle = 'rgba(0,0,0,0.5)';
 
@@ -676,36 +810,60 @@ class Enemy {
         ctx.fill();
         ctx.stroke();
 
-        ctx.shadowBlur = 0;
-        ctx.font = 'bold 20px "Roboto Mono"';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-
-        const remainingWord = this.word.substring(this.typedIndex);
-        const typedWord = this.word.substring(0, this.typedIndex);
-        
-        const totalWidth = ctx.measureText(this.word).width;
-        const startX = -totalWidth / 2;
-
-        ctx.fillStyle = 'rgba(0, 255, 102, 0.5)';
-        ctx.fillText(typedWord, startX + ctx.measureText(typedWord).width/2, -30);
-
-        ctx.fillStyle = this.isLocked ? '#ff0055' : '#fff';
-        ctx.fillText(remainingWord, startX + ctx.measureText(typedWord).width + ctx.measureText(remainingWord).width/2, -30);
-        
-        if (this.isLocked) {
+        // Draw Lock Circle
+        if (isLocked) {
             ctx.beginPath();
             ctx.strokeStyle = '#ff0055';
             ctx.lineWidth = 1;
-            ctx.arc(0, 5, 30, 0, Math.PI * 2);
+            ctx.arc(0, 5, 35, 0, Math.PI * 2);
             ctx.stroke();
             
+            // Down arrow indicator
             ctx.beginPath();
             ctx.moveTo(-5, 40);
             ctx.lineTo(5, 40);
             ctx.lineTo(0, 50);
             ctx.fillStyle = '#ff0055';
             ctx.fill();
+        }
+
+        // Draw Text
+        ctx.shadowBlur = 0;
+        ctx.font = 'bold 20px "Roboto Mono"';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // Logic: Split word into "Typed" (matches input) and "Remaining"
+        const matchIndex = inputBuffer.length;
+        
+        const typedPart = this.word.substring(0, matchIndex);
+        const remainPart = this.word.substring(matchIndex);
+        
+        const totalWidth = ctx.measureText(this.word).width;
+        const startX = -totalWidth / 2;
+
+        // Render Typed Part (Green/Highlighted)
+        if (isMatch && matchIndex > 0) {
+            ctx.fillStyle = 'rgba(0, 255, 102, 0.9)';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#00ff66';
+            ctx.fillText(typedPart, startX + ctx.measureText(typedPart).width/2, -30);
+            ctx.shadowBlur = 0;
+        } else if (!isMatch && matchIndex > 0) {
+            // If we have input but this enemy ISN'T a match (the other bug case)
+            // Render the word dimmed or normal
+            ctx.fillStyle = '#555';
+            ctx.fillText(this.word, startX + totalWidth/2, -30);
+        } else {
+            // Completely un-typed
+            ctx.fillStyle = '#fff';
+            ctx.fillText(this.word, startX + totalWidth/2, -30);
+        }
+
+        // Render Remaining Part
+        if (isMatch && remainPart.length > 0) {
+            ctx.fillStyle = isLocked ? '#ff0055' : '#fff';
+            ctx.fillText(remainPart, startX + ctx.measureText(typedPart).width + ctx.measureText(remainPart).width/2, -30);
         }
 
         ctx.restore();
@@ -718,7 +876,7 @@ class Bullet {
         this.y = sy;
         this.tx = tx;
         this.ty = ty;
-        this.speed = 1000; 
+        this.speed = 1200; 
         const angle = Math.atan2(ty - sy, tx - sx);
         this.vx = Math.cos(angle) * this.speed;
         this.vy = Math.sin(angle) * this.speed;
@@ -780,4 +938,4 @@ const game = new Game();
 
 </script>
 </body>
-</html>
+</html>	
