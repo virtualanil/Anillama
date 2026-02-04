@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Tags for Google and Social Media -->
-    <title>Typing Defender - 3D Typing Shooter Game</title>
-    <meta name="description" content="Play Neon Type Defender, a free 3D typing shooter game, Typing game, Test game. Improve your WPM and accuracy while defending system from cyber enemies in a neon retro-future world.">
-    <meta name="keywords" content="typing game, shooter game, WPM game, HTML5 game, browser game, educational game, cyberpunk, neon, free online game,test game, typing games, games">
+    <title>Typing Defender - Free 3D Typing Shooter Game</title>
+    <meta name="description" content="Play Typing Defender, a free 3D typing shooter game. Improve your WPM and accuracy while defending system from cyber enemies in a neon retro-future world.">
+    <meta name="keywords" content="typing game, shooter game, WPM game, HTML5 game, browser game, educational game, cyberpunk, neon, free online game">
     <meta name="author" content="Anil Lama">
     <meta name="robots" content="index, follow">
 
@@ -16,9 +16,8 @@
     <meta property="og:url" content="https://anillama.com.np/typinggame/">
     <meta property="og:title" content="Typing Defender - 3D Typing Shooter">
     <meta property="og:description" content="Type to destroy incoming enemies. Test your typing speed in this intense arcade experience.">
-
-
-    <style>
+    
+       <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap');
 
         :root {
@@ -230,7 +229,9 @@
         <h2>BY ANIL LAMA</h2>
         <p class="subtitle">Type words to destroy enemies.<br>
         <strong>SMART TARGETING:</strong> If multiple words start the same (e.g. "select" & "server"), type until they differ to lock the correct one. <br>
-        Typing a wrong letter resets your combo.<br>Press ESC to Pause.<br> Press <strong>SPACE</strong> Button for Upgrade the Level.</p>
+        Typing a wrong letter resets your combo.<br>
+        <strong>FEATURE:</strong> Press SPACE to spawn extra enemies instantly.<br>
+        Press ESC to Pause.</p>
         <button class="btn" onclick="game.start()">START GAME</button>
     </div>
 
@@ -335,9 +336,9 @@ const WORD_LIST = [
   "rescue","mission","command","control","system","network","server","client","proxy",
   "access","denied","allowed","secure","lock","key","cipher","code","hack","breach",
   "firewall","virus","malware","spyware","trojan","worm","botnet","root","kernel",
-  "bash","script","python","java","html","css","web","internet","cloud","server",
+  "bash","script","python","java","rajesh","anil","parth","saroj","cloud","server",
   "database","query","select","insert","update","delete","compile","execute","render",
-  "debug","deploy","commit","push","pull","merge","branch","build","test","optimize",
+  "debug","deploy","commit","lama","pull","merge","branch","build","test","optimize",
   "thread","process","memory","cache","buffer","stream","packet","socket","router",
   "switch","gateway","domain","host","ping","trace","latency","bandwidth","signal",
   "sensor","camera","vision","audio","image","scalar","random","sample","filter",
@@ -345,10 +346,10 @@ const WORD_LIST = [
   "screen","input","output","mouse","keyboard","touch","gesture","click","scroll",
   "zoom","pan",
   "array","object","string","number","boolean","null","undefined","function","method","class",
-  "module","import","export","default","rajesh","await","promise","callback","event","listener",
+  "module","import","export","default","async","await","promise","callback","event","listener",
   "state","props","mount","unmount","effect","layout","theme","style","color","font",
-  "border","margin","padding","radius","opacity","layer","panel","window","dialog",
-  "modal","alert","confirm","prompt","toast","notify","message","status","success",
+  "border","margin","padding","radius","fonepay","layer","panel","window","dialog",
+  "modal","alert","csd","prompt","toast","notify","message","status","success",
   "error","warning","info","retry","cancel","submit","reset","start","pause","resume",
   "stop","finish","score","level","stage","round","timer","clock","second","minute",
   "hour","day","night","dawn","dusk","sun","moon","star","galaxy","cosmos","comet",
@@ -386,7 +387,7 @@ class Game {
         this.lastTime = 0;
         this.pauseTime = 0;
         
-        // NEW: Store spawn timer ID to control it on Pause/Resume
+        // Store spawn timer ID to control it on Pause/Resume
         this.spawnTimer = null;
         
         this.player = new Player(this);
@@ -497,7 +498,7 @@ class Game {
     }
 
     spawnEnemy() {
-        // If we are not playing, stop the chain (unless it's a temp pause handled by togglePause)
+        // If we are not playing, stop the chain (unless it's a temp pause)
         if (this.state !== 'PLAYING') return;
         
         const word = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
@@ -516,6 +517,15 @@ class Game {
 
     handleInput(e) {
         if (this.state !== 'PLAYING') return;
+        
+        // Special Feature: Press Space to Spawn Extra Enemy
+        if (e.code === 'Space' || e.key === ' ') {
+            e.preventDefault(); // Stop scrolling
+            this.spawnEnemy();
+            // Optional: Visual flash to confirm spawn
+            this.createExplosion(this.width/2, 50, 'rgba(0,243,255,0.5)'); 
+            return; 
+        }
         
         // Allow only single characters (letters), ignore control keys unless specified
         if (e.key.length !== 1) return;
