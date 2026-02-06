@@ -16,26 +16,61 @@
     <meta property="og:url" content="https://anillama.com.np/typinggame/">
     <meta property="og:title" content="Typing Defender - 3D Typing Shooter">
     <meta property="og:description" content="Type to destroy incoming enemies. Test your typing speed in this intense arcade experience.">
-    
-    <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+ <!-- Firebase + Game Scripts -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+import { getFirestore, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyCNVdBXRTJMkACc46EUmn38Vy4Flz3vDOQ",
-    authDomain: "typing-game-c5e84.firebaseapp.com",
-    projectId: "typing-game-c5e84",
-    storageBucket: "typing-game-c5e84.firebasestorage.app",
-    messagingSenderId: "1017813191155",
-    appId: "1:1017813191155:web:af354c72711c6488562a86"
-  };
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyCNVdBXRTJMkACc46EUmn38Vy4Flz3vDOQ",
+  authDomain: "typing-game-c5e84.firebaseapp.com",
+  projectId: "typing-game-c5e84",
+  storageBucket: "typing-game-c5e84.firebasestorage.app",
+  messagingSenderId: "1017813191155",
+  appId: "1:1017813191155:web:af354c72711c6488562a86"
+};
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+window.currentUser = null;
+
+// Login with Google
+window.loginWithGoogle = async function () {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    window.currentUser = result.user;
+    alert("Welcome " + window.currentUser.displayName);
+    document.querySelector("button[onclick='loginWithGoogle()']").disabled = true;
+  } catch (err) {
+    console.error(err);
+    alert("Login failed");
+  }
+};
+
+// Save Score to Firestore
+window.saveScore = async function(score, wpm) {
+  if (!window.currentUser) return;
+  try {
+    await addDoc(collection(db, "leaderboard"), {
+      name: window.currentUser.displayName,
+      email: window.currentUser.email,
+      score: score,
+      wpm: wpm,
+      time: serverTimestamp()
+    });
+    console.log("Score saved!");
+  } catch(e) {
+    console.error("Failed to save score:", e);
+  }
+};
 </script>
+
        <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap');
 
