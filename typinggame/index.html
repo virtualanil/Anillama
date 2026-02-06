@@ -17,6 +17,25 @@
     <meta property="og:title" content="Typing Defender - 3D Typing Shooter">
     <meta property="og:description" content="Type to destroy incoming enemies. Test your typing speed in this intense arcade experience.">
     
+    <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCNVdBXRTJMkACc46EUmn38Vy4Flz3vDOQ",
+    authDomain: "typing-game-c5e84.firebaseapp.com",
+    projectId: "typing-game-c5e84",
+    storageBucket: "typing-game-c5e84.firebasestorage.app",
+    messagingSenderId: "1017813191155",
+    appId: "1:1017813191155:web:af354c72711c6488562a86"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
        <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap');
 
@@ -233,6 +252,7 @@
         <strong>FEATURE:</strong> Press SPACE to spawn extra enemies instantly.<br>
         Press ESC to Pause.</p>
         <button class="btn" onclick="game.start()">START GAME</button>
+        <button onclick="loginWithGoogle()">Login with Gmail</button>
     </div>
 
     <!-- PAUSE SCREEN -->
