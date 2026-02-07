@@ -77,8 +77,7 @@
             }
         };
 
-        // Save Score to Firestore (IMPROVED WITH TRANSACTION)
-        // A transaction ensures that reading the old score and writing the new one happens atomically.
+        // Save Score to Firestore (UPDATED LOGIC: Prioritize WPM)
         window.saveScore = async function(score, wpm) {
             if (!window.currentUser) {
                 console.log("Cannot save score: User not logged in");
@@ -98,12 +97,15 @@
                         console.log("First game. Saving score.");
                     } else {
                         const existingData = sfDoc.data();
-                        // Only update if new score is strictly higher
-                        if (score > existingData.score) {
+                        
+                        // CHANGE: Now comparing WPM instead of Score
+                        // Only update if new WPM is strictly higher
+                        if (wpm > existingData.wpm) {
                             shouldSave = true;
-                            console.log(`New High Score! Old: ${existingData.score}, New: ${score}`);
+                            console.log(`New High WPM! Old: ${existingData.wpm}, New: ${wpm}`);
+                            console.log(`Previous Score: ${existingData.score} replaced by new Score: ${score}`);
                         } else {
-                            console.log(`Score ${score} is not higher than current best ${existingData.score}. Not saving.`);
+                            console.log(`WPM ${wpm} is not higher than current best ${existingData.wpm}. Not saving.`);
                         }
                     }
 
@@ -111,7 +113,7 @@
                         transaction.set(userDocRef, {
                             name: window.currentUser.displayName,
                             email: window.currentUser.email,
-                            score: score,
+                            score: score, // Save the score achieved at this high WPM
                             wpm: wpm,
                             time: serverTimestamp()
                         });
@@ -125,14 +127,14 @@
             }
         };
 
-        // Fetch Leaderboard
+        // Fetch Leaderboard (UPDATED: Order by WPM)
         window.loadLeaderboard = async function() {
             const listEl = document.getElementById('leaderboard-list');
             listEl.innerHTML = '<li>Loading...</li>';
             
             try {
-                // Changed limit to 10 as requested
-                const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(10));
+                // CHANGE: Ordering by "wpm" descending instead of "score"
+                const q = query(collection(db, "leaderboard"), orderBy("wpm", "desc"), limit(10));
                 const querySnapshot = await getDocs(q);
                 
                 listEl.innerHTML = ''; 
@@ -147,8 +149,8 @@
                     const li = document.createElement('li');
                     li.innerHTML = `
                         <span class="lb-name">${data.name}</span>
-                        <span class="lb-stats">WPM: ${data.wpm}</span>
-                        <span class="lb-score">${data.score}</span>
+                        <span class="lb-stats">SCORE: ${data.score}</span>
+                        <span class="lb-score">WPM: ${data.wpm}</span>
                     `;
                     listEl.appendChild(li);
                 });
@@ -472,7 +474,7 @@
         
         <!-- Leaderboard Section -->
         <div class="leaderboard-container">
-            <h3>Top 10 Defenders</h3>
+            <h3>Top 10 Defenders (By WPM)</h3>
             <ul id="leaderboard-list">
                 <li>Loading...</li>
             </ul>
@@ -856,6 +858,7 @@ class Game {
         // SAVE AND LOAD LOGIC
         if (window.currentUser) {
             // User is logged in, save their score
+            // Now logic checks WPM first
             await saveScore(this.score, finalWpm);
         } else {
             console.log("User not logged in. Score not saved to leaderboard.");
