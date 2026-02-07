@@ -4,72 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SEO Tags for Google and Social Media -->
+    <!-- SEO Tags -->
     <title>Typing Defender - Free 3D Typing Shooter Game</title>
-    <meta name="description" content="Play Typing Defender, a free 3D typing shooter game. Improve your WPM and accuracy while defending system from cyber enemies in a neon retro-future world.">
-    <meta name="keywords" content="typing game, shooter game, WPM game, HTML5 game, browser game, educational game, cyberpunk, neon, free online game">
+    <meta name="description" content="Play Typing Defender, a free 3D typing shooter game. Improve your WPM and accuracy while defending system from cyber enemies.">
     <meta name="author" content="Anil Lama">
-    <meta name="robots" content="index, follow">
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://anillama.com.np/typinggame/">
-    <meta property="og:title" content="Typing Defender - 3D Typing Shooter">
-    <meta property="og:description" content="Type to destroy incoming enemies. Test your typing speed in this intense arcade experience.">
- <!-- Firebase + Game Scripts -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-import { getFirestore, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+    <!-- Firebase SDKs (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+        import { getFirestore, addDoc, collection, serverTimestamp, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-// Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyCNVdBXRTJMkACc46EUmn38Vy4Flz3vDOQ",
-  authDomain: "typing-game-c5e84.firebaseapp.com",
-  projectId: "typing-game-c5e84",
-  storageBucket: "typing-game-c5e84.firebasestorage.app",
-  messagingSenderId: "1017813191155",
-  appId: "1:1017813191155:web:af354c72711c6488562a86"
-};
+        // Firebase Config
+        const firebaseConfig = {
+        apiKey: "AIzaSyCNVdBXRTJMkACc46EUmn38Vy4Flz3vDOQ",
+        authDomain: "typing-game-c5e84.firebaseapp.com",
+        projectId: "typing-game-c5e84",
+        storageBucket: "typing-game-c5e84.firebasestorage.app",
+        messagingSenderId: "1017813191155",
+        appId: "1:1017813191155:web:af354c72711c6488562a86"
+        };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
 
-window.currentUser = null;
+        window.currentUser = null;
 
-// Login with Google
-window.loginWithGoogle = async function () {
-  try {
-    const result = await signInWithPopup(auth, provider);
-    window.currentUser = result.user;
-    alert("Welcome " + window.currentUser.displayName);
-    document.querySelector("button[onclick='loginWithGoogle()']").disabled = true;
-  } catch (err) {
-    console.error(err);
-    alert("Login failed");
-  }
-};
+        // Listen to Auth State changes (keeps login persistent on refresh)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.currentUser = user;
+                const loginBtn = document.querySelector("button[onclick='loginWithGoogle()']");
+                if(loginBtn) {
+                    loginBtn.innerText = "Logged in as " + user.displayName;
+                    loginBtn.disabled = true;
+                    loginBtn.style.opacity = "0.7";
+                }
+            } else {
+                window.currentUser = null;
+                const loginBtn = document.querySelector("button[onclick='loginWithGoogle()']");
+                if(loginBtn) {
+                    loginBtn.innerText = "Login with Gmail";
+                    loginBtn.disabled = false;
+                    loginBtn.style.opacity = "1";
+                }
+            }
+        });
 
-// Save Score to Firestore
-window.saveScore = async function(score, wpm) {
-  if (!window.currentUser) return;
-  try {
-    await addDoc(collection(db, "leaderboard"), {
-      name: window.currentUser.displayName,
-      email: window.currentUser.email,
-      score: score,
-      wpm: wpm,
-      time: serverTimestamp()
-    });
-    console.log("Score saved!");
-  } catch(e) {
-    console.error("Failed to save score:", e);
-  }
-};
-</script>
+        // Login with Google
+        window.loginWithGoogle = async function () {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                window.currentUser = result.user;
+                console.log("User logged in:", window.currentUser.displayName);
+            } catch (err) {
+                console.error(err);
+                alert("Login failed: " + err.message);
+            }
+        };
+
+        // Save Score to Firestore
+        window.saveScore = async function(score, wpm) {
+            if (!window.currentUser) {
+                console.log("Cannot save score: User not logged in");
+                return;
+            }
+            try {
+                await addDoc(collection(db, "leaderboard"), {
+                    name: window.currentUser.displayName,
+                    email: window.currentUser.email,
+                    score: score,
+                    wpm: wpm,
+                    time: serverTimestamp()
+                });
+                console.log("Score saved!");
+            } catch(e) {
+                console.error("Failed to save score:", e);
+            }
+        };
+
+        // Fetch Leaderboard
+        window.loadLeaderboard = async function() {
+            const listEl = document.getElementById('leaderboard-list');
+            listEl.innerHTML = '<li>Loading...</li>';
+            
+            try {
+                // Create query: get top 10 scores ordered by score (descending)
+                const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(5));
+                const querySnapshot = await getDocs(q);
+                
+                listEl.innerHTML = ''; // Clear loading
+                
+                if (querySnapshot.empty) {
+                    listEl.innerHTML = '<li>No scores yet. Be the first!</li>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span class="lb-name">${data.name}</span>
+                        <span class="lb-stats">WPM: ${data.wpm}</span>
+                        <span class="lb-score">${data.score}</span>
+                    `;
+                    listEl.appendChild(li);
+                });
+            } catch (error) {
+                console.error("Error loading leaderboard:", error);
+                listEl.innerHTML = '<li>Error loading scores.</li>';
+            }
+        };
+    </script>
 
        <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap');
@@ -147,7 +196,6 @@ window.saveScore = async function(score, wpm) {
             transition: opacity 0.2s, transform 0.1s;
         }
 
-        /* Current Input Display (shows what you are typing) */
         .current-input {
             position: absolute;
             bottom: 120px;
@@ -185,6 +233,7 @@ window.saveScore = async function(score, wpm) {
             z-index: 10;
             pointer-events: auto;
             transition: opacity 0.3s;
+            overflow-y: auto; /* Allow scroll for leaderboard if needed */
         }
 
         .hidden {
@@ -210,6 +259,7 @@ window.saveScore = async function(score, wpm) {
             margin-bottom: 20px;
             text-shadow: 0 0 5px var(--primary);
             font-weight: 400;
+            text-align: center;
         }
 
         p.subtitle {
@@ -235,6 +285,7 @@ window.saveScore = async function(score, wpm) {
             position: relative;
             overflow: hidden;
             pointer-events: auto;
+            margin: 10px;
         }
 
         .btn:hover {
@@ -243,12 +294,20 @@ window.saveScore = async function(score, wpm) {
             box-shadow: 0 0 30px var(--primary);
         }
 
+        .btn:disabled {
+            border-color: #555;
+            color: #555;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
             margin-bottom: 30px;
             text-align: left;
+            min-width: 300px;
         }
 
         .stat-box {
@@ -259,6 +318,46 @@ window.saveScore = async function(score, wpm) {
         .stat-label { font-size: 0.8rem; color: #888; }
         .stat-value { font-size: 1.5rem; font-weight: bold; }
 
+        /* Leaderboard Styles */
+        .leaderboard-container {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 500px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .leaderboard-container h3 {
+            margin: 0 0 15px 0;
+            color: var(--success);
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+        }
+        ul#leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        ul#leaderboard-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #333;
+            font-family: var(--type-font);
+            font-size: 0.9rem;
+        }
+        ul#leaderboard-list li:last-child { border-bottom: none; }
+        .lb-name { color: #fff; flex: 1; }
+        .lb-stats { color: #aaa; margin-right: 15px; }
+        .lb-score { color: var(--primary); font-weight: bold; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -282,12 +381,12 @@ window.saveScore = async function(score, wpm) {
         <h1>TYPING DEFENDER</h1>
         <h2>BY ANIL LAMA</h2>
         <p class="subtitle">Type words to destroy enemies.<br>
-        <strong>SMART TARGETING:</strong> If multiple words start the same (e.g. "select" & "server"), type until they differ to lock the correct one. <br>
+        <strong>SMART TARGETING:</strong> If multiple words start the same, type until they differ to lock the correct one. <br>
         Typing a wrong letter resets your combo.<br>
         <strong>FEATURE:</strong> Press SPACE to spawn extra enemies instantly.<br>
         Press ESC to Pause.</p>
         <button class="btn" onclick="game.start()">START GAME</button>
-        <button onclick="loginWithGoogle()">Login with Gmail</button>
+        <button class="btn" onclick="loginWithGoogle()">Login with Gmail</button>
     </div>
 
     <!-- PAUSE SCREEN -->
@@ -318,7 +417,18 @@ window.saveScore = async function(score, wpm) {
                 <div class="stat-value" id="finalWords">0</div>
             </div>
         </div>
-        <button class="btn" onclick="game.restart()">TRY AGAIN</button>
+        
+        <!-- Leaderboard Section -->
+        <div class="leaderboard-container">
+            <h3>Top 5 Defenders</h3>
+            <ul id="leaderboard-list">
+                <li>Loading...</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button class="btn" onclick="game.restart()">TRY AGAIN</button>
+        </div>
     </div>
 </div>
 
@@ -442,7 +552,6 @@ class Game {
         this.lastTime = 0;
         this.pauseTime = 0;
         
-        // Store spawn timer ID to control it on Pause/Resume
         this.spawnTimer = null;
         
         this.player = new Player(this);
@@ -459,15 +568,12 @@ class Game {
         this.difficultyMultiplier = 1;
         
         this.shake = 0;
-        
-        // Global Input Buffer
         this.currentInput = ""; 
 
         this.resize();
         window.addEventListener('resize', () => this.resize());
         document.addEventListener('keydown', (e) => this.handleInput(e));
         
-        // Pause Listener - ONLY ESC
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 this.togglePause();
@@ -486,30 +592,25 @@ class Game {
 
     togglePause() {
         if (this.state === 'PLAYING') {
-            // PAUSE
             this.state = 'PAUSED';
             this.pauseTime = performance.now();
             document.getElementById('pauseScreen').classList.remove('hidden');
             if (AudioSys.ctx) AudioSys.ctx.suspend();
             
-            // STOP the spawn timer
             if (this.spawnTimer) {
                 clearTimeout(this.spawnTimer);
                 this.spawnTimer = null;
             }
 
         } else if (this.state === 'PAUSED') {
-            // RESUME
             this.state = 'PLAYING';
             document.getElementById('pauseScreen').classList.add('hidden');
             
-            // Adjust lastTime to account for time spent paused
             const pauseDuration = performance.now() - this.pauseTime;
             this.lastTime += pauseDuration;
             
             if (AudioSys.ctx) AudioSys.ctx.resume();
             
-            // RESTART the spawn timer
             this.spawnEnemy();
         }
     }
@@ -532,7 +633,6 @@ class Game {
     }
 
     reset() {
-        // Clear spawn timer if restarting
         if (this.spawnTimer) {
             clearTimeout(this.spawnTimer);
             this.spawnTimer = null;
@@ -553,7 +653,6 @@ class Game {
     }
 
     spawnEnemy() {
-        // If we are not playing, stop the chain (unless it's a temp pause)
         if (this.state !== 'PLAYING') return;
         
         const word = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
@@ -566,68 +665,48 @@ class Game {
         
         const nextSpawn = Math.max(800, 2000 - (this.difficultyMultiplier * 200));
         
-        // Store the timer ID so we can clear it on Pause
         this.spawnTimer = setTimeout(() => this.spawnEnemy(), nextSpawn);
     }
 
     handleInput(e) {
         if (this.state !== 'PLAYING') return;
         
-        // Special Feature: Press Space to Spawn Extra Enemy
         if (e.code === 'Space' || e.key === ' ') {
-            e.preventDefault(); // Stop scrolling
+            e.preventDefault();
             this.spawnEnemy();
-            // Optional: Visual flash to confirm spawn
             this.createExplosion(this.width/2, 50, 'rgba(0,243,255,0.5)'); 
             return; 
         }
         
-        // Allow only single characters (letters), ignore control keys unless specified
         if (e.key.length !== 1) return;
         const key = e.key.toLowerCase();
         
-        // Only accept letters
         if (!/[a-z]/.test(key)) return;
 
         this.totalKeystrokes++;
         
-        // 1. Create prospective new input string
         const prospectiveInput = this.currentInput + key;
-        
-        // 2. Find all enemies that START WITH this prospective input
         const matches = this.enemies.filter(enemy => enemy.word.startsWith(prospectiveInput));
         
         if (matches.length > 0) {
-            // VALID KEYSTROKE
-            
-            // Check for exact matches (destruction)
             const exactMatches = matches.filter(enemy => enemy.word === prospectiveInput);
             
             if (exactMatches.length > 0) {
-                // Destroy all exact matches
                 exactMatches.forEach(enemy => this.destroyEnemy(enemy));
-                // If there are still partial matches (e.g. two "select" words), keep buffer, else clear
                 const remainingMatches = matches.filter(enemy => enemy.word !== prospectiveInput);
                 this.currentInput = remainingMatches.length > 0 ? prospectiveInput : "";
             } else {
-                // Partial matches only (Ambiguity or continuing a word)
-                
                 this.currentInput = prospectiveInput;
                 AudioSys.playKeystroke();
-                
-                // Visual feedback: Shoot at ALL matching enemies (cool factor)
                 matches.forEach(match => {
                     this.createBullet(this.player.x, this.player.y - 40, match.x, match.y);
                 });
             }
             
         } else {
-            // INVALID KEYSTROKE
             this.missedKeystrokes++;
             this.breakCombo();
             AudioSys.playError();
-            
-            // Optional: Shake screen on error
             this.shake = 3;
         }
         
@@ -653,7 +732,7 @@ class Game {
 
     breakCombo() {
         this.combo = 0;
-        this.currentInput = ""; // Reset input on error
+        this.currentInput = ""; 
         this.updateInputDisplay();
     }
 
@@ -674,7 +753,6 @@ class Game {
             el.style.opacity = 0;
         } else {
             el.style.opacity = 0.8;
-            // Highlight typed part
             el.innerHTML = this.currentInput;
             el.style.transform = "translateX(-50%) scale(1.1)";
             setTimeout(() => {
@@ -705,7 +783,6 @@ class Game {
 
     gameOver() {
         this.state = 'GAMEOVER';
-        // Clear spawn timer on game over
         if (this.spawnTimer) {
             clearTimeout(this.spawnTimer);
             this.spawnTimer = null;
@@ -723,6 +800,17 @@ class Game {
         document.getElementById('finalWords').innerText = this.wordsTyped;
         
         document.getElementById('gameOverScreen').classList.remove('hidden');
+
+        // SAVE AND LOAD LOGIC
+        if (window.currentUser) {
+            // User is logged in, save their score
+            saveScore(this.score, finalWpm);
+        } else {
+            console.log("User not logged in. Score not saved to leaderboard.");
+        }
+        
+        // Load the latest leaderboard regardless of login status
+        loadLeaderboard();
     }
 
     loop(timestamp) {
@@ -743,21 +831,18 @@ class Game {
 
         this.drawGrid();
 
-        // Only run update logic if playing
         if (this.state === 'PLAYING') {
             this.player.update(dt);
             this.player.draw(this.ctx);
 
-            // Determine matches based on current buffer
             const activeMatches = this.enemies.filter(e => 
                 this.currentInput.length > 0 && e.word.startsWith(this.currentInput)
             );
 
             this.enemies.forEach((enemy, index) => {
                 enemy.update(dt);
-                // Pass currentInput to draw to handle highlighting logic
                 const isMatch = activeMatches.includes(enemy);
-                const isLocked = isMatch && activeMatches.length === 1; // Only lock visually if unique
+                const isLocked = isMatch && activeMatches.length === 1; 
                 enemy.draw(this.ctx, this.currentInput, isMatch, isLocked);
                 
                 if (enemy.y > this.height - 50) {
@@ -778,13 +863,11 @@ class Game {
                 if (p.life <= 0) this.particles.splice(i, 1);
             });
 
-            // Draw targeting lines to all active matches
             if (activeMatches.length > 0) {
                 activeMatches.forEach(target => {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.player.x, this.player.y - 20);
                     this.ctx.lineTo(target.x, target.y);
-                    // If unique match, solid line. If multiple, faint dashed line.
                     this.ctx.strokeStyle = activeMatches.length === 1 
                         ? 'rgba(0, 243, 255, 0.4)' 
                         : 'rgba(0, 243, 255, 0.1)';
@@ -795,11 +878,8 @@ class Game {
                 });
             }
         } else if (this.state === 'PAUSED' || this.state === 'GAMEOVER' || this.state === 'MENU') {
-            // If not playing (paused, game over, menu), we still draw entities
-            // but we don't call update() so they stay frozen in place
             this.player.draw(this.ctx);
 
-            // Determine matches based on current buffer (needed for draw)
             const activeMatches = this.enemies.filter(e => 
                 this.currentInput.length > 0 && e.word.startsWith(this.currentInput)
             );
@@ -904,7 +984,6 @@ class Enemy {
         ctx.save();
         ctx.translate(this.x + (Math.sin(this.wobbleOffset) * 5), this.y);
 
-        // Determine Color
         let baseColor = '#ffffff';
         let glowColor = 'rgba(255, 255, 255, 0.2)';
         
@@ -915,10 +994,10 @@ class Enemy {
 
         if (isMatch) {
             if (isLocked) {
-                baseColor = '#ff0055'; // Red when locked uniquely
+                baseColor = '#ff0055'; 
                 glowColor = 'rgba(255, 0, 85, 0.4)';
             } else {
-                baseColor = '#00f3ff'; // Cyan when multiple match (Ambiguous)
+                baseColor = '#00f3ff'; 
                 glowColor = 'rgba(0, 243, 255, 0.4)';
             }
         }
@@ -951,7 +1030,6 @@ class Enemy {
         ctx.fill();
         ctx.stroke();
 
-        // Draw Lock Circle
         if (isLocked) {
             ctx.beginPath();
             ctx.strokeStyle = '#ff0055';
@@ -959,7 +1037,6 @@ class Enemy {
             ctx.arc(0, 5, 35, 0, Math.PI * 2);
             ctx.stroke();
             
-            // Down arrow indicator
             ctx.beginPath();
             ctx.moveTo(-5, 40);
             ctx.lineTo(5, 40);
@@ -968,13 +1045,11 @@ class Enemy {
             ctx.fill();
         }
 
-        // Draw Text
         ctx.shadowBlur = 0;
         ctx.font = 'bold 20px "Roboto Mono"';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        // Logic: Split word into "Typed" (matches input) and "Remaining"
         const matchIndex = inputBuffer.length;
         
         const typedPart = this.word.substring(0, matchIndex);
@@ -983,7 +1058,6 @@ class Enemy {
         const totalWidth = ctx.measureText(this.word).width;
         const startX = -totalWidth / 2;
 
-        // Render Typed Part (Green/Highlighted)
         if (isMatch && matchIndex > 0) {
             ctx.fillStyle = 'rgba(0, 255, 102, 0.9)';
             ctx.shadowBlur = 10;
@@ -991,17 +1065,13 @@ class Enemy {
             ctx.fillText(typedPart, startX + ctx.measureText(typedPart).width/2, -30);
             ctx.shadowBlur = 0;
         } else if (!isMatch && matchIndex > 0) {
-            // If we have input but this enemy ISN'T a match (the other bug case)
-            // Render the word dimmed or normal
             ctx.fillStyle = '#555';
             ctx.fillText(this.word, startX + totalWidth/2, -30);
         } else {
-            // Completely un-typed
             ctx.fillStyle = '#fff';
             ctx.fillText(this.word, startX + totalWidth/2, -30);
         }
 
-        // Render Remaining Part
         if (isMatch && remainPart.length > 0) {
             ctx.fillStyle = isLocked ? '#ff0055' : '#fff';
             ctx.fillText(remainPart, startX + ctx.measureText(typedPart).width + ctx.measureText(remainPart).width/2, -30);
