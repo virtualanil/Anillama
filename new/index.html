@@ -13,7 +13,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-        import { getFirestore, collection, serverTimestamp, getDocs, query, orderBy, limit, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+        import { getFirestore, collection, serverTimestamp, getDocs, query, orderBy, limit, doc, getDoc, setDoc, runTransaction } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
         // Firebase Config
         const firebaseConfig = {
@@ -77,50 +77,50 @@
             }
         };
 
-        // Save Score to Firestore (FIXED LOGIC)
+        // Save Score to Firestore (IMPROVED WITH TRANSACTION)
+        // A transaction ensures that reading the old score and writing the new one happens atomically.
         window.saveScore = async function(score, wpm) {
             if (!window.currentUser) {
                 console.log("Cannot save score: User not logged in");
-                return;
+                return false;
             }
+            
+            const userDocRef = doc(db, "leaderboard", window.currentUser.uid);
+
             try {
-                // We use the user's UID as the Document ID.
-                // This ensures that for this specific user, there is only ONE document.
-                const userDocRef = doc(db, "leaderboard", window.currentUser.uid);
-                
-                // Check if the document already exists to see if we have a high score to beat
-                const docSnap = await getDoc(userDocRef);
-                
-                let shouldSave = false;
+                await runTransaction(db, async (transaction) => {
+                    const sfDoc = await transaction.get(userDocRef);
+                    let shouldSave = false;
 
-                if (docSnap.exists()) {
-                    const existingData = docSnap.data();
-                    // Only update if the new score is strictly higher than the old one
-                    if (score > existingData.score) {
+                    if (!sfDoc.exists()) {
+                        // First time playing
                         shouldSave = true;
-                        console.log(`New High Score! Old: ${existingData.score}, New: ${score}`);
+                        console.log("First game. Saving score.");
                     } else {
-                        console.log(`Score ${score} is not higher than current best ${existingData.score}. Not saving.`);
+                        const existingData = sfDoc.data();
+                        // Only update if new score is strictly higher
+                        if (score > existingData.score) {
+                            shouldSave = true;
+                            console.log(`New High Score! Old: ${existingData.score}, New: ${score}`);
+                        } else {
+                            console.log(`Score ${score} is not higher than current best ${existingData.score}. Not saving.`);
+                        }
                     }
-                } else {
-                    // First time this user plays
-                    shouldSave = true;
-                    console.log("First game. Saving score.");
-                }
 
-                if (shouldSave) {
-                    await setDoc(userDocRef, {
-                        name: window.currentUser.displayName,
-                        email: window.currentUser.email,
-                        score: score,
-                        wpm: wpm,
-                        time: serverTimestamp()
-                    });
-                    console.log("Score saved successfully!");
-                }
-                return true; // Return true if saved or skipped (no error)
-            } catch(e) {
-                console.error("Failed to save score:", e);
+                    if (shouldSave) {
+                        transaction.set(userDocRef, {
+                            name: window.currentUser.displayName,
+                            email: window.currentUser.email,
+                            score: score,
+                            wpm: wpm,
+                            time: serverTimestamp()
+                        });
+                    }
+                });
+                console.log("Transaction successfully committed!");
+                return true;
+            } catch (e) {
+                console.error("Transaction failed: ", e);
                 return false;
             }
         };
@@ -131,7 +131,7 @@
             listEl.innerHTML = '<li>Loading...</li>';
             
             try {
-                // FIXED: Changed limit(5) to limit(10)
+                // Changed limit to 10 as requested
                 const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(10));
                 const querySnapshot = await getDocs(q);
                 
@@ -833,7 +833,6 @@ class Game {
         document.getElementById('wpmDisplay').innerText = wpm;
     }
 
-    // FIXED: Made async to await saveScore before loading leaderboard
     async gameOver() {
         this.state = 'GAMEOVER';
         if (this.spawnTimer) {
@@ -857,7 +856,6 @@ class Game {
         // SAVE AND LOAD LOGIC
         if (window.currentUser) {
             // User is logged in, save their score
-            // We use 'await' to make sure the data is saved to DB before we fetch the list
             await saveScore(this.score, finalWpm);
         } else {
             console.log("User not logged in. Score not saved to leaderboard.");
