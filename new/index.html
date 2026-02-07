@@ -13,7 +13,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-        import { getFirestore, addDoc, collection, serverTimestamp, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+        import { getFirestore, collection, serverTimestamp, getDocs, query, orderBy, limit, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
         // Firebase Config
         const firebaseConfig = {
@@ -77,21 +77,47 @@
             }
         };
 
-        // Save Score to Firestore
+        // Save Score to Firestore (FIXED LOGIC)
         window.saveScore = async function(score, wpm) {
             if (!window.currentUser) {
                 console.log("Cannot save score: User not logged in");
                 return;
             }
             try {
-                await addDoc(collection(db, "leaderboard"), {
-                    name: window.currentUser.displayName,
-                    email: window.currentUser.email,
-                    score: score,
-                    wpm: wpm,
-                    time: serverTimestamp()
-                });
-                console.log("Score saved!");
+                // We use the user's UID as the Document ID.
+                // This ensures that for this specific user, there is only ONE document.
+                const userDocRef = doc(db, "leaderboard", window.currentUser.uid);
+                
+                // Check if the document already exists to see if we have a high score to beat
+                const docSnap = await getDoc(userDocRef);
+                
+                let shouldSave = false;
+
+                if (docSnap.exists()) {
+                    const existingData = docSnap.data();
+                    // Only update if the new score is strictly higher than the old one
+                    if (score > existingData.score) {
+                        shouldSave = true;
+                        console.log(`New High Score! Old: ${existingData.score}, New: ${score}`);
+                    } else {
+                        console.log(`Score ${score} is not higher than current best ${existingData.score}. Not saving.`);
+                    }
+                } else {
+                    // First time this user plays
+                    shouldSave = true;
+                    console.log("First game. Saving score.");
+                }
+
+                if (shouldSave) {
+                    await setDoc(userDocRef, {
+                        name: window.currentUser.displayName,
+                        email: window.currentUser.email,
+                        score: score,
+                        wpm: wpm,
+                        time: serverTimestamp()
+                    });
+                    console.log("Score saved successfully!");
+                }
             } catch(e) {
                 console.error("Failed to save score:", e);
             }
@@ -103,6 +129,7 @@
             listEl.innerHTML = '<li>Loading...</li>';
             
             try {
+                // We still query the whole collection, ordered by score
                 const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(5));
                 const querySnapshot = await getDocs(q);
                 
@@ -113,8 +140,8 @@
                     return;
                 }
 
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
+                querySnapshot.forEach((docSnapshot) => {
+                    const data = docSnapshot.data();
                     const li = document.createElement('li');
                     li.innerHTML = `
                         <span class="lb-name">${data.name}</span>
