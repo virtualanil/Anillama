@@ -13,7 +13,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-        import { getFirestore, collection, serverTimestamp, getDocs, query, orderBy, limit, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+        import { getFirestore, collection, serverTimestamp, getDocs, query, orderBy, limit, doc, getDoc, setDoc, runTransaction } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
         // Firebase Config
         const firebaseConfig = {
@@ -77,60 +77,66 @@
             }
         };
 
-        // Save Score to Firestore (FIXED LOGIC)
+        // Save Score to Firestore (UPDATED LOGIC: Prioritize WPM)
         window.saveScore = async function(score, wpm) {
             if (!window.currentUser) {
                 console.log("Cannot save score: User not logged in");
-                return;
+                return false;
             }
+            
+            const userDocRef = doc(db, "leaderboard", window.currentUser.uid);
+
             try {
-                // We use the user's UID as the Document ID.
-                // This ensures that for this specific user, there is only ONE document.
-                const userDocRef = doc(db, "leaderboard", window.currentUser.uid);
-                
-                // Check if the document already exists to see if we have a high score to beat
-                const docSnap = await getDoc(userDocRef);
-                
-                let shouldSave = false;
+                await runTransaction(db, async (transaction) => {
+                    const sfDoc = await transaction.get(userDocRef);
+                    let shouldSave = false;
 
-                if (docSnap.exists()) {
-                    const existingData = docSnap.data();
-                    // Only update if the new score is strictly higher than the old one
-                    if (score > existingData.score) {
+                    if (!sfDoc.exists()) {
+                        // First time playing
                         shouldSave = true;
-                        console.log(`New High Score! Old: ${existingData.score}, New: ${score}`);
+                        console.log("First game. Saving score.");
                     } else {
-                        console.log(`Score ${score} is not higher than current best ${existingData.score}. Not saving.`);
+                        const existingData = sfDoc.data();
+                        
+                        // CHANGE: Now comparing WPM instead of Score
+                        // Only update if new WPM is strictly higher
+                        if (wpm > existingData.wpm) {
+                            shouldSave = true;
+                            console.log(`New High WPM! Old: ${existingData.wpm}, New: ${wpm}`);
+                            console.log(`Previous Score: ${existingData.score} replaced by new Score: ${score}`);
+                        } else {
+                            console.log(`WPM ${wpm} is not higher than current best ${existingData.wpm}. Not saving.`);
+                        }
                     }
-                } else {
-                    // First time this user plays
-                    shouldSave = true;
-                    console.log("First game. Saving score.");
-                }
 
-                if (shouldSave) {
-                    await setDoc(userDocRef, {
-                        name: window.currentUser.displayName,
-                        email: window.currentUser.email,
-                        score: score,
-                        wpm: wpm,
-                        time: serverTimestamp()
-                    });
-                    console.log("Score saved successfully!");
-                }
-            } catch(e) {
-                console.error("Failed to save score:", e);
+                    if (shouldSave) {
+                        transaction.set(userDocRef, {
+                            name: window.currentUser.displayName,
+                            email: window.currentUser.email,
+                            score: score, // Save the score achieved at this high WPM
+                            wpm: wpm,
+                            time: serverTimestamp()
+                        });
+                    }
+                });
+                console.log("Transaction successfully committed!");
+                return true;
+            } catch (e) {
+                console.error("Transaction failed: ", e);
+                return false;
             }
         };
 
-        // Fetch Leaderboard
-        window.loadLeaderboard = async function() {
-            const listEl = document.getElementById('leaderboard-list');
+        // Fetch Leaderboard (UPDATED: Accepts list ID to be reusable)
+        window.loadLeaderboard = async function(listId = 'leaderboard-list') {
+            const listEl = document.getElementById(listId);
+            if(!listEl) return;
+            
             listEl.innerHTML = '<li>Loading...</li>';
             
             try {
-                // We still query the whole collection, ordered by score
-                const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(5));
+                // CHANGE: Ordering by "wpm" descending instead of "score"
+                const q = query(collection(db, "leaderboard"), orderBy("wpm", "desc"), limit(10));
                 const querySnapshot = await getDocs(q);
                 
                 listEl.innerHTML = ''; 
@@ -145,8 +151,8 @@
                     const li = document.createElement('li');
                     li.innerHTML = `
                         <span class="lb-name">${data.name}</span>
-                        <span class="lb-stats">WPM: ${data.wpm}</span>
-                        <span class="lb-score">${data.score}</span>
+                        <span class="lb-stats">SCORE: ${data.score}</span>
+                        <span class="lb-score">WPM: ${data.wpm}</span>
                     `;
                     listEl.appendChild(li);
                 });
@@ -342,6 +348,11 @@
             box-shadow: none;
         }
 
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -376,12 +387,12 @@
             text-transform: uppercase;
             font-size: 1.2rem;
         }
-        ul#leaderboard-list {
+        ul.leaderboard-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        ul#leaderboard-list li {
+        ul.leaderboard-list li {
             display: flex;
             justify-content: space-between;
             padding: 10px;
@@ -389,7 +400,7 @@
             font-family: var(--type-font);
             font-size: 0.9rem;
         }
-        ul#leaderboard-list li:last-child { border-bottom: none; }
+        ul.leaderboard-list li:last-child { border-bottom: none; }
         .lb-name { color: #fff; flex: 1; }
         .lb-stats { color: #aaa; margin-right: 15px; }
         .lb-score { color: var(--primary); font-weight: bold; }
@@ -437,6 +448,25 @@
         
         <!-- Login Button is visible by default, hides after login -->
         <button id="loginBtn" class="btn" onclick="loginWithGoogle()">Login with Gmail</button>
+        
+        <!-- New Leaderboard Button -->
+        <button class="btn btn-small" onclick="openLeaderboardMenu()">LEADERBOARD</button>
+    </div>
+
+    <!-- LEADERBOARD MENU (For Start Screen) -->
+    <div class="modal hidden" id="leaderboardMenuScreen">
+        <h1>TOP DEFENDERS</h1>
+        
+        <div class="leaderboard-container">
+            <h3>Top 10 (By WPM)</h3>
+            <ul id="leaderboard-list-start" class="leaderboard-list">
+                <li>Loading...</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button class="btn" onclick="closeLeaderboardMenu()">BACK</button>
+        </div>
     </div>
 
     <!-- PAUSE SCREEN -->
@@ -470,8 +500,8 @@
         
         <!-- Leaderboard Section -->
         <div class="leaderboard-container">
-            <h3>Top 5 Defenders</h3>
-            <ul id="leaderboard-list">
+            <h3>Top 10 Defenders (By WPM)</h3>
+            <ul id="leaderboard-list" class="leaderboard-list">
                 <li>Loading...</li>
             </ul>
         </div>
@@ -483,6 +513,19 @@
 </div>
 
 <script>
+// Helper Functions for Menus
+window.openLeaderboardMenu = function() {
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('leaderboardMenuScreen').classList.remove('hidden');
+    // Load data into the Start Screen specific list
+    loadLeaderboard('leaderboard-list-start');
+};
+
+window.closeLeaderboardMenu = function() {
+    document.getElementById('leaderboardMenuScreen').classList.add('hidden');
+    document.getElementById('startScreen').classList.remove('hidden');
+};
+
 const AudioSys = {
     ctx: null,
     init() {
@@ -831,7 +874,7 @@ class Game {
         document.getElementById('wpmDisplay').innerText = wpm;
     }
 
-    gameOver() {
+    async gameOver() {
         this.state = 'GAMEOVER';
         if (this.spawnTimer) {
             clearTimeout(this.spawnTimer);
@@ -854,13 +897,14 @@ class Game {
         // SAVE AND LOAD LOGIC
         if (window.currentUser) {
             // User is logged in, save their score
-            saveScore(this.score, finalWpm);
+            // Now logic checks WPM first
+            await saveScore(this.score, finalWpm);
         } else {
             console.log("User not logged in. Score not saved to leaderboard.");
         }
         
-        // Load the latest leaderboard regardless of login status
-        loadLeaderboard();
+        // Load the latest leaderboard into the Game Over list
+        loadLeaderboard('leaderboard-list');
     }
 
     loop(timestamp) {
