@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Tags -->
-    <title>Typing Defender - Free 3D Typing Shooter Game</title>
+    <title>Typing Game - Nepali Typing Game</title>
     <meta name="description" content="Play Typing Defender, a free 3D typing shooter game. Improve your WPM and accuracy while defending system from cyber enemies.">
     <meta name="author" content="Anil Lama">
 
@@ -84,13 +84,18 @@
                 return;
             }
             try {
+                // We use the user's UID as the Document ID.
+                // This ensures that for this specific user, there is only ONE document.
                 const userDocRef = doc(db, "leaderboard", window.currentUser.uid);
+                
+                // Check if the document already exists to see if we have a high score to beat
                 const docSnap = await getDoc(userDocRef);
                 
                 let shouldSave = false;
 
                 if (docSnap.exists()) {
                     const existingData = docSnap.data();
+                    // Only update if the new score is strictly higher than the old one
                     if (score > existingData.score) {
                         shouldSave = true;
                         console.log(`New High Score! Old: ${existingData.score}, New: ${score}`);
@@ -98,6 +103,7 @@
                         console.log(`Score ${score} is not higher than current best ${existingData.score}. Not saving.`);
                     }
                 } else {
+                    // First time this user plays
                     shouldSave = true;
                     console.log("First game. Saving score.");
                 }
@@ -112,8 +118,10 @@
                     });
                     console.log("Score saved successfully!");
                 }
+                return true; // Return true if saved or skipped (no error)
             } catch(e) {
                 console.error("Failed to save score:", e);
+                return false;
             }
         };
 
@@ -123,7 +131,8 @@
             listEl.innerHTML = '<li>Loading...</li>';
             
             try {
-                const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(5));
+                // FIXED: Changed limit(5) to limit(10)
+                const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(10));
                 const querySnapshot = await getDocs(q);
                 
                 listEl.innerHTML = ''; 
@@ -257,59 +266,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 5, 16, 0.9);
-            backdrop-filter: blur(8px);
-            z-index: 10;
-            pointer-events: auto;
-            transition: opacity 0.3s;
-            overflow-y: auto;
-            
-            /* Default layout for other modals (Game Over, Pause) */
+            background: rgba(5, 5, 16, 0.85);
+            backdrop-filter: blur(5px);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-        }
-
-        /* SPECIAL LAYOUT FOR START SCREEN (Ads) */
-        #startScreen {
-            flex-direction: row; /* Horizontal layout for Start Screen */
-            justify-content: center;
-            align-items: center;
-        }
-
-        .ad-space {
-            flex: 1; /* Takes up remaining space equally */
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px dashed rgba(0, 243, 255, 0.2);
-            background: rgba(0,0,0,0.2);
-            margin: 20px;
-            max-width: 300px;
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 1.5rem;
-            text-align: center;
-            position: relative;
-        }
-
-        .ad-space::after {
-            content: "ADVERTISEMENT SPACE";
-            font-family: var(--ui-font);
-            transform: rotate(-45deg);
-        }
-
-        .menu-content {
-            flex: 0 0 auto; /* Don't grow or shrink */
-            width: 500px;
-            max-width: 90%;
-            z-index: 2;
-            padding: 40px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--primary);
-            box-shadow: 0 0 50px rgba(0, 243, 255, 0.1);
-            clip-path: polygon(5% 0, 100% 0, 100% 95%, 95% 100%, 0 100%, 0 5%);
+            z-index: 10;
+            pointer-events: auto;
+            transition: opacity 0.3s;
+            overflow-y: auto;
         }
 
         .hidden {
@@ -319,8 +285,8 @@
         }
 
         h1 {
-            font-size: 3.5rem;
-            margin: 0 0 10px 0;
+            font-size: 4rem;
+            margin: 0;
             background: linear-gradient(to bottom, #fff, var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -328,29 +294,25 @@
             letter-spacing: 5px;
             filter: drop-shadow(0 0 15px var(--primary));
             text-align: center;
-            line-height: 1.1;
         }
 
         h2 {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             color: #fff;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             text-shadow: 0 0 5px var(--primary);
             font-weight: 400;
             text-align: center;
-            letter-spacing: 2px;
         }
 
         p.subtitle {
             font-family: var(--type-font);
-            color: #ccc;
-            font-size: 0.95rem;
-            margin-bottom: 30px;
+            color: #aaa;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
             text-align: center;
-            line-height: 1.5;
-            background: rgba(0, 243, 255, 0.05);
-            padding: 10px;
-            border-radius: 4px;
+            max-width: 600px;
+            line-height: 1.6;
         }
 
         .btn {
@@ -358,7 +320,7 @@
             color: var(--primary);
             border: 2px solid var(--primary);
             padding: 15px 40px;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-family: var(--ui-font);
             text-transform: uppercase;
             cursor: pointer;
@@ -366,9 +328,7 @@
             position: relative;
             overflow: hidden;
             pointer-events: auto;
-            margin: 10px 0;
-            width: 100%;
-            box-sizing: border-box;
+            margin: 10px;
         }
 
         .btn:hover {
@@ -437,19 +397,6 @@
         .lb-score { color: var(--primary); font-weight: bold; }
 
         /* Mobile Adjustments */
-        @media (max-width: 900px) {
-            .ad-space {
-                display: none; /* Hide ads on tablets/mobile */
-            }
-            #startScreen {
-                flex-direction: column; /* Revert to vertical stack */
-            }
-            .menu-content {
-                width: 90%;
-                margin: 20px;
-            }
-        }
-        
         @media (max-width: 600px) {
             h1 { font-size: 2.5rem; }
             .stats-grid { grid-template-columns: 1fr; }
@@ -477,35 +424,21 @@
         <div class="hud-combo" id="comboDisplay">COMBO x1</div>
     </div>
 
-    <!-- START SCREEN WITH ADS LAYOUT -->
+    <!-- START SCREEN -->
     <div class="modal" id="startScreen">
-        <!-- Left Ad Space -->
-        <div class="ad-space ad-left">
-            <!-- PASTE YOUR GOOGLE ADSENSE CODE HERE -->
-<img src="image_2026-02-07_152325290.png" style="width:100%; height:100%; object-fit:contain;" alt="Ad">
-        </div>
-
-        <!-- Center Menu Content -->
-        <div class="menu-content">
-            <h1>TYPING GAME</h1>
-            <h2>BY ANIL LAMA</h2>
-            <p class="subtitle">Type words to destroy enemies.<br>
-            <strong>SMART TARGETING:</strong> If multiple words start the same, type until they differ to lock the correct one. <br>
-            Typing a wrong letter resets your combo.<br>
-            <strong>FEATURE:</strong> Press SPACE to spawn extra enemies instantly.<br>
-            Press ESC to Pause.</p>
-            
-            <!-- Start Button is Hidden by default, shows after login -->
-            <button id="startBtn" class="btn hidden" onclick="game.start()">START GAME</button>
-            
-            <!-- Login Button is visible by default, hides after login -->
-            <button id="loginBtn" class="btn" onclick="loginWithGoogle()">Login with Gmail</button>
-        </div>
-
-        <!-- Right Ad Space -->
-        <div class="ad-space ad-right">
-            <!-- PASTE YOUR GOOGLE ADSENSE CODE HERE -->
-        </div>
+        <h1>TYPING GAME</h1>
+        <h2>BY ANIL LAMA </h2>
+        <p class="subtitle">Typing Game words to destroy enemies.<br>
+        <strong>SMART TARGETING:</strong> If multiple words start the same, type until they differ to lock the correct one. <br>
+        Typing a wrong letter resets your combo.<br>
+        <strong>FEATURE:</strong> Press SPACE to spawn extra enemies instantly.<br>
+        Press ESC to Pause.</p>
+        
+        <!-- Start Button is Hidden by default, shows after login -->
+        <button id="startBtn" class="btn hidden" onclick="game.start()">START GAME</button>
+        
+        <!-- Login Button is visible by default, hides after login -->
+        <button id="loginBtn" class="btn" onclick="loginWithGoogle()">Login with Gmail</button>
     </div>
 
     <!-- PAUSE SCREEN -->
@@ -539,7 +472,7 @@
         
         <!-- Leaderboard Section -->
         <div class="leaderboard-container">
-            <h3>Top 5 Defenders</h3>
+            <h3>Top 10 Defenders</h3>
             <ul id="leaderboard-list">
                 <li>Loading...</li>
             </ul>
@@ -612,7 +545,7 @@ const AudioSys = {
 };
 
 const WORD_LIST = [
-  "shell","alpha","bravo","target","vector","laser","shield","plasma","orbit","space",
+  "nepal","malai","ramro","lagchha","vector","laser","shield","plasma","orbit","space",
   "planet","meteor","rocket","alien","ufo","robot","cyborg","neon","pulse","matrix",
   "data","link","node","grid","flash","spark","blast","fire","storm","wind","rain",
   "thunder","light","dark","shadow","ghost","spirit","soul","mind","power","energy",
@@ -629,7 +562,7 @@ const WORD_LIST = [
   "noise","smooth","sharp","pixel","frame","motion","engine","driver","device",
   "screen","input","output","mouse","keyboard","touch","gesture","click","scroll",
   "zoom","pan",
-  "array","object","string","number","boolean","null","undefined","function","method","class",
+  "love","you","string","number","boolean","null","undefined","function","method","class",
   "module","import","export","default","async","await","promise","callback","event","listener",
   "state","props","mount","unmount","effect","layout","theme","style","color","font",
   "border","margin","padding","radius","fonepay","layer","panel","window","dialog",
@@ -900,7 +833,8 @@ class Game {
         document.getElementById('wpmDisplay').innerText = wpm;
     }
 
-    gameOver() {
+    // FIXED: Made async to await saveScore before loading leaderboard
+    async gameOver() {
         this.state = 'GAMEOVER';
         if (this.spawnTimer) {
             clearTimeout(this.spawnTimer);
@@ -923,7 +857,8 @@ class Game {
         // SAVE AND LOAD LOGIC
         if (window.currentUser) {
             // User is logged in, save their score
-            saveScore(this.score, finalWpm);
+            // We use 'await' to make sure the data is saved to DB before we fetch the list
+            await saveScore(this.score, finalWpm);
         } else {
             console.log("User not logged in. Score not saved to leaderboard.");
         }
