@@ -13,7 +13,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-        import { getFirestore, addDoc, collection, serverTimestamp, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+        import { getFirestore, collection, serverTimestamp, getDocs, query, orderBy, limit, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
         // Firebase Config
         const firebaseConfig = {
@@ -33,24 +33,36 @@
 
         window.currentUser = null;
 
-        // Listen to Auth State changes (keeps login persistent on refresh)
+        // Listen to Auth State changes
         onAuthStateChanged(auth, (user) => {
+            const loginBtn = document.getElementById("loginBtn");
+            const startBtn = document.getElementById("startBtn");
+            const userDisplay = document.getElementById("userDisplay");
+
             if (user) {
                 window.currentUser = user;
-                const loginBtn = document.querySelector("button[onclick='loginWithGoogle()']");
-                if(loginBtn) {
-                    loginBtn.innerText = "Logged in as " + user.displayName;
-                    loginBtn.disabled = true;
-                    loginBtn.style.opacity = "0.7";
+                
+                // Show Name at Top
+                if(userDisplay) {
+                    userDisplay.innerHTML = `COMMANDER: <span>${user.displayName}</span>`;
                 }
+
+                // Hide Login, Show Start
+                if(loginBtn) loginBtn.classList.add('hidden');
+                if(startBtn) startBtn.classList.remove('hidden');
+
+                console.log("User logged in:", window.currentUser.displayName);
             } else {
                 window.currentUser = null;
-                const loginBtn = document.querySelector("button[onclick='loginWithGoogle()']");
-                if(loginBtn) {
-                    loginBtn.innerText = "Login with Gmail";
-                    loginBtn.disabled = false;
-                    loginBtn.style.opacity = "1";
+                
+                // Show Guest at Top
+                if(userDisplay) {
+                    userDisplay.innerHTML = `GUEST`;
                 }
+
+                // Show Login, Hide Start
+                if(loginBtn) loginBtn.classList.remove('hidden');
+                if(startBtn) startBtn.classList.add('hidden');
             }
         });
 
@@ -59,28 +71,53 @@
             try {
                 const result = await signInWithPopup(auth, provider);
                 window.currentUser = result.user;
-                console.log("User logged in:", window.currentUser.displayName);
             } catch (err) {
                 console.error(err);
                 alert("Login failed: " + err.message);
             }
         };
 
-        // Save Score to Firestore
+        // Save Score to Firestore (FIXED LOGIC)
         window.saveScore = async function(score, wpm) {
             if (!window.currentUser) {
                 console.log("Cannot save score: User not logged in");
                 return;
             }
             try {
-                await addDoc(collection(db, "leaderboard"), {
-                    name: window.currentUser.displayName,
-                    email: window.currentUser.email,
-                    score: score,
-                    wpm: wpm,
-                    time: serverTimestamp()
-                });
-                console.log("Score saved!");
+                // We use the user's UID as the Document ID.
+                // This ensures that for this specific user, there is only ONE document.
+                const userDocRef = doc(db, "leaderboard", window.currentUser.uid);
+                
+                // Check if the document already exists to see if we have a high score to beat
+                const docSnap = await getDoc(userDocRef);
+                
+                let shouldSave = false;
+
+                if (docSnap.exists()) {
+                    const existingData = docSnap.data();
+                    // Only update if the new score is strictly higher than the old one
+                    if (score > existingData.score) {
+                        shouldSave = true;
+                        console.log(`New High Score! Old: ${existingData.score}, New: ${score}`);
+                    } else {
+                        console.log(`Score ${score} is not higher than current best ${existingData.score}. Not saving.`);
+                    }
+                } else {
+                    // First time this user plays
+                    shouldSave = true;
+                    console.log("First game. Saving score.");
+                }
+
+                if (shouldSave) {
+                    await setDoc(userDocRef, {
+                        name: window.currentUser.displayName,
+                        email: window.currentUser.email,
+                        score: score,
+                        wpm: wpm,
+                        time: serverTimestamp()
+                    });
+                    console.log("Score saved successfully!");
+                }
             } catch(e) {
                 console.error("Failed to save score:", e);
             }
@@ -92,19 +129,19 @@
             listEl.innerHTML = '<li>Loading...</li>';
             
             try {
-                // Create query: get top 10 scores ordered by score (descending)
+                // We still query the whole collection, ordered by score
                 const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(5));
                 const querySnapshot = await getDocs(q);
                 
-                listEl.innerHTML = ''; // Clear loading
+                listEl.innerHTML = ''; 
                 
                 if (querySnapshot.empty) {
                     listEl.innerHTML = '<li>No scores yet. Be the first!</li>';
                     return;
                 }
 
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
+                querySnapshot.forEach((docSnapshot) => {
+                    const data = docSnapshot.data();
                     const li = document.createElement('li');
                     li.innerHTML = `
                         <span class="lb-name">${data.name}</span>
@@ -170,8 +207,11 @@
         .hud-top {
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
             font-size: 1.2rem;
             text-shadow: 0 0 10px var(--primary);
+            gap: 10px;
         }
 
         .hud-stat {
@@ -233,10 +273,11 @@
             z-index: 10;
             pointer-events: auto;
             transition: opacity 0.3s;
-            overflow-y: auto; /* Allow scroll for leaderboard if needed */
+            overflow-y: auto;
         }
 
         .hidden {
+            display: none !important;
             opacity: 0;
             pointer-events: none;
         }
@@ -357,6 +398,8 @@
         @media (max-width: 600px) {
             h1 { font-size: 2.5rem; }
             .stats-grid { grid-template-columns: 1fr; }
+            .hud-top { font-size: 0.9rem; }
+            .hud-stat { padding: 5px 10px; }
         }
     </style>
 </head>
@@ -370,6 +413,9 @@
 
     <div class="ui-layer" id="hud">
         <div class="hud-top">
+            <!-- New User Display Area -->
+            <div class="hud-stat" id="userDisplay">GUEST</div>
+            
             <div class="hud-stat">SCORE: <span id="scoreDisplay">0</span></div>
             <div class="hud-stat">WPM: <span id="wpmDisplay">0</span></div>
         </div>
@@ -385,8 +431,12 @@
         Typing a wrong letter resets your combo.<br>
         <strong>FEATURE:</strong> Press SPACE to spawn extra enemies instantly.<br>
         Press ESC to Pause.</p>
-        <button class="btn" onclick="game.start()">START GAME</button>
-        <button class="btn" onclick="loginWithGoogle()">Login with Gmail</button>
+        
+        <!-- Start Button is Hidden by default, shows after login -->
+        <button id="startBtn" class="btn hidden" onclick="game.start()">START GAME</button>
+        
+        <!-- Login Button is visible by default, hides after login -->
+        <button id="loginBtn" class="btn" onclick="loginWithGoogle()">Login with Gmail</button>
     </div>
 
     <!-- PAUSE SCREEN -->
