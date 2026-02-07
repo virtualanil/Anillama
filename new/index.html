@@ -455,6 +455,7 @@
             cursor: pointer;
             box-shadow: 0 2px 0 #000;
             transition: background 0.1s;
+            touch-action: manipulation; /* Improves response time on mobile */
         }
 
         .kb-key:active {
@@ -655,11 +656,14 @@ window.closeLeaderboardMenu = function() {
     document.getElementById('startScreen').classList.remove('hidden');
 };
 
-// Virtual Keyboard Logic
+// Virtual Keyboard Logic - FIXED
 const keys = document.querySelectorAll('.kb-key');
 keys.forEach(key => {
-    const touchHandler = (e) => {
-        e.preventDefault(); // Prevent ghost clicks
+    // Only use touchstart for mobile to prevent double input bug
+    key.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevents zoom/scroll
+        e.stopPropagation(); // Stops event bubbling
+        
         const keyValue = key.getAttribute('data-key');
         
         // Visual feedback
@@ -673,10 +677,7 @@ keys.forEach(key => {
         if (window.game && window.game.state === 'PLAYING') {
             window.game.handleKeyInput(keyValue);
         }
-    };
-
-    key.addEventListener('touchstart', touchHandler, {passive: false});
-    key.addEventListener('mousedown', touchHandler); // For desktop testing
+    }, { passive: false });
 });
 
 const AudioSys = {
@@ -834,7 +835,6 @@ class Game {
         this.height = this.canvas.height = window.innerHeight;
         
         // Auto adjust player Y position based on screen height
-        // If keyboard is visible (CSS logic), move player up
         const isMobilePortrait = window.matchMedia("(max-width: 768px) and (orientation: portrait)").matches;
         this.player.y = isMobilePortrait ? this.height - 240 : this.height - 80;
         this.player.x = this.width / 2;
@@ -906,7 +906,6 @@ class Game {
         if (this.state !== 'PLAYING') return;
         
         const word = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
-        // Auto adjust spawn X to keep within safe bounds
         const safeWidth = this.width - 100;
         const x = Math.random() * safeWidth + 50; 
         const y = -50;
