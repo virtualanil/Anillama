@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Auto-Adjust Viewport for Mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <!-- SEO Tags -->
     <title>Typing Game - Nepali Typing Game</title>
@@ -42,12 +43,10 @@
             if (user) {
                 window.currentUser = user;
                 
-                // Show Name at Top
                 if(userDisplay) {
                     userDisplay.innerHTML = `CMD: <span>${user.displayName.split(' ')[0]}</span>`;
                 }
 
-                // Hide Login, Show Start
                 if(loginBtn) loginBtn.classList.add('hidden');
                 if(startBtn) startBtn.classList.remove('hidden');
 
@@ -55,12 +54,10 @@
             } else {
                 window.currentUser = null;
                 
-                // Show Guest at Top
                 if(userDisplay) {
                     userDisplay.innerHTML = `GUEST`;
                 }
 
-                // Show Login, Hide Start
                 if(loginBtn) loginBtn.classList.remove('hidden');
                 if(startBtn) startBtn.classList.add('hidden');
             }
@@ -77,7 +74,7 @@
             }
         };
 
-        // Save Score to Firestore (UPDATED LOGIC: Prioritize WPM)
+        // Save Score to Firestore (Prioritize WPM)
         window.saveScore = async function(score, wpm) {
             if (!window.currentUser) {
                 console.log("Cannot save score: User not logged in");
@@ -93,16 +90,11 @@
 
                     if (!sfDoc.exists()) {
                         shouldSave = true;
-                        console.log("First game. Saving score.");
                     } else {
                         const existingData = sfDoc.data();
-                        
-                        // CHANGE: Now comparing WPM instead of Score
+                        // Compare WPM
                         if (wpm > existingData.wpm) {
                             shouldSave = true;
-                            console.log(`New High WPM! Old: ${existingData.wpm}, New: ${wpm}`);
-                        } else {
-                            console.log(`WPM ${wpm} is not higher than current best ${existingData.wpm}. Not saving.`);
                         }
                     }
 
@@ -116,7 +108,6 @@
                         });
                     }
                 });
-                console.log("Transaction successfully committed!");
                 return true;
             } catch (e) {
                 console.error("Transaction failed: ", e);
@@ -138,7 +129,7 @@
                 listEl.innerHTML = ''; 
                 
                 if (querySnapshot.empty) {
-                    listEl.innerHTML = '<li>No scores yet. Be the first!</li>';
+                    listEl.innerHTML = '<li>No scores yet.</li>';
                     return;
                 }
 
@@ -169,10 +160,12 @@
             --bg: #050510;
             --ui-font: 'Orbitron', sans-serif;
             --type-font: 'Roboto Mono', monospace;
+            --kb-height: 220px;
         }
 
         * {
             -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
         }
 
         body {
@@ -182,13 +175,16 @@
             color: white;
             font-family: var(--ui-font);
             user-select: none;
-            touch-action: none; /* Prevents scrolling on mobile */
+            /* Crucial for auto-adjust mobile game feel */
+            touch-action: none; 
+            width: 100vw;
+            height: 100vh;
         }
 
         #game-container {
             position: relative;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
         }
 
         canvas {
@@ -208,7 +204,6 @@
             flex-direction: column;
             justify-content: space-between;
             padding: 10px;
-            box-sizing: border-box;
             z-index: 5;
         }
 
@@ -228,6 +223,7 @@
             border: 1px solid var(--primary);
             border-radius: 4px;
             font-size: 0.8rem;
+            white-space: nowrap;
         }
 
         .hud-stat span {
@@ -246,11 +242,11 @@
 
         .current-input {
             position: absolute;
-            bottom: 260px; /* Moved up for keyboard */
+            bottom: 240px; /* Adjust dynamically in JS if needed */
             left: 50%;
             transform: translateX(-50%);
             font-family: var(--type-font);
-            font-size: 1.5rem;
+            font-size: clamp(1rem, 2vw, 1.5rem); /* Auto font size */
             color: var(--primary);
             text-shadow: 0 0 10px var(--primary);
             letter-spacing: 2px;
@@ -274,7 +270,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 5, 16, 0.9);
+            background: rgba(5, 5, 16, 0.95);
             backdrop-filter: blur(5px);
             display: flex;
             flex-direction: column;
@@ -294,13 +290,13 @@
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 5vw, 4rem); /* Auto scaling title */
             margin: 0 0 10px 0;
             background: linear-gradient(to bottom, #fff, var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             filter: drop-shadow(0 0 15px var(--primary));
             text-align: center;
         }
@@ -329,7 +325,7 @@
             color: var(--primary);
             border: 2px solid var(--primary);
             padding: 12px 30px;
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-family: var(--ui-font);
             text-transform: uppercase;
             cursor: pointer;
@@ -421,6 +417,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
+            height: var(--kb-height);
             background: rgba(5, 10, 20, 0.95);
             border-top: 1px solid #333;
             padding: 5px;
@@ -428,7 +425,9 @@
             display: none; /* Hidden by default on desktop */
             flex-direction: column;
             align-items: center;
+            /* Handles iPhone notch */
             padding-bottom: env(safe-area-inset-bottom);
+            transition: transform 0.3s ease;
         }
 
         .kb-row {
@@ -471,23 +470,52 @@
             font-size: 12px;
         }
 
-        /* Media Queries for Mobile */
-        @media (max-width: 768px) {
+        /* Auto-Adjust Media Queries */
+        
+        /* Show Virtual Keyboard on Mobile Portrait */
+        @media (max-width: 768px) and (orientation: portrait) {
             .virtual-keyboard {
                 display: flex;
             }
             .current-input {
-                bottom: 280px;
+                bottom: 240px; /* Above keyboard */
             }
             .stats-grid {
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Hide Virtual Keyboard on Mobile Landscape (too small) */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .virtual-keyboard {
+                display: none !important;
+            }
+            .current-input {
+                bottom: 120px; /* Lower when no keyboard */
+            }
+            .modal {
+                padding: 5px;
+            }
+            .btn {
+                width: auto;
+                min-width: 200px;
+            }
+        }
         
+        /* Very Small Mobile Fixes */
         @media (max-width: 400px) {
-            h1 { font-size: 2rem; }
-            .kb-key { height: 40px; font-size: 12px; }
-            .current-input { bottom: 260px; font-size: 1.2rem; }
+            .hud-top {
+                font-size: 0.7rem;
+                gap: 2px;
+            }
+            .hud-stat {
+                padding: 2px 5px;
+            }
+            .kb-key { 
+                height: 40px; 
+                font-size: 12px;
+                margin: 0 1px;
+            }
         }
     </style>
 </head>
@@ -499,7 +527,7 @@
     <!-- Visual Input Buffer -->
     <div class="current-input" id="inputBufferDisplay"></div>
 
-    <!-- VIRTUAL KEYBOARD (Mobile Only) -->
+    <!-- VIRTUAL KEYBOARD (Auto-Visible on Mobile Portrait) -->
     <div class="virtual-keyboard" id="virtualKeyboard">
         <div class="kb-row">
             <div class="kb-key" data-key="q">Q</div>
@@ -804,7 +832,11 @@ class Game {
     resize() {
         this.width = this.canvas.width = window.innerWidth;
         this.height = this.canvas.height = window.innerHeight;
-        this.player.y = this.height - 100; // Adjusted for mobile keyboard
+        
+        // Auto adjust player Y position based on screen height
+        // If keyboard is visible (CSS logic), move player up
+        const isMobilePortrait = window.matchMedia("(max-width: 768px) and (orientation: portrait)").matches;
+        this.player.y = isMobilePortrait ? this.height - 240 : this.height - 80;
         this.player.x = this.width / 2;
     }
 
@@ -874,7 +906,9 @@ class Game {
         if (this.state !== 'PLAYING') return;
         
         const word = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
-        const x = Math.random() * (this.width - 100) + 50;
+        // Auto adjust spawn X to keep within safe bounds
+        const safeWidth = this.width - 100;
+        const x = Math.random() * safeWidth + 50; 
         const y = -50;
         const speed = (Math.random() * 0.5 + 0.5) * this.difficultyMultiplier;
         const type = Math.random() > 0.8 ? 'ARMORED' : 'NORMAL';
@@ -886,11 +920,10 @@ class Game {
         this.spawnTimer = setTimeout(() => this.spawnEnemy(), nextSpawn);
     }
 
-    // Unified Input Logic for Keyboard and Virtual Keys
+    // Unified Input Logic
     handleKeyInput(keyChar) {
         if (this.state !== 'PLAYING') return;
         
-        // Handle Backspace
         if (keyChar === 'backspace') {
             if (this.currentInput.length > 0) {
                 this.currentInput = this.currentInput.slice(0, -1);
@@ -899,14 +932,12 @@ class Game {
             return;
         }
 
-        // Handle Space
         if (keyChar === ' ') {
             this.spawnEnemy();
             this.createExplosion(this.width/2, 50, 'rgba(0,243,255,0.5)'); 
             return; 
         }
         
-        // Handle Letters
         if (keyChar.length !== 1) return;
         const key = keyChar.toLowerCase();
         
@@ -944,7 +975,6 @@ class Game {
     }
 
     handleInput(e) {
-        // Wrapper for physical keyboard
         this.handleKeyInput(e.key);
     }
 
