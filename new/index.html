@@ -127,9 +127,11 @@
             }
         };
 
-        // Fetch Leaderboard (UPDATED: Order by WPM)
-        window.loadLeaderboard = async function() {
-            const listEl = document.getElementById('leaderboard-list');
+        // Fetch Leaderboard (UPDATED: Accepts list ID to be reusable)
+        window.loadLeaderboard = async function(listId = 'leaderboard-list') {
+            const listEl = document.getElementById(listId);
+            if(!listEl) return;
+            
             listEl.innerHTML = '<li>Loading...</li>';
             
             try {
@@ -346,6 +348,11 @@
             box-shadow: none;
         }
 
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -380,12 +387,12 @@
             text-transform: uppercase;
             font-size: 1.2rem;
         }
-        ul#leaderboard-list {
+        ul.leaderboard-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        ul#leaderboard-list li {
+        ul.leaderboard-list li {
             display: flex;
             justify-content: space-between;
             padding: 10px;
@@ -393,7 +400,7 @@
             font-family: var(--type-font);
             font-size: 0.9rem;
         }
-        ul#leaderboard-list li:last-child { border-bottom: none; }
+        ul.leaderboard-list li:last-child { border-bottom: none; }
         .lb-name { color: #fff; flex: 1; }
         .lb-stats { color: #aaa; margin-right: 15px; }
         .lb-score { color: var(--primary); font-weight: bold; }
@@ -441,6 +448,25 @@
         
         <!-- Login Button is visible by default, hides after login -->
         <button id="loginBtn" class="btn" onclick="loginWithGoogle()">Login with Gmail</button>
+        
+        <!-- New Leaderboard Button -->
+        <button class="btn btn-small" onclick="openLeaderboardMenu()">LEADERBOARD</button>
+    </div>
+
+    <!-- LEADERBOARD MENU (For Start Screen) -->
+    <div class="modal hidden" id="leaderboardMenuScreen">
+        <h1>TOP DEFENDERS</h1>
+        
+        <div class="leaderboard-container">
+            <h3>Top 10 (By WPM)</h3>
+            <ul id="leaderboard-list-start" class="leaderboard-list">
+                <li>Loading...</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button class="btn" onclick="closeLeaderboardMenu()">BACK</button>
+        </div>
     </div>
 
     <!-- PAUSE SCREEN -->
@@ -475,7 +501,7 @@
         <!-- Leaderboard Section -->
         <div class="leaderboard-container">
             <h3>Top 10 Defenders (By WPM)</h3>
-            <ul id="leaderboard-list">
+            <ul id="leaderboard-list" class="leaderboard-list">
                 <li>Loading...</li>
             </ul>
         </div>
@@ -487,6 +513,19 @@
 </div>
 
 <script>
+// Helper Functions for Menus
+window.openLeaderboardMenu = function() {
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('leaderboardMenuScreen').classList.remove('hidden');
+    // Load data into the Start Screen specific list
+    loadLeaderboard('leaderboard-list-start');
+};
+
+window.closeLeaderboardMenu = function() {
+    document.getElementById('leaderboardMenuScreen').classList.add('hidden');
+    document.getElementById('startScreen').classList.remove('hidden');
+};
+
 const AudioSys = {
     ctx: null,
     init() {
@@ -864,8 +903,8 @@ class Game {
             console.log("User not logged in. Score not saved to leaderboard.");
         }
         
-        // Load the latest leaderboard regardless of login status
-        loadLeaderboard();
+        // Load the latest leaderboard into the Game Over list
+        loadLeaderboard('leaderboard-list');
     }
 
     loop(timestamp) {
