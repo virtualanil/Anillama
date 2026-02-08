@@ -3,256 +3,206 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CSD Follow-Up Portal</title>
+  <title>CSD Follow-Up Portal - The Turquoise Moon</title>
 
   <style>
-    /* --- 2026 DESIGN SYSTEM --- */
     :root {
-      --bg-deep: #020617;
-      --accent: #2dd4bf; /* Turquoise */
-      --accent-glow: rgba(45, 212, 191, 0.4);
-      --accent-dim: rgba(45, 212, 191, 0.1);
-      --glass: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --glass-highlight: rgba(255, 255, 255, 0.1);
-      --text-main: #f8fafc;
+      --bg-body: #0f172a;
+      --bg-card: #1e293b;
+      --bg-input: #334155;
+      --primary: #6366f1;
+      --accent-ancient: #2dd4bf;
+      --accent-glow: rgba(45, 212, 191, 0.2);
+      --danger: #ef4444;
+      --warn: #f59e0b;
+      --success: #22c55e; /* Green for active signal */
+      --text-main: #f1f5f9;
       --text-muted: #94a3b8;
-      --font-main: 'Inter', system-ui, sans-serif;
-      --easing: cubic-bezier(0.23, 1, 0.32, 1);
+      --border: #334155;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-    
-    /* Selection Color */
-    ::selection { background: var(--accent); color: #000; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: var(--font-main);
-      background-color: var(--bg-deep);
+      font-family: Inter, system-ui, sans-serif;
+      background: radial-gradient(circle at top right, #1e293b, #0f172a);
       color: var(--text-main);
       min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
+      padding-bottom: 40px;
     }
 
-    /* --- ANIMATED BACKGROUND ORBS --- */
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      z-index: -1;
-      opacity: 0.4;
-      animation: float-orb 20s infinite alternate ease-in-out;
-    }
-    .orb-1 {
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, #4f46e5, transparent);
-      top: -100px; left: -100px;
-      animation-delay: 0s;
-    }
-    .orb-2 {
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, #0ea5e9, transparent);
-      bottom: -100px; right: -100px;
-      animation-delay: -5s;
-    }
-    .orb-3 {
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, var(--accent), transparent);
-      top: 40%; left: 40%;
-      animation-duration: 25s;
-      opacity: 0.2;
-    }
-
-    @keyframes float-orb {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(30px, 50px) scale(1.1); }
-    }
-
-    /* --- LAYOUT --- */
-    .container { 
-      max-width: 1100px; 
-      margin: auto; 
-      padding: 40px 20px; 
-      position: relative;
-      z-index: 1;
-    }
+    .container { max-width: 1200px; margin: auto; padding: 20px; }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
       padding-bottom: 20px;
-      border-bottom: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--border);
     }
 
     .brand h1 {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #fff 30%, var(--accent));
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(to right, #818cf8, #2dd4bf);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       display: flex;
+      gap: 10px;
+    }
+
+    /* --- STATUS BADGE (GREEN SIGNAL FIX) --- */
+    .status-badge {
+      display: flex;
       align-items: center;
-      gap: 12px;
-      text-shadow: 0 0 20px var(--accent-dim);
+      gap: 8px;
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      transition: all 0.3s ease;
     }
 
-    /* --- COMPONENTS --- */
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #555; /* Grey when idle */
+      box-shadow: 0 0 0 transparent;
+      transition: all 0.3s ease;
+    }
+
+    /* Active State: Green Signal */
+    .status-badge.active {
+      border-color: var(--success);
+      color: var(--success);
+      background: rgba(34, 197, 94, 0.1);
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+    }
+
+    .status-badge.active .status-dot {
+      background-color: var(--success);
+      box-shadow: 0 0 10px var(--success);
+      animation: pulse-green 1.5s infinite;
+    }
+
+    @keyframes pulse-green {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* --- CARDS & FORM --- */
     .card {
-      background: var(--glass);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      border-radius: 24px;
-      padding: 32px;
-      box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
-      margin-bottom: 30px;
-      transition: transform 0.4s var(--easing), border-color 0.3s;
-    }
-
-    .card:hover {
-      border-color: var(--glass-highlight);
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.05);
     }
 
     h2 {
       font-size: 18px;
-      margin-bottom: 24px;
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    h2::before {
-      content: '';
-      display: block;
-      width: 4px;
-      height: 18px;
-      background: var(--accent);
-      border-radius: 2px;
-      box-shadow: 0 0 10px var(--accent);
+      margin-bottom: 20px;
+      border-left: 4px solid var(--accent-ancient);
+      padding-left: 12px;
     }
 
-    /* --- FORMS --- */
     .input-group {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 20px;
-      margin-bottom: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
     }
 
     .form-control {
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      padding: 14px 16px;
+      background: var(--bg-input);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 12px;
       color: var(--text-main);
-      font-size: 15px;
-      transition: all 0.3s var(--easing);
-    }
-
-    .form-control:focus {
-      border-color: var(--accent);
-      background: rgba(0, 0, 0, 0.4);
-      box-shadow: 0 0 0 4px var(--accent-dim);
+      outline: none;
+      transition: 0.2s;
     }
     
-    .form-control::placeholder { color: rgba(255,255,255,0.2); }
+    .form-control:focus {
+      border-color: var(--accent-ancient);
+    }
 
-    .form-control.full-width { grid-column: 1 / -1; resize: vertical; min-height: 80px; }
+    .form-control.full-width { grid-column: 1 / -1; }
 
     button {
-      background: linear-gradient(135deg, var(--accent), #0ea5e9);
+      background: linear-gradient(135deg, var(--primary), #4f46e5);
       border: none;
-      color: #0f172a;
-      padding: 14px 24px;
-      border-radius: 12px;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 600;
       width: 100%;
-      font-size: 15px;
-      transition: all 0.3s var(--easing);
-      position: relative;
-      overflow: hidden;
+      transition: opacity 0.2s;
     }
 
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px -5px var(--accent-glow);
-      filter: brightness(1.1);
-    }
-    
-    button:active { transform: translateY(0); }
+    button:hover { opacity: 0.9; }
 
-    /* --- TABLE --- */
-    .table-wrapper {
+    /* --- TABLE WITH NOTES --- */
+    .table-container {
       overflow-x: auto;
     }
 
     table { 
       width: 100%; 
-      border-collapse: separate; 
-      border-spacing: 0 8px; 
+      border-collapse: collapse; 
+      min-width: 800px; /* Ensure table doesn't squish too much */
     }
 
-    th {
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
       text-align: left;
-      padding: 0 16px 12px 16px;
-      color: var(--text-muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border-bottom: 1px solid var(--glass-border);
     }
 
-    td {
-      background: rgba(255, 255, 255, 0.02);
-      padding: 16px;
-      border-top: 1px solid var(--glass-border);
-      border-bottom: 1px solid var(--glass-border);
-      font-size: 14px;
-      transition: all 0.2s;
-    }
+    th { color: var(--text-muted); font-size: 12px; text-transform: uppercase; }
     
-    tr td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; border-left: 1px solid var(--glass-border); }
-    tr td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-right: 1px solid var(--glass-border); }
-    
-    tr:hover td {
-      background: rgba(255, 255, 255, 0.05);
-      transform: scale(1.005);
+    /* Notes column styling */
+    .note-cell {
+      max-width: 200px;
+      color: var(--text-muted);
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .status-pill {
-      padding: 6px 12px;
-      border-radius: 20px;
+      padding: 4px 10px;
+      border-radius: 12px;
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
-    .status-pending { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
-    .status-done { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
-    .status-snoozed { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+    .status-pending { background: rgba(245,158,11,.15); color: var(--warn); }
+    .status-done { background: rgba(34,197,94,.15); color: #22c55e; }
+    .status-snoozed { background: rgba(99,102,241,.15); color: var(--primary); }
 
-    /* --- MODAL (ALARM) --- */
+    /* --- MODAL --- */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(2, 6, 23, 0.8);
-      backdrop-filter: blur(8px);
+      background: rgba(2,6,23,.9);
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       pointer-events: none;
-      transition: all 0.4s var(--easing);
+      transition: .4s;
       z-index: 999;
     }
 
@@ -262,146 +212,53 @@
     }
 
     .modal-box {
-      background: linear-gradient(145deg, #1e293b, #0f172a);
-      border: 1px solid var(--accent);
-      padding: 50px;
-      border-radius: 32px;
+      background: linear-gradient(145deg,#1e293b,#0f172a);
+      border: 1px solid var(--accent-ancient);
+      padding: 40px;
+      border-radius: 24px;
       text-align: center;
-      box-shadow: 0 0 60px var(--accent-dim), inset 0 0 20px rgba(255,255,255,0.05);
-      transform: scale(0.8) translateY(20px);
-      transition: all 0.5s var(--easing);
-      max-width: 90%;
-      width: 450px;
-      position: relative;
-    }
-
-    .modal-overlay.active .modal-box {
-      transform: scale(1) translateY(0);
-    }
-
-    /* Ripple Effect behind modal */
-    .modal-box::before {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 150%; height: 150%;
-      background: radial-gradient(circle, var(--accent-dim), transparent 60%);
-      z-index: -1;
-      animation: ripple 2s infinite linear;
-    }
-
-    @keyframes ripple {
-      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
-      100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+      box-shadow: 0 0 30px rgba(45,212,191,.2);
+      width: 90%;
+      max-width: 450px;
     }
 
     .alarm-icon {
-      font-size: 80px;
+      font-size: 64px;
       margin-bottom: 20px;
-      display: inline-block;
-      filter: drop-shadow(0 0 20px var(--accent));
-      animation: float-icon 3s ease-in-out infinite;
-    }
-
-    @keyframes float-icon {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-15px) rotate(5deg); }
-    }
-
-    .modal-title {
-      font-size: 24px;
-      margin-bottom: 12px;
-      font-weight: 700;
+      display: block;
+      animation: float 3s ease-in-out infinite;
     }
 
     .modal-actions {
       display: flex;
-      gap: 16px;
+      gap: 12px;
       justify-content: center;
-      margin-top: 30px;
-    }
-
-    .btn-modal {
-      flex: 1;
-      padding: 14px;
-      border-radius: 12px;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.2s;
+      margin-top: 20px;
     }
 
     .btn-snooze {
-      background: rgba(255,255,255,0.1);
-      color: white;
-      border: 1px solid var(--glass-border);
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-main);
     }
-    .btn-snooze:hover { background: rgba(255,255,255,0.2); }
 
     .btn-stop {
-      background: var(--accent);
+      background: var(--accent-ancient);
       color: #0f172a;
-      box-shadow: 0 0 20px var(--accent-glow);
-    }
-    .btn-stop:hover { background: #5cead6; transform: translateY(-2px); }
-
-    /* System Status Indicator */
-    .status-badge {
-      font-size: 11px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--glass-border);
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
-    .status-dot {
-      width: 6px; height: 6px;
-      background: var(--text-muted);
-      border-radius: 50%;
-    }
-
-    .status-badge.active {
-      border-color: var(--accent);
-      color: var(--accent);
-      box-shadow: 0 0 15px var(--accent-dim);
-    }
-
-    .status-badge.active .status-dot {
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--accent);
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink { 50% { opacity: 0.5; } }
-
-    /* Mobile */
-    @media(max-width: 600px) {
-      .container { padding: 20px; }
-      .modal-box { padding: 30px 20px; }
-      .modal-actions { flex-direction: column; }
-      h1 span { display: none; } /* Hide text, keep logo on tiny screens */
-      h1::before { content: 'CSD'; }
+    @keyframes float {
+      50% { transform: translateY(-10px); }
     }
   </style>
 </head>
 
 <body>
-  <!-- Ambient Background -->
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-
 <div class="container">
 
 <header>
-  <div class="brand">
-    <h1>🌙 <span>CSD Portal 2026</span></h1>
-  </div>
+  <div class="brand"><h1>🌙 CSD Follow-Up Portal</h1></div>
+  <!-- Green Signal Badge -->
   <div class="status-badge" id="systemStatus">
     <div class="status-dot"></div> System Active
   </div>
@@ -411,190 +268,197 @@
   <h2>New Follow-Up</h2>
   <form id="followForm">
     <div class="input-group">
-      <input id="client" class="form-control" placeholder="Client Name" required autocomplete="off">
-      <input id="subject" class="form-control" placeholder="Subject / Topic" required autocomplete="off">
+      <input id="client" class="form-control" placeholder="Client Name" required>
+      <input id="subject" class="form-control" placeholder="Subject" required>
       <input id="date" type="date" class="form-control" required>
       <input id="time" type="time" class="form-control" required>
-      <input id="snoozeMins" type="number" class="form-control" value="5" min="1" placeholder="Snooze (m)">
+      <input id="snoozeMins" type="number" class="form-control" value="5" min="1">
     </div>
-    <textarea id="notes" class="form-control full-width" placeholder="Add specific details here..."></textarea>
-    <br>
-    <button>Schedule Follow-Up</button>
+    <textarea id="notes" class="form-control full-width" rows="2" placeholder="Additional details / Notes..."></textarea>
+    <br><br>
+    <button>Add Follow-Up</button>
   </form>
 </section>
 
 <section class="card">
   <h2>Scheduled Tasks</h2>
-  <div class="table-wrapper">
+  <div class="table-container">
     <table>
       <thead>
-        <tr><th>Client</th><th>Subject</th><th>Date</th><th>Time</th><th>Status</th></tr>
+        <tr>
+          <th>Client</th>
+          <th>Subject</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Notes</th> <!-- Added Notes Column -->
+          <th>Status</th>
+        </tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
-  </div>
-  <div id="emptyMsg" style="text-align:center; padding: 20px; color: var(--text-muted); display:none;">
-    No tasks scheduled. Enjoy the quiet.
   </div>
 </section>
 
 </div>
 
-<!-- IMMERSIVE MODAL -->
+<!-- MODAL -->
 <div class="modal-overlay" id="alarmModal">
   <div class="modal-box">
     <div class="alarm-icon">🌕</div>
-    <div class="modal-title" id="alarmMessage"></div>
-    <div style="color:var(--text-muted); font-size: 14px; letter-spacing: 2px; text-transform:uppercase; margin-bottom: 10px;">The Turquoise Moon</div>
+    <h3 id="alarmMessage" style="margin-bottom: 10px; font-size: 20px;">Reminder</h3>
+    <p id="alarmNotes" style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;"></p>
     <div class="modal-actions">
-      <button class="btn-modal btn-snooze" id="btnSnooze">Snooze</button>
-      <button class="btn-modal btn-stop" id="btnStop">Complete Task</button>
+      <button class="btn-snooze" id="btnSnooze">Snooze</button>
+      <button class="btn-stop" id="btnStop">Mark Done</button>
     </div>
   </div>
 </div>
 
-<!-- AUDIO ASSETS -->
-<!-- Ensure Followup.m4a is in the same directory -->
+<!-- 🔔 ONE-SHOT TING SOUND -->
 <audio id="tingSound" preload="auto">
   <source src="Test Ringtone.mp3">
 </audio>
+
+<!-- 🎵 LOOPING AMBIENT SOUND -->
+<audio id="alarmSound" loop preload="auto">
+  <source src="Test Ringtone.mp3">
+</audio>
+
 <script>
-  // State
-  let followUps = JSON.parse(localStorage.getItem("csd_moon_2026") || "[]");
-  let currentId = null;
+// Initialize data
+let followUps = JSON.parse(localStorage.getItem("moon_v2") || "[]");
+let currentId = null;
 
-  // DOM Elements
-  const tableBody = document.getElementById("tableBody");
-  const alarmModal = document.getElementById("alarmModal");
-  const alarmMessage = document.getElementById("alarmMessage");
-  const alarmSound = document.getElementById("alarmSound");
-  const tingSound = document.getElementById("tingSound");
-  const statusBadge = document.getElementById("systemStatus");
-  const emptyMsg = document.getElementById("emptyMsg");
+// DOM Elements
+const tableBody = document.getElementById("tableBody");
+const alarmModal = document.getElementById("alarmModal");
+const alarmMessage = document.getElementById("alarmMessage");
+const alarmNotes = document.getElementById("alarmNotes");
+const alarmSound = document.getElementById("alarmSound");
+const tingSound = document.getElementById("tingSound");
+const systemStatus = document.getElementById("systemStatus");
 
-  // Set Date Default
-  document.getElementById("date").valueAsDate = new Date();
+// Set default date to today
+document.getElementById("date").valueAsDate = new Date();
 
-  function render() {
-    tableBody.innerHTML = "";
-    
-    if (followUps.length === 0) {
-      emptyMsg.style.display = "block";
-    } else {
-      emptyMsg.style.display = "none";
-    }
-
+function render() {
+  tableBody.innerHTML = "";
+  
+  if (followUps.length === 0) {
+    tableBody.innerHTML = "<tr><td colspan='6' style='text-align:center; padding: 20px; color: var(--text-muted);'>No follow-ups scheduled.</td></tr>";
+  } else {
     followUps.forEach(f => {
+      // Handle empty notes display
+      const notesDisplay = f.notes ? `<span title="${f.notes}">${f.notes}</span>` : "-";
+      
       tableBody.innerHTML += `
         <tr>
           <td style="font-weight: 600;">${f.client}</td>
           <td>${f.subject}</td>
           <td>${f.date}</td>
           <td>${f.time}</td>
+          <td class="note-cell">${notesDisplay}</td>
           <td><span class="status-pill status-${f.status}">${f.status}</span></td>
         </tr>`;
     });
-    
-    localStorage.setItem("csd_moon_2026", JSON.stringify(followUps));
   }
+  
+  localStorage.setItem("moon_v2", JSON.stringify(followUps));
+}
 
-  document.getElementById("followForm").onsubmit = e => {
-    e.preventDefault();
-    
-    // Capture values before reset
-    const client = document.getElementById("client").value;
-    const subject = document.getElementById("subject").value;
-    const date = document.getElementById("date").value;
-    const time = document.getElementById("time").value;
-    const snooze = document.getElementById("snoozeMins").value;
+// Add New Item
+document.getElementById("followForm").onsubmit = function(e) {
+  e.preventDefault();
+  
+  // Get values
+  const client = document.getElementById("client").value;
+  const subject = document.getElementById("subject").value;
+  const date = document.getElementById("date").value;
+  const time = document.getElementById("time").value;
+  const snooze = document.getElementById("snoozeMins").value;
+  const notes = document.getElementById("notes").value;
 
-    followUps.push({
-      id: Date.now(),
-      client,
-      subject,
-      date,
-      time,
-      snooze: +snooze,
-      status: "pending",
-      rung: false
-    });
-    
-    render();
-    e.target.reset();
-    document.getElementById("date").valueAsDate = new Date(); // Reset date to today
-  };
-
-  function trigger(item) {
-    currentId = item.id;
-    item.rung = true;
-    render(); // Update table to show status if needed (or keep pending visually)
-
-    alarmMessage.textContent = `Follow up with ${item.client}`;
-    alarmModal.classList.add("active");
-    
-    // UI Feedback
-    statusBadge.classList.add("active");
-    statusBadge.innerHTML = `<div class="status-dot"></div> Alarm Active`;
-
-    // 🔔 TING (One shot)
-    tingSound.currentTime = 0;
-    tingSound.play().catch(err => console.log("Ting audio blocked until interaction"));
-
-    // 🎵 LOOP (Ambient)
-    alarmSound.currentTime = 0;
-    alarmSound.play().catch(err => console.log("Loop audio blocked"));
-  }
-
-  function stop() {
-    alarmSound.pause();
-    alarmSound.currentTime = 0;
-    
-    alarmModal.classList.remove("active");
-    statusBadge.classList.remove("active");
-    statusBadge.innerHTML = `<div class="status-dot"></div> System Active`;
-
-    // Mark as done
-    const item = followUps.find(f => f.id === currentId);
-    if(item) item.status = "done";
-    
-    currentId = null;
-    render();
-  }
-
-  function snooze() {
-    let f = followUps.find(x => x.id === currentId);
-    if (f) {
-      let d = new Date();
-      d.setMinutes(d.getMinutes() + f.snooze);
-      
-      f.date = d.toISOString().slice(0, 10);
-      f.time = d.toTimeString().slice(0, 5);
-      f.rung = false;
-      f.status = "snoozed";
-    }
-    stop(); // Re-use stop logic to clear audio/UI, but we already updated status above
-  }
-
-  // Event Listeners
-  document.getElementById("btnStop").onclick = stop;
-  document.getElementById("btnSnooze").onclick = snooze;
-
-  // Timer Loop (High precision)
-  setInterval(() => {
-    let now = new Date();
-    followUps.forEach(f => {
-      if (!f.rung && f.status !== "done") {
-        // Simple ISO string comparison for time check
-        if (now >= new Date(f.date + "T" + f.time)) {
-          trigger(f);
-        }
-      }
-    });
-  }, 1000);
-
-  // Initial Render
+  followUps.push({
+    id: Date.now(),
+    client,
+    subject,
+    date,
+    time,
+    snooze: +snooze,
+    notes, // Save notes
+    status: "pending",
+    rung: false
+  });
+  
   render();
+  e.target.reset();
+  document.getElementById("date").valueAsDate = new Date(); // Reset date
+};
 
+function trigger(item) {
+  currentId = item.id;
+  item.rung = true;
+
+  alarmMessage.textContent = `Follow up: ${item.client}`;
+  alarmNotes.textContent = item.notes ? `Notes: ${item.notes}` : "";
+  
+  alarmModal.classList.add("active");
+  systemStatus.classList.add("active"); // Triggers Green Signal
+
+  // 🔔 TING
+  tingSound.currentTime = 0;
+  tingSound.play().catch(e => console.log("Ting blocked", e));
+
+  // 🎵 LOOP
+  alarmSound.currentTime = 0;
+  alarmSound.play().catch(e => console.log("Loop blocked", e));
+}
+
+function stopAlarm() {
+  alarmSound.pause();
+  alarmSound.currentTime = 0;
+  
+  alarmModal.classList.remove("active");
+  systemStatus.classList.remove("active"); // Back to Grey
+
+  const item = followUps.find(f => f.id === currentId);
+  if (item) item.status = "done";
+  
+  currentId = null;
+  render();
+}
+
+function snoozeAlarm() {
+  let f = followUps.find(x => x.id === currentId);
+  if (f) {
+    let d = new Date();
+    d.setMinutes(d.getMinutes() + f.snooze);
+    f.date = d.toISOString().slice(0, 10);
+    f.time = d.toTimeString().slice(0, 5);
+    f.rung = false;
+    f.status = "snoozed";
+  }
+  stopAlarm(); // Use stopAlarm to clear audio/UI
+}
+
+// Event Listeners (Robust fix for button issues)
+document.getElementById("btnStop").addEventListener("click", stopAlarm);
+document.getElementById("btnSnooze").addEventListener("click", snoozeAlarm);
+
+// Timer Loop
+setInterval(() => {
+  let now = new Date();
+  followUps.forEach(f => {
+    if (!f.rung && f.status !== "done") {
+      if (now >= new Date(f.date + "T" + f.time)) {
+        trigger(f);
+      }
+    }
+  });
+}, 1000);
+
+// Initial Render
+render();
 </script>
 </body>
 </html>
