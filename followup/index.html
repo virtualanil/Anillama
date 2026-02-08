@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSD Follow-Up Portal - The Turquoise Moon</title>
+
+  <style>
+    :root {
+      --bg-body: #0f172a;
+      --bg-card: #1e293b;
+      --bg-input: #334155;
+      --primary: #6366f1;
+      --accent-ancient: #2dd4bf;
+      --accent-glow: rgba(45, 212, 191, 0.2);
+      --danger: #ef4444;
+      --warn: #f59e0b;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: radial-gradient(circle at top right, #1e293b, #0f172a);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    .container { max-width: 1000px; margin: auto; padding: 20px; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand h1 {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(to right, #818cf8, #2dd4bf);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      gap: 10px;
+    }
+
+    .status-badge {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .status-badge.active {
+      border-color: var(--accent-ancient);
+      color: var(--accent-ancient);
+      background: var(--accent-glow);
+      box-shadow: 0 0 12px var(--accent-ancient);
+      animation: pulse-glow 2s infinite;
+    }
+
+    .card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--accent-ancient);
+      padding-left: 12px;
+    }
+
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-control {
+      background: var(--bg-input);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--text-main);
+      border: none;
+    }
+
+    .form-control.full-width { grid-column: 1 / -1; }
+
+    button {
+      background: linear-gradient(135deg, var(--primary), #4f46e5);
+      border: none;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      width: 100%;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .status-pill {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-pending { background: rgba(245,158,11,.15); color: var(--warn); }
+    .status-done { background: rgba(34,197,94,.15); color: #22c55e; }
+    .status-snoozed { background: rgba(99,102,241,.15); color: var(--primary); }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: .4s;
+      z-index: 999;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: linear-gradient(145deg,#1e293b,#0f172a);
+      border: 1px solid var(--accent-ancient);
+      padding: 40px;
+      border-radius: 24px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(45,212,191,.2);
+    }
+
+    .alarm-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn-snooze {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+    }
+
+    .btn-stop {
+      background: var(--accent-ancient);
+      color: #0f172a;
+    }
+
+    @keyframes float {
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pulse-glow {
+      50% { box-shadow: 0 0 20px var(--accent-ancient); }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+  <div class="brand"><h1>🌙 CSD Follow-Up Portal</h1></div>
+  <div class="status-badge" id="systemStatus">System Active</div>
+</header>
+
+<section class="card">
+  <h2>New Follow-Up</h2>
+  <form id="followForm">
+    <div class="input-group">
+      <input id="client" class="form-control" placeholder="Client" required>
+      <input id="subject" class="form-control" placeholder="Subject" required>
+      <input id="date" type="date" class="form-control" required>
+      <input id="time" type="time" class="form-control" required>
+      <input id="snoozeMins" type="number" class="form-control" value="5">
+    </div>
+    <textarea id="notes" class="form-control full-width" rows="2" placeholder="Notes"></textarea>
+    <br><br>
+    <button>Add Follow-Up</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Scheduled</h2>
+  <table>
+    <thead>
+      <tr><th>Client</th><th>Subject</th><th>Date</th><th>Time</th><th>Status</th></tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</section>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="alarmModal">
+  <div class="modal-box">
+    <div class="alarm-icon">🌕</div>
+    <h3 id="alarmMessage"></h3>
+    <br>
+    <div class="modal-actions">
+      <button class="btn-snooze" id="btnSnooze">Snooze</button>
+      <button class="btn-stop" id="btnStop">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- 🔔 ONE-SHOT TING SOUND -->
+<audio id="tingSound" preload="auto">
+  <source src="Followup.m4a">
+</audio>
+
+<!-- 🎵 LOOPING AMBIENT SOUND -->
+<audio id="alarmSound" loop preload="auto">
+  <source src="https://cdn.pixabay.com/audio/2022/03/09/audio_c8c8a73467.mp3">
+</audio>
+
+<script>
+let followUps = JSON.parse(localStorage.getItem("moon")||"[]");
+let currentId = null;
+
+const tableBody = document.getElementById("tableBody");
+const alarmModal = document.getElementById("alarmModal");
+const alarmMessage = document.getElementById("alarmMessage");
+const alarmSound = document.getElementById("alarmSound");
+const tingSound = document.getElementById("tingSound");
+const status = document.getElementById("systemStatus");
+
+document.getElementById("date").valueAsDate = new Date();
+
+function render(){
+  tableBody.innerHTML="";
+  followUps.forEach(f=>{
+    tableBody.innerHTML+=`
+      <tr>
+        <td>${f.client}</td>
+        <td>${f.subject}</td>
+        <td>${f.date}</td>
+        <td>${f.time}</td>
+        <td><span class="status-pill status-${f.status}">${f.status}</span></td>
+      </tr>`;
+  });
+  localStorage.setItem("moon",JSON.stringify(followUps));
+}
+
+document.getElementById("followForm").onsubmit=e=>{
+  e.preventDefault();
+  followUps.push({
+    id:Date.now(),
+    client:client.value,
+    subject:subject.value,
+    date:date.value,
+    time:time.value,
+    snooze:+snoozeMins.value,
+    status:"pending",
+    rung:false
+  });
+  render();
+  e.target.reset();
+};
+
+function trigger(item){
+  currentId=item.id;
+  item.rung=true;
+
+  alarmMessage.textContent=`Time to follow up with ${item.client}`;
+  alarmModal.classList.add("active");
+  status.classList.add("active");
+
+  // 🔔 TING
+  tingSound.currentTime=0;
+  tingSound.play().catch(()=>{});
+
+  // 🎵 LOOP
+  alarmSound.currentTime=0;
+  alarmSound.play().catch(()=>{});
+}
+
+function stop(){
+  alarmSound.pause();
+  alarmModal.classList.remove("active");
+  status.classList.remove("active");
+  followUps.find(f=>f.id===currentId).status="done";
+  currentId=null;
+  render();
+}
+
+function snooze(){
+  let f=followUps.find(x=>x.id===currentId);
+  let d=new Date();
+  d.setMinutes(d.getMinutes()+f.snooze);
+  f.date=d.toISOString().slice(0,10);
+  f.time=d.toTimeString().slice(0,5);
+  f.rung=false;
+  f.status="snoozed";
+  stop();
+}
+
+btnStop.onclick=stop;
+btnSnooze.onclick=snooze;
+
+setInterval(()=>{
+  let now=new Date();
+  followUps.forEach(f=>{
+    if(!f.rung && f.status!=="done"){
+      if(now>=new Date(f.date+"T"+f.time)) trigger(f);
+    }
+  });
+},1000);
+
+render();
+</script>
+</body>
+</html>
