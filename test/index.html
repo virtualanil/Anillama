@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DualSchedule Pro</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Libraries -->
+    <!-- 1. Accurate Nepali Date Converter -->
+    <script src="https://unpkg.com/bikram-sambat-js@1.0.0/dist/bikram-sambat-js.min.js"></script>
+    <!-- 2. EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #4338ca;
+            --bg-body: #F1F5F9;
+            --bg-card: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --radius: 12px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        
+        body { background-color: var(--bg-body); color: var(--text-main); height: 100vh; overflow: hidden; }
+
+        /* --- Animations --- */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* --- LOGIN SCREEN --- */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #4F46E5 0%, #8B5CF6 100%);
+            display: flex; justify-content: center; align-items: center; z-index: 2000;
+        }
+        .login-card {
+            background: white; padding: 3rem; border-radius: 24px; box-shadow: var(--shadow-lg);
+            text-align: center; width: 100%; max-width: 400px; animation: slideUp 0.5s ease-out;
+        }
+        .login-logo { font-size: 2rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem; }
+        .login-sub { color: var(--text-muted); margin-bottom: 2rem; }
+        
+        .google-btn {
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: white; border: 1px solid var(--border); padding: 12px;
+            border-radius: 50px; font-weight: 500; cursor: pointer; transition: 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+        .google-btn:hover { background-color: #f8fafc; border-color: #cbd5e1; }
+        .google-icon { width: 20px; height: 20px; }
+
+        /* --- MAIN APP LAYOUT --- */
+        #app-screen { display: none; height: 100vh; display: flex; flex-direction: column; }
+        
+        header {
+            background: var(--bg-card); padding: 1rem 2rem; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .app-brand { display: flex; align-items: center; gap: 0.75rem; font-weight: 700; font-size: 1.25rem; color: var(--primary); }
+        .user-menu { display: flex; align-items: center; gap: 1rem; }
+        .user-avatar-sm { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
+        .btn-logout { font-size: 0.85rem; color: var(--text-muted); cursor: pointer; text-decoration: underline; }
+
+        .main-container { flex: 1; display: flex; overflow: hidden; }
+        
+        /* Sidebar */
+        aside {
+            width: 320px; background: var(--bg-card); border-right: 1px solid var(--border);
+            padding: 2rem; display: flex; flex-direction: column; gap: 2rem;
+        }
+        .create-btn {
+            width: 100%; background: var(--primary); color: white; padding: 1rem;
+            border-radius: var(--radius); border: none; font-weight: 600; font-size: 1rem;
+            cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 0.5rem;
+            box-shadow: var(--shadow-md); transition: 0.2s;
+        }
+        .create-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+        .upcoming-section h3 { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 1rem; }
+        .event-item {
+            background: #F8FAFC; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary);
+            margin-bottom: 0.75rem; transition: 0.2s;
+        }
+        .event-item:hover { background: #EFF6FF; }
+        .event-time { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+        .event-title { font-weight: 600; font-size: 0.95rem; }
+
+        /* Calendar Area */
+        main { flex: 1; padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; }
+        
+        .calendar-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .month-display { font-size: 1.5rem; font-weight: 700; }
+        
+        .view-toggle {
+            background: #E2E8F0; padding: 4px; border-radius: 50px; display: flex; gap: 4px;
+        }
+        .toggle-opt {
+            padding: 6px 16px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            transition: 0.2s; color: var(--text-muted);
+        }
+        .toggle-opt.active { background: white; color: var(--primary); box-shadow: var(--shadow-sm); }
+
+        .calendar-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px;
+            background: var(--border); border: 1px solid var(--border); border-radius: var(--radius);
+            overflow: hidden; box-shadow: var(--shadow-md); flex: 1;
+        }
+        .grid-header {
+            background: #F8FAFC; padding: 1rem; text-align: center; font-weight: 600; font-size: 0.9rem; color: var(--text-muted);
+        }
+        .grid-cell {
+            background: white; min-height: 100px; padding: 0.75rem; position: relative; cursor: pointer;
+            transition: background 0.1s;
+        }
+        .grid-cell:hover { background: #F8FAFC; }
+        .grid-cell.today { background: #EFF6FF; }
+        .grid-cell.today .day-num { background: var(--primary); color: white; }
+        .day-num { font-size: 0.9rem; font-weight: 500; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-bottom: 4px; }
+        .cell-event {
+            font-size: 0.75rem; background: #E0E7FF; color: var(--primary);
+            padding: 2px 6px; border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* --- Modals --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .modal { background: white; padding: 2rem; border-radius: 16px; width: 100%; max-width: 450px; box-shadow: var(--shadow-lg); animation: slideUp 0.3s; }
+        
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .form-control { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 2rem; }
+        .btn-primary { background: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; }
+        .btn-secondary { background: transparent; color: var(--text-muted); border: 1px solid var(--border); padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; }
+
+        /* Toast */
+        #toast-box { position: fixed; bottom: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: white; padding: 1rem; border-radius: 8px; box-shadow: var(--shadow-lg);
+            display: flex; align-items: center; gap: 10px; min-width: 300px; border-left: 4px solid var(--primary);
+            animation: slideUp 0.3s;
+        }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--success); }
+
+        /* Test Button */
+        .test-conn { font-size: 0.75rem; color: var(--primary); text-decoration: underline; cursor: pointer; border: none; background: none; margin-top: 10px; display: inline-block;}
+
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; overflow-y: auto; }
+            aside { width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+            .calendar-grid { min-height: 500px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN SCREEN -->
+    <div id="login-screen">
+        <div class="login-card">
+            <div class="login-logo">DualSchedule</div>
+            <p class="login-sub">Manage your life in AD and BS</p>
+            
+            <button class="google-btn" onclick="handleLogin()">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G" class="google-icon">
+                Sign in with Google
+            </button>
+            <p style="margin-top: 1rem; font-size: 0.8rem; color: #94a3b8;">Secure login simulation</p>
+        </div>
+    </div>
+
+    <!-- 2. APP SCREEN -->
+    <div id="app-screen" style="display: none;">
+        <header>
+            <div class="app-brand">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                DualSchedule
+            </div>
+            <div class="user-menu">
+                <button class="btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;" onclick="openSettings()">⚙️ Settings</button>
+                <img id="header-avatar" src="" class="user-avatar-sm" alt="User">
+                <span class="btn-logout" onclick="logout()">Logout</span>
+            </div>
+        </header>
+
+        <div class="main-container">
+            <aside>
+                <button class="create-btn" onclick="openEventModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Create Event
+                </button>
+
+                <div class="upcoming-section">
+                    <h3>Upcoming Reminders</h3>
+                    <div id="upcoming-list">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </aside>
+
+            <main>
+                <div class="calendar-controls">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <button class="btn-secondary" onclick="changeMonth(-1)">&lt;</button>
+                        <span class="month-display" id="month-label">...</span>
+                        <button class="btn-secondary" onclick="changeMonth(1)">&gt;</button>
+                    </div>
+                    
+                    <div class="view-toggle">
+                        <div class="toggle-opt active" id="btn-ad" onclick="switchView('AD')">English (AD)</div>
+                        <div class="toggle-opt" id="btn-bs" onclick="switchView('BS')">Nepali (BS)</div>
+                    </div>
+                </div>
+
+                <div class="calendar-grid">
+                    <div class="grid-header">Sun</div>
+                    <div class="grid-header">Mon</div>
+                    <div class="grid-header">Tue</div>
+                    <div class="grid-header">Wed</div>
+                    <div class="grid-header">Thu</div>
+                    <div class="grid-header">Fri</div>
+                    <div class="grid-header">Sat</div>
+                    <div id="calendar-body" style="display: contents;"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal: Event -->
+    <div class="modal-overlay" id="modal-event">
+        <div class="modal">
+            <h2 style="margin-bottom: 1.5rem;">New Event</h2>
+            <form id="event-form">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="evt-title" class="form-control" required placeholder="Meeting, Appointment...">
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="evt-date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Time</label>
+                    <input type="time" id="evt-time" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="evt-desc" class="form-control" rows="2"></textarea>
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="checkbox" id="evt-reminder" checked style="width: auto;">
+                    <label style="margin:0;">Send Email Notification</label>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModals()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Settings -->
+    <div class="modal-overlay" id="modal-settings">
+        <div class="modal">
+            <h2>Settings</h2>
+            <div style="background: #f0fdf4; color: #166534; padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem;">
+                <strong>Status:</strong> EmailJS Configured. <br>
+                Service: <code>service_6fdl6ag</code><br>
+                Template: <code>template_86aaou7</code>
+            </div>
+            <div class="form-group">
+                <label>Registered Email (Sender/Receiver)</label>
+                <input type="email" id="set-email" class="form-control" readonly style="background: #f1f5f9;">
+            </div>
+            <div class="form-group">
+                <label>EmailJS Public Key</label>
+                <input type="text" id="set-pk" class="form-control" value="VxQFg3XE5hiYofAQj">
+            </div>
+            <button class="test-conn" onclick="testEmailConnection()">🚀 Test Email Connection</button>
+            
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closeModals()">Close</button>
+                <button type="button" class="btn-primary" onclick="saveSettings()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-box"></div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const CONFIG = {
+            publicKey: "VxQFg3XE5hiYofAQj",
+            serviceID: "service_6fdl6ag",
+            templateID: "template_86aaou7"
+        };
+
+        // --- STATE ---
+        let user = JSON.parse(localStorage.getItem('ds_user')) || null;
+        let events = JSON.parse(localStorage.getItem('ds_events')) || [];
+        let currentDate = new Date();
+        let viewMode = 'AD'; // 'AD' or 'BS'
+
+        // --- INIT ---
+        window.onload = function() {
+            if (user) {
+                showApp();
+            } else {
+                document.getElementById('login-screen').style.display = 'flex';
+            }
+            emailjs.init(CONFIG.publicKey);
+            setInterval(checkReminders, 60000); // Check every minute
+        };
+
+        // --- AUTH FLOW ---
+        function handleLogin() {
+            // Simulating Google Login for the demo
+            const email = prompt("Simulating Google Login.\n\nPlease enter your Gmail address:", "user@gmail.com");
+            if (email && email.includes('@')) {
+                user = {
+                    email: email,
+                    name: email.split('@')[0],
+                    avatar: `https://ui-avatars.com/api/?name=${email}&background=random`
+                };
+                localStorage.setItem('ds_user', JSON.stringify(user));
+                showApp();
+                showToast('Welcome back!', 'You have successfully logged in.', 'success');
+            }
+        }
+
+        function showApp() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-screen').style.display = 'flex';
+            document.getElementById('header-avatar').src = user.avatar;
+            document.getElementById('set-email').value = user.email;
+            renderCalendar();
+            renderUpcoming();
+        }
+
+        function logout() {
+            localStorage.removeItem('ds_user');
+            location.reload();
+        }
+
+        // --- CALENDAR LOGIC (AD & BS) ---
+        function switchView(mode) {
+            viewMode = mode;
+            document.getElementById('btn-ad').classList.toggle('active', mode === 'AD');
+            document.getElementById('btn-bs').classList.toggle('active', mode === 'BS');
+            renderCalendar();
+        }
+
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-body');
+            grid.innerHTML = '';
+            const label = document.getElementById('month-label');
+            
+            let year, monthIndex, daysInMonth, startDayIndex;
+            let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            let bsMonths = ["Baishakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin", "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"];
+
+            if (viewMode === 'AD') {
+                year = currentDate.getFullYear();
+                monthIndex = currentDate.getMonth();
+                daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+                startDayIndex = new Date(year, monthIndex, 1).getDay();
+                label.textContent = `${monthNames[monthIndex]} ${year}`;
+            } else {
+                // --- ACCURATE BS LOGIC ---
+                // 1. Convert the reference AD date to BS to find context
+                // Note: BikramSambat expects (year, month, day). Months are 1-12.
+                const bsData = BikramSambat.BS2AD(year, monthIndex+1, 1); // This converts BS to AD. We need AD to BS.
+                
+                // Use AD2BS to get current BS context
+                const bsObj = BikramSambat.AD2BS(currentDate.getFullYear(), currentDate.getMonth()+1, 1);
+                
+                year = bsObj.bsYear;
+                monthIndex = bsObj.bsMonth - 1; // 0-indexed for array
+                daysInMonth = bsObj.bsMonthDays; // Variable days (30,31,32)
+                
+                // Find start day of BS month: Convert 1st of BS month back to AD to get Day of Week
+                const firstOfBsMonthAd = BikramSambat.BS2AD(bsObj.bsYear, bsObj.bsMonth, 1);
+                startDayIndex = firstOfBsMonthAd.adDay.getDay(); // 0-6
+                
+                label.textContent = `${bsMonths[monthIndex]} ${year} (BS)`;
+            }
+
+            // Padding (Previous Month)
+            for (let i = 0; i < startDayIndex; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.style.background = '#f8fafc';
+                grid.appendChild(cell);
+            }
+
+            // Days
+            const today = new Date();
+            for (let i = 1; i <= daysInMonth; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                
+                // Highlight Today (AD only for simplicity in highlighting)
+                if (viewMode === 'AD' && i === today.getDate() && monthIndex === today.getMonth() && year === today.getFullYear()) {
+                    cell.classList.add('today');
+                }
+
+                // Number
+                const num = document.createElement('div');
+                num.className = 'day-num';
+                num.textContent = i;
+                cell.appendChild(num);
+
+                // Find Date String for Events
+                let dateStr = "";
+                if (viewMode === 'AD') {
+                    dateStr = `${year}-${String(monthIndex+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+                } else {
+                    // Convert BS day to AD to look up event (stored in AD)
+                    const adEquivalent = BikramSambat.BS2AD(year, monthIndex+1, i);
+                    dateStr = `${adEquivalent.adYear}-${String(adEquivalent.adMonth+1).padStart(2,'0')}-${String(adEquivalent.adDate).padStart(2,'0')}`;
+                }
+
+                // Render Events
+                const dayEvents = events.filter(e => e.date === dateStr);
+                dayEvents.forEach(evt => {
+                    const el = document.createElement('div');
+                    el.className = 'cell-event';
+                    el.textContent = `${evt.time} ${evt.title}`;
+                    cell.appendChild(el);
+                });
+
+                // Click to Add
+                cell.onclick = () => openEventModal(dateStr);
+                grid.appendChild(cell);
+            }
+        }
+
+        // --- EVENT HANDLING ---
+        function openEventModal(dateStr) {
+            document.getElementById('evt-date').value = dateStr || new Date().toISOString().split('T')[0];
+            document.getElementById('evt-time').value = "09:00";
+            document.getElementById('modal-event').style.display = 'flex';
+        }
+
+        function openSettings() {
+            document.getElementById('modal-settings').style.display = 'flex';
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal-overlay').forEach(el => el.style.display = 'none');
+        }
+
+        document.getElementById('event-form').onsubmit = function(e) {
+            e.preventDefault();
+            const newEvent = {
+                id: Date.now(),
+                title: document.getElementById('evt-title').value,
+                date: document.getElementById('evt-date').value,
+                time: document.getElementById('evt-time').value,
+                desc: document.getElementById('evt-desc').value,
+                reminder: document.getElementById('evt-reminder').checked,
+                notified: false
+            };
+            events.push(newEvent);
+            localStorage.setItem('ds_events', JSON.stringify(events));
+            renderCalendar();
+            renderUpcoming();
+            closeModals();
+            showToast('Event Added', 'Reminder saved successfully.', 'success');
+        };
+
+        function renderUpcoming() {
+            const list = document.getElementById('upcoming-list');
+            list.innerHTML = '';
+            const now = new Date().toISOString();
+            const upcoming = events.filter(e => (e.date + 'T' + e.time) >= now).sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time));
+            
+            if(upcoming.length === 0) {
+                list.innerHTML = '<div style="color:var(--text-muted); font-size:0.9rem;">No upcoming events.</div>';
+                return;
+            }
+
+            upcoming.slice(0, 4).forEach(evt => {
+                const el = document.createElement('div');
+                el.className = 'event-item';
+                el.innerHTML = `
+                    <div class="event-time">${evt.date} • ${evt.time}</div>
+                    <div class="event-title">${evt.title}</div>
+                    ${evt.reminder ? '<div style="font-size:0.7rem; color:var(--primary); margin-top:4px;">🔔 Email On</div>' : ''}
+                `;
+                list.appendChild(el);
+            });
+        }
+
+        // --- EMAIL SYSTEM ---
+        function checkReminders() {
+            const now = new Date();
+            const currTime = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            const currDate = now.toISOString().split('T')[0];
+
+            events.forEach(evt => {
+                if (evt.reminder && !evt.notified && evt.date === currDate && evt.time === currTime) {
+                    sendEmail(evt);
+                    evt.notified = true;
+                    localStorage.setItem('ds_events', JSON.stringify(events));
+                }
+            });
+        }
+
+        function sendEmail(evt) {
+            const templateParams = {
+                to_email: user.email,
+                to_name: user.name,
+                event_title: evt.title,
+                event_date: evt.date,
+                event_time: evt.time,
+                event_desc: evt.desc || "No details provided."
+            };
+
+            emailjs.send(CONFIG.serviceID, CONFIG.templateID, templateParams)
+                .then(function() {
+                    showToast('Reminder Sent', `Email sent to ${user.email}`, 'success');
+                }, function(err) {
+                    console.error("EmailJS Error:", err);
+                    showToast('Email Failed', 'Check console for error details.', 'error');
+                });
+        }
+
+        function testEmailConnection() {
+            const btn = document.querySelector('.test-conn');
+            btn.textContent = "Sending...";
+            
+            const templateParams = {
+                to_email: user.email,
+                to_name: user.name,
+                event_title: "TEST CONNECTION",
+                event_date: new Date().toISOString().split('T')[0],
+                event_time: "12:00",
+                event_desc: "If you receive this, your configuration is correct!"
+            };
+
+            emailjs.send(CONFIG.serviceID, CONFIG.templateID, templateParams)
+                .then(() => {
+                    showToast('Success!', 'Test email sent. Check your inbox.', 'success');
+                    btn.textContent = "✅ Test Passed";
+                })
+                .catch(err => {
+                    console.error(err);
+                    showToast('Failed', err.text || "Unknown Error", 'error');
+                    btn.textContent = "❌ Try Again";
+                });
+        }
+
+        function saveSettings() {
+            CONFIG.publicKey = document.getElementById('set-pk').value;
+            user.email = document.getElementById('set-email').value;
+            localStorage.setItem('ds_user', JSON.stringify(user));
+            emailjs.init(CONFIG.publicKey);
+            closeModals();
+            showToast('Settings Saved', 'Configuration updated.', 'success');
+        }
+
+        function showToast(title, msg, type='normal') {
+            const box = document.getElementById('toast-box');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<div><strong>${title}</strong><br><small>${msg}</small></div>`;
+            box.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+    </script>
+</body>
+</html>
