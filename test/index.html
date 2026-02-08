@@ -1,470 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DualSchedule - Fixed Version</title>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Libraries -->
-    <script src="https://unpkg.com/bikram-sambat-js@1.0.0/dist/bikram-sambat-js.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSD Follow-Up Portal - The Turquoise Moon</title>
 
-    <style>
-        :root {
-            --primary: #4F46E5;
-            --danger: #EF4444;
-            --success: #10B981;
-            --bg: #F1F5F9;
-            --card: #FFFFFF;
-            --text: #1E293B;
-            --border: #E2E8F0;
-        }
+  <style>
+    :root {
+      --bg-body: #0f172a;
+      --bg-card: #1e293b;
+      --bg-input: #334155;
+      --primary: #6366f1;
+      --accent-ancient: #2dd4bf;
+      --accent-glow: rgba(45, 212, 191, 0.2);
+      --danger: #ef4444;
+      --warn: #f59e0b;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* --- LOGIN SCREEN --- */
-        #login-screen {
-            position: fixed; inset: 0; background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
-            display: flex; justify-content: center; align-items: center; z-index: 9999;
-        }
-        .login-box {
-            background: white; padding: 2.5rem; border-radius: 16px; width: 100%; max-width: 380px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); text-align: center;
-        }
-        .input-field {
-            width: 100%; padding: 12px; margin: 10px 0; border: 1px solid var(--border);
-            border-radius: 8px; font-size: 1rem;
-        }
-        .btn-login {
-            width: 100%; padding: 12px; background: var(--primary); color: white;
-            border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px;
-        }
-        .btn-login:hover { background: #4338ca; }
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: radial-gradient(circle at top right, #1e293b, #0f172a);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
 
-        /* --- APP LAYOUT --- */
-        #app-screen { display: none; height: 100vh; display: flex; flex-direction: column; }
-        
-        header {
-            background: var(--card); padding: 1rem 2rem; border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .main-layout { display: flex; flex: 1; overflow: hidden; }
-        
-        /* Sidebar */
-        aside { width: 300px; background: var(--card); border-right: 1px solid var(--border); padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; overflow-y: auto; }
-        .sidebar-btn {
-            width: 100%; padding: 10px; background: #EEF2FF; color: var(--primary);
-            border: 1px solid #C7D2FE; border-radius: 8px; font-weight: 600; cursor: pointer;
-        }
-        .sidebar-btn:hover { background: #E0E7FF; }
-        
-        .event-list { list-style: none; }
-        .event-item {
-            padding: 10px; background: #F8FAFC; border-left: 3px solid var(--primary);
-            margin-bottom: 8px; border-radius: 4px; font-size: 0.9rem;
-        }
-        .event-time { font-size: 0.75rem; color: #64748B; font-weight: 600; }
+    .container { max-width: 1000px; margin: auto; padding: 20px; }
 
-        /* Calendar */
-        main { flex: 1; padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; }
-        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .month-title { font-size: 1.5rem; font-weight: 700; }
-        
-        .view-toggles { display: flex; gap: 5px; background: #E2E8F0; padding: 4px; border-radius: 8px; }
-        .toggle-btn {
-            padding: 6px 12px; border-radius: 6px; border: none; background: transparent; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #64748B;
-        }
-        .toggle-btn.active { background: white; color: var(--primary); shadow: 0 1px 2px rgba(0,0,0,0.1); }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
 
-        .calendar-grid {
-            display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border);
-            border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex: 1;
-        }
-        .day-head { background: #F8FAFC; padding: 10px; text-align: center; font-weight: 600; font-size: 0.9rem; color: #64748B; }
-        .day-cell {
-            background: white; min-height: 80px; padding: 8px; cursor: pointer; transition: 0.2s;
-        }
-        .day-cell:hover { background: #F1F5F9; }
-        .day-cell.today { background: #EFF6FF; }
-        .day-num { font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; display: inline-block; width: 24px; height: 24px; text-align: center; line-height: 24px; border-radius: 50%; }
-        .today .day-num { background: var(--primary); color: white; }
-        .cell-dot { font-size: 0.75rem; background: #E0E7FF; color: var(--primary); padding: 2px 4px; border-radius: 3px; display: block; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .brand h1 {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(to right, #818cf8, #2dd4bf);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      gap: 10px;
+    }
 
-        /* Modals */
-        .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none;
-            align-items: center; justify-content: center; z-index: 1000;
-        }
-        .modal-content { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
-        .form-input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
-        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.5rem; }
-        
-        /* Toast */
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
-        .toast { padding: 12px 16px; background: white; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid var(--primary); font-size: 0.9rem; max-width: 350px; }
-        .toast.error { border-left-color: var(--danger); }
-        .toast.success { border-left-color: var(--success); }
-        
-        .debug-box { background: #FFF1F2; color: #9F1239; padding: 10px; border-radius: 6px; font-size: 0.8rem; margin-top: 10px; border: 1px solid #FECDD3; }
-        .var-list { font-family: monospace; background: #F1F5F9; padding: 8px; border-radius: 4px; font-size: 0.75rem; margin-top: 5px; }
-    </style>
+    .status-badge {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .status-badge.active {
+      border-color: var(--accent-ancient);
+      color: var(--accent-ancient);
+      background: var(--accent-glow);
+      box-shadow: 0 0 12px var(--accent-ancient);
+      animation: pulse-glow 2s infinite;
+    }
+
+    .card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--accent-ancient);
+      padding-left: 12px;
+    }
+
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-control {
+      background: var(--bg-input);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--text-main);
+      border: none;
+    }
+
+    .form-control.full-width { grid-column: 1 / -1; }
+
+    button {
+      background: linear-gradient(135deg, var(--primary), #4f46e5);
+      border: none;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      width: 100%;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .status-pill {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-pending { background: rgba(245,158,11,.15); color: var(--warn); }
+    .status-done { background: rgba(34,197,94,.15); color: #22c55e; }
+    .status-snoozed { background: rgba(99,102,241,.15); color: var(--primary); }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: .4s;
+      z-index: 999;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: linear-gradient(145deg,#1e293b,#0f172a);
+      border: 1px solid var(--accent-ancient);
+      padding: 40px;
+      border-radius: 24px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(45,212,191,.2);
+    }
+
+    .alarm-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn-snooze {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+    }
+
+    .btn-stop {
+      background: var(--accent-ancient);
+      color: #0f172a;
+    }
+
+    @keyframes float {
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pulse-glow {
+      50% { box-shadow: 0 0 20px var(--accent-ancient); }
+    }
+  </style>
 </head>
+
 <body>
+<div class="container">
 
-    <!-- LOGIN -->
-    <div id="login-screen">
-        <div class="login-box">
-            <h2 style="margin-bottom: 10px; color: var(--primary);">DualSchedule</h2>
-            <p style="color: #64748B; margin-bottom: 20px;">Enter your Gmail to start</p>
-            <input type="email" id="login-email" class="input-field" placeholder="name@gmail.com" value="">
-            <button class="btn-login" onclick="performLogin()">Login</button>
-        </div>
+<header>
+  <div class="brand"><h1>🌙 CSD Follow-Up Portal</h1></div>
+  <div class="status-badge" id="systemStatus">System Active</div>
+</header>
+
+<section class="card">
+  <h2>New Follow-Up</h2>
+  <form id="followForm">
+    <div class="input-group">
+      <input id="client" class="form-control" placeholder="Client" required>
+      <input id="subject" class="form-control" placeholder="Subject" required>
+      <input id="date" type="date" class="form-control" required>
+      <input id="time" type="time" class="form-control" required>
+      <input id="snoozeMins" type="number" class="form-control" value="5">
     </div>
+    <textarea id="notes" class="form-control full-width" rows="2" placeholder="Notes"></textarea>
+    <br><br>
+    <button>Add Follow-Up</button>
+  </form>
+</section>
 
-    <!-- APP -->
-    <div id="app-screen" style="display: none;">
-        <header>
-            <div style="font-weight: 700; color: var(--primary); font-size: 1.2rem;">DualSchedule</div>
-            <div style="display: flex; gap: 15px; align-items: center;">
-                <button class="toggle-btn" onclick="openSettings()">⚙️ Settings</button>
-                <span id="user-display" style="font-size: 0.9rem; font-weight: 600;"></span>
-                <button class="toggle-btn" onclick="logout()" style="color: var(--danger);">Logout</button>
-            </div>
-        </header>
+<section class="card">
+  <h2>Scheduled</h2>
+  <table>
+    <thead>
+      <tr><th>Client</th><th>Subject</th><th>Date</th><th>Time</th><th>Status</th></tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</section>
 
-        <div class="main-layout">
-            <aside>
-                <button class="sidebar-btn" onclick="openEventModal()">+ New Event</button>
-                <h3 style="font-size: 0.9rem; color: #64748B; text-transform: uppercase;">Upcoming</h3>
-                <ul id="event-list-ul" class="event-list"></ul>
-            </aside>
+</div>
 
-            <main>
-                <div class="controls">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <button class="toggle-btn" onclick="navMonth(-1)">&lt;</button>
-                        <span class="month-title" id="calendar-label">Loading...</span>
-                        <button class="toggle-btn" onclick="navMonth(1)">&gt;</button>
-                    </div>
-                    <div class="view-toggles">
-                        <button class="toggle-btn active" id="btn-ad" onclick="setMode('AD')">AD</button>
-                        <button class="toggle-btn" id="btn-bs" onclick="setMode('BS')">BS</button>
-                    </div>
-                </div>
-                <div class="calendar-grid">
-                    <div class="day-head">Sun</div><div class="day-head">Mon</div><div class="day-head">Tue</div>
-                    <div class="day-head">Wed</div><div class="day-head">Thu</div><div class="day-head">Fri</div><div class="day-head">Sat</div>
-                    <div id="grid-body" style="display: contents;"></div>
-                </div>
-            </main>
-        </div>
+<!-- MODAL -->
+<div class="modal-overlay" id="alarmModal">
+  <div class="modal-box">
+    <div class="alarm-icon">🌕</div>
+    <h3 id="alarmMessage"></h3>
+    <br>
+    <div class="modal-actions">
+      <button class="btn-snooze" id="btnSnooze">Snooze</button>
+      <button class="btn-stop" id="btnStop">Done</button>
     </div>
+  </div>
+</div>
 
-    <!-- MODAL: EVENT -->
-    <div id="modal-event" class="modal">
-        <div class="modal-content">
-            <h3>New Event</h3>
-            <form id="event-form" onsubmit="saveEvent(event)">
-                <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" id="e-title" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label>Date</label>
-                    <input type="date" id="e-date" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label>Time</label>
-                    <input type="time" id="e-time" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 5px;">
-                        <input type="checkbox" id="e-rem" checked style="width: auto;"> Send Email
-                    </label>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="toggle-btn" onclick="closeModals()">Cancel</button>
-                    <button type="submit" class="btn-login">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
+<!-- 🔔 ONE-SHOT TING SOUND -->
+<audio id="tingSound" preload="auto">
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_9a5f7b4f44.mp3">
+</audio>
 
-    <!-- MODAL: SETTINGS -->
-    <div id="modal-settings" class="modal">
-        <div class="modal-content">
-            <h3>Settings & Diagnostics</h3>
-            <div class="form-group">
-                <label>Your Email (Recipient)</label>
-                <input type="email" id="s-email" class="form-input">
-            </div>
-            <div class="debug-box">
-                <strong>Fix Guide:</strong> If emails fail, ensure your EmailJS Template uses these variables:
-                <div class="var-list">
-                    to_email, to_name, event_title, event_date, event_time, event_desc
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="toggle-btn" onclick="testEmail()">🚀 Test Connection</button>
-                <button type="button" class="btn-login" onclick="saveSettings()">Save</button>
-            </div>
-        </div>
-    </div>
+<!-- 🎵 LOOPING AMBIENT SOUND -->
+<audio id="alarmSound" loop preload="auto">
+  <source src="https://cdn.pixabay.com/audio/2022/03/09/audio_c8c8a73467.mp3">
+</audio>
 
-    <div id="toast-container"></div>
+<script>
+let followUps = JSON.parse(localStorage.getItem("moon")||"[]");
+let currentId = null;
 
-    <script>
-        // --- CONFIG & STATE ---
-        const CONFIG = {
-            pk: "VxQFg3XE5hiYofAQj",
-            sid: "service_6fdl6ag",
-            tid: "template_86aaou7"
-        };
+const tableBody = document.getElementById("tableBody");
+const alarmModal = document.getElementById("alarmModal");
+const alarmMessage = document.getElementById("alarmMessage");
+const alarmSound = document.getElementById("alarmSound");
+const tingSound = document.getElementById("tingSound");
+const status = document.getElementById("systemStatus");
 
-        let state = {
-            user: JSON.parse(localStorage.getItem('ds_user')) || null,
-            events: JSON.parse(localStorage.getItem('ds_events')) || [],
-            date: new Date(),
-            mode: 'AD'
-        };
+document.getElementById("date").valueAsDate = new Date();
 
-        // --- INIT ---
-        window.onload = function() {
-            if(!BikramSambat) { alert("BS Library failed to load."); return; }
-            try {
-                emailjs.init(CONFIG.pk);
-                console.log("EmailJS initialized");
-            } catch(e) {
-                console.error("EmailJS Init Error", e);
-            }
+function render(){
+  tableBody.innerHTML="";
+  followUps.forEach(f=>{
+    tableBody.innerHTML+=`
+      <tr>
+        <td>${f.client}</td>
+        <td>${f.subject}</td>
+        <td>${f.date}</td>
+        <td>${f.time}</td>
+        <td><span class="status-pill status-${f.status}">${f.status}</span></td>
+      </tr>`;
+  });
+  localStorage.setItem("moon",JSON.stringify(followUps));
+}
 
-            if(state.user) {
-                showApp();
-            } else {
-                document.getElementById('login-screen').style.display = 'flex';
-            }
-            
-            // Reminder Checker
-            setInterval(checkReminders, 60000); 
-        };
+document.getElementById("followForm").onsubmit=e=>{
+  e.preventDefault();
+  followUps.push({
+    id:Date.now(),
+    client:client.value,
+    subject:subject.value,
+    date:date.value,
+    time:time.value,
+    snooze:+snoozeMins.value,
+    status:"pending",
+    rung:false
+  });
+  render();
+  e.target.reset();
+};
 
-        // --- AUTH ---
-        function performLogin() {
-            const email = document.getElementById('login-email').value;
-            if(!email.includes('@')) return alert("Invalid email");
-            state.user = { email: email, name: email.split('@')[0] };
-            localStorage.setItem('ds_user', JSON.stringify(state.user));
-            showApp();
-        }
+function trigger(item){
+  currentId=item.id;
+  item.rung=true;
 
-        function showApp() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-screen').style.display = 'flex';
-            document.getElementById('user-display').textContent = state.user.email;
-            document.getElementById('s-email').value = state.user.email;
-            renderCal();
-            renderList();
-        }
+  alarmMessage.textContent=`Time to follow up with ${item.client}`;
+  alarmModal.classList.add("active");
+  status.classList.add("active");
 
-        function logout() {
-            localStorage.removeItem('ds_user');
-            location.reload();
-        }
+  // 🔔 TING
+  tingSound.currentTime=0;
+  tingSound.play().catch(()=>{});
 
-        // --- CALENDAR LOGIC ---
-        function setMode(m) {
-            state.mode = m;
-            document.getElementById('btn-ad').classList.toggle('active', m === 'AD');
-            document.getElementById('btn-bs').classList.toggle('active', m === 'BS');
-            renderCal();
-        }
+  // 🎵 LOOP
+  alarmSound.currentTime=0;
+  alarmSound.play().catch(()=>{});
+}
 
-        function navMonth(d) {
-            state.date.setMonth(state.date.getMonth() + d);
-            renderCal();
-        }
+function stop(){
+  alarmSound.pause();
+  alarmModal.classList.remove("active");
+  status.classList.remove("active");
+  followUps.find(f=>f.id===currentId).status="done";
+  currentId=null;
+  render();
+}
 
-        function renderCal() {
-            const grid = document.getElementById('grid-body');
-            grid.innerHTML = '';
-            let year, month, days, startDay, mNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-            let bsNames = ["Bai","Jes","Ash","Shr","Bha","Ash","Kar","Man","Pou","Mag","Fal","Cha"];
+function snooze(){
+  let f=followUps.find(x=>x.id===currentId);
+  let d=new Date();
+  d.setMinutes(d.getMinutes()+f.snooze);
+  f.date=d.toISOString().slice(0,10);
+  f.time=d.toTimeString().slice(0,5);
+  f.rung=false;
+  f.status="snoozed";
+  stop();
+}
 
-            if(state.mode === 'AD') {
-                year = state.date.getFullYear();
-                month = state.date.getMonth();
-                days = new Date(year, month+1, 0).getDate();
-                startDay = new Date(year, month, 1).getDay();
-                document.getElementById('calendar-label').textContent = `${mNames[month]} ${year}`;
-            } else {
-                // BS Calculation
-                const bs = BikramSambat.AD2BS(state.date.getFullYear(), state.date.getMonth()+1, 1);
-                year = bs.bsYear;
-                month = bs.bsMonth - 1;
-                days = bs.bsMonthDays;
-                // Find start day
-                const adFirst = BikramSambat.BS2AD(bs.bsYear, bs.bsMonth, 1);
-                startDay = adFirst.adDay.getDay();
-                document.getElementById('calendar-label').textContent = `${bsNames[month]} ${year} (BS)`;
-            }
+btnStop.onclick=stop;
+btnSnooze.onclick=snooze;
 
-            // Padding
-            for(let i=0; i<startDay; i++) {
-                grid.innerHTML += `<div class="day-cell" style="background:#f8fafc"></div>`;
-            }
+setInterval(()=>{
+  let now=new Date();
+  followUps.forEach(f=>{
+    if(!f.rung && f.status!=="done"){
+      if(now>=new Date(f.date+"T"+f.time)) trigger(f);
+    }
+  });
+},1000);
 
-            // Days
-            const today = new Date();
-            for(let i=1; i<=days; i++) {
-                let dateStr = "";
-                let isToday = false;
-
-                if(state.mode === 'AD') {
-                    dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-                    if(i === today.getDate() && month === today.getMonth()) isToday = true;
-                } else {
-                    // Convert BS day to AD string for event lookup
-                    const ad = BikramSambat.BS2AD(year, month+1, i);
-                    dateStr = `${ad.adYear}-${String(ad.adMonth+1).padStart(2,'0')}-${String(ad.adDate).padStart(2,'0')}`;
-                }
-
-                let cell = document.createElement('div');
-                cell.className = `day-cell ${isToday ? 'today' : ''}`;
-                cell.innerHTML = `<span class="day-num">${i}</span>`;
-                cell.onclick = () => { document.getElementById('e-date').value = dateStr; openEventModal(); };
-
-                // Events
-                const evts = state.events.filter(e => e.date === dateStr);
-                evts.forEach(e => {
-                    let dot = document.createElement('span');
-                    dot.className = 'cell-dot';
-                    dot.textContent = `${e.time} ${e.title}`;
-                    cell.appendChild(dot);
-                });
-
-                grid.appendChild(cell);
-            }
-        }
-
-        // --- EVENTS ---
-        function openEventModal() { document.getElementById('modal-event').style.display = 'flex'; }
-        function openSettings() { document.getElementById('modal-settings').style.display = 'flex'; }
-        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-
-        function saveEvent(e) {
-            e.preventDefault();
-            const evt = {
-                id: Date.now(),
-                title: document.getElementById('e-title').value,
-                date: document.getElementById('e-date').value,
-                time: document.getElementById('e-time').value,
-                rem: document.getElementById('e-rem').checked,
-                sent: false
-            };
-            state.events.push(evt);
-            localStorage.setItem('ds_events', JSON.stringify(state.events));
-            renderCal();
-            renderList();
-            closeModals();
-            showToast("Event Saved", "success");
-        }
-
-        function renderList() {
-            const ul = document.getElementById('event-list-ul');
-            ul.innerHTML = '';
-            const now = new Date().toISOString().split('T')[0];
-            const upcoming = state.events.filter(e => e.date >= now).sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time));
-            
-            upcoming.slice(0,4).forEach(e => {
-                ul.innerHTML += `<li class="event-item">
-                    <div class="event-time">${e.date} ${e.time}</div>
-                    <div>${e.title}</div>
-                    ${e.rem ? '<small style="color:var(--primary)">🔔 Email ON</small>' : ''}
-                </li>`;
-            });
-        }
-
-        function saveSettings() {
-            state.user.email = document.getElementById('s-email').value;
-            localStorage.setItem('ds_user', JSON.stringify(state.user));
-            closeModals();
-            showToast("Settings Saved", "success");
-        }
-
-        // --- EMAIL LOGIC (FIXED) ---
-        function checkReminders() {
-            const now = new Date();
-            const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-            const dateStr = now.toISOString().split('T')[0];
-
-            state.events.forEach(e => {
-                if(e.rem && !e.sent && e.date === dateStr && e.time === timeStr) {
-                    sendMail(e);
-                    e.sent = true;
-                    localStorage.setItem('ds_events', JSON.stringify(state.events));
-                }
-            });
-        }
-
-        function sendMail(evt) {
-            const params = {
-                to_email: state.user.email,      // MUST exist in template
-                to_name: state.user.name,        // MUST exist in template
-                event_title: evt.title,          // MUST exist in template
-                event_date: evt.date,            // MUST exist in template
-                event_time: evt.time,            // MUST exist in template
-                event_desc: "Reminder event"     // MUST exist in template
-            };
-
-            emailjs.send(CONFIG.sid, CONFIG.tid, params)
-                .then(function(res) {
-                    showToast("Email Sent Successfully!", "success");
-                })
-                .catch(function(err) {
-                    console.error("EmailJS Error:", err);
-                    // SHOW THE ACTUAL ERROR TO USER
-                    showToast("FAILED: " + (err.text || JSON.stringify(err)), "error");
-                });
-        }
-
-        function testEmail() {
-            const btn = document.querySelector('#modal-settings .toggle-btn');
-            const originalText = btn.textContent;
-            btn.textContent = "Sending...";
-
-            const params = {
-                to_email: state.user.email,
-                to_name: "Test User",
-                event_title: "Connection Test",
-                event_date: new Date().toISOString().split('T')[0],
-                event_time: "12:00",
-                event_desc: "If you see this, your config is correct."
-            };
-
-            emailjs.send(CONFIG.sid, CONFIG.tid, params)
-                .then(() => {
-                    showToast("Test Email Sent! Check Inbox.", "success");
-                    btn.textContent = "✅ Success";
-                })
-                .catch((err) => {
-                    showToast("FAILED: " + (err.text || JSON.stringify(err)), "error");
-                    btn.textContent = "❌ Failed";
-                });
-        }
-
-        function showToast(msg, type) {
-            const t = document.createElement('div');
-            t.className = `toast ${type}`;
-            t.textContent = msg;
-            document.getElementById('toast-container').appendChild(t);
-            setTimeout(() => t.remove(), 5000);
-        }
-    </script>
+render();
+</script>
 </body>
 </html>
