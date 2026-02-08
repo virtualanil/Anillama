@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CSD Follow-Up Portal - The Turquoise Moon</title>
+  <title>CSD Follow-Up Portal</title>
 
   <style>
     :root {
@@ -260,7 +260,7 @@
   <div class="brand"><h1>🌙 CSD Follow-Up Portal</h1></div>
   <!-- Green Signal Badge -->
   <div class="status-badge" id="systemStatus">
-    <div class="status-dot"></div> System Active
+    <div class="status-dot-green"></div> System Active
   </div>
 </header>
 
@@ -268,13 +268,13 @@
   <h2>New Follow-Up</h2>
   <form id="followForm">
     <div class="input-group">
-      <input id="client" class="form-control" placeholder="Client Name" required>
+      <input id="client" class="form-control" placeholder="Mobile Number" required>
       <input id="subject" class="form-control" placeholder="Subject" required>
       <input id="date" type="date" class="form-control" required>
       <input id="time" type="time" class="form-control" required>
       <input id="snoozeMins" type="number" class="form-control" value="5" min="1">
     </div>
-    <textarea id="notes" class="form-control full-width" rows="2" placeholder="Additional details / Notes..."></textarea>
+    <textarea id="notes" class="form-control full-width" rows="2" placeholder="Notes..."></textarea>
     <br><br>
     <button>Add Follow-Up</button>
   </form>
