@@ -53,7 +53,7 @@
       gap: 10px;
     }
 
-    /* --- STATUS BADGE (GREEN SIGNAL FIX) --- */
+    /* --- STATUS BADGE (GREEN SIGNAL) --- */
     .status-badge {
       display: flex;
       align-items: center;
@@ -151,7 +151,7 @@
 
     button:hover { opacity: 0.9; }
 
-    /* --- TABLE WITH NOTES --- */
+    /* --- TABLE --- */
     .table-container {
       overflow-x: auto;
     }
@@ -159,18 +159,18 @@
     table { 
       width: 100%; 
       border-collapse: collapse; 
-      min-width: 800px; /* Ensure table doesn't squish too much */
+      min-width: 900px; 
     }
 
     th, td {
       padding: 12px;
       border-bottom: 1px solid rgba(255,255,255,0.05);
       text-align: left;
+      vertical-align: middle;
     }
 
     th { color: var(--text-muted); font-size: 12px; text-transform: uppercase; }
     
-    /* Notes column styling */
     .note-cell {
       max-width: 200px;
       color: var(--text-muted);
@@ -191,6 +191,27 @@
     .status-pending { background: rgba(245,158,11,.15); color: var(--warn); }
     .status-done { background: rgba(34,197,94,.15); color: #22c55e; }
     .status-snoozed { background: rgba(99,102,241,.15); color: var(--primary); }
+
+    /* New Button Style for Table Actions */
+    .btn-action-done {
+      background-color: var(--success);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      width: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.1s;
+    }
+    
+    .btn-action-done:hover {
+      background-color: #16a34a;
+      transform: scale(1.05);
+    }
 
     /* --- MODAL --- */
     .modal-overlay {
@@ -257,10 +278,10 @@
 <div class="container">
 
 <header>
-  <div class="brand"><h1>🌙 CSD Follow-Up Portal</h1></div>
+  <div class="brand"><h1>🌙 CSD Follow-Up Portal (Keep This Tab Open To Receive Your Reminder.)</h1></div>
   <!-- Green Signal Badge -->
   <div class="status-badge" id="systemStatus">
-    <div class="status-dot-green"></div> System Active
+    <div class="status-dot"></div> System Active
   </div>
 </header>
 
@@ -290,8 +311,9 @@
           <th>Subject</th>
           <th>Date</th>
           <th>Time</th>
-          <th>Notes</th> <!-- Added Notes Column -->
+          <th>Notes</th>
           <th>Status</th>
+          <th>Action</th> <!-- New Action Column -->
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -345,12 +367,20 @@ function render() {
   tableBody.innerHTML = "";
   
   if (followUps.length === 0) {
-    tableBody.innerHTML = "<tr><td colspan='6' style='text-align:center; padding: 20px; color: var(--text-muted);'>No follow-ups scheduled.</td></tr>";
+    tableBody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding: 20px; color: var(--text-muted);'>No follow-ups scheduled.</td></tr>";
   } else {
     followUps.forEach(f => {
       // Handle empty notes display
       const notesDisplay = f.notes ? `<span title="${f.notes}">${f.notes}</span>` : "-";
       
+      // Determine Action Cell Content
+      let actionHtml = `<span style="color: var(--text-muted); font-size: 12px;">-</span>`;
+      
+      if (f.status === 'pending') {
+        // Only show "Done" button if status is pending
+        actionHtml = `<button class="btn-action-done" onclick="manualComplete(${f.id})">✔ Done</button>`;
+      }
+
       tableBody.innerHTML += `
         <tr>
           <td style="font-weight: 600;">${f.client}</td>
@@ -359,6 +389,7 @@ function render() {
           <td>${f.time}</td>
           <td class="note-cell">${notesDisplay}</td>
           <td><span class="status-pill status-${f.status}">${f.status}</span></td>
+          <td>${actionHtml}</td>
         </tr>`;
     });
   }
@@ -370,7 +401,6 @@ function render() {
 document.getElementById("followForm").onsubmit = function(e) {
   e.preventDefault();
   
-  // Get values
   const client = document.getElementById("client").value;
   const subject = document.getElementById("subject").value;
   const date = document.getElementById("date").value;
@@ -385,7 +415,7 @@ document.getElementById("followForm").onsubmit = function(e) {
     date,
     time,
     snooze: +snooze,
-    notes, // Save notes
+    notes,
     status: "pending",
     rung: false
   });
@@ -394,6 +424,15 @@ document.getElementById("followForm").onsubmit = function(e) {
   e.target.reset();
   document.getElementById("date").valueAsDate = new Date(); // Reset date
 };
+
+// Manual Complete from Table
+window.manualComplete = function(id) {
+  let item = followUps.find(f => f.id === id);
+  if (item) {
+    item.status = "done";
+    render();
+  }
+}
 
 function trigger(item) {
   currentId = item.id;
@@ -415,8 +454,11 @@ function trigger(item) {
 }
 
 function stopAlarm() {
+  // Stop both sounds immediately
   alarmSound.pause();
   alarmSound.currentTime = 0;
+  tingSound.pause();
+  tingSound.currentTime = 0;
   
   alarmModal.classList.remove("active");
   systemStatus.classList.remove("active"); // Back to Grey
@@ -441,7 +483,7 @@ function snoozeAlarm() {
   stopAlarm(); // Use stopAlarm to clear audio/UI
 }
 
-// Event Listeners (Robust fix for button issues)
+// Event Listeners
 document.getElementById("btnStop").addEventListener("click", stopAlarm);
 document.getElementById("btnSnooze").addEventListener("click", snoozeAlarm);
 
