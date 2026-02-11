@@ -36,33 +36,31 @@
         // Listen to Auth State changes
         onAuthStateChanged(auth, (user) => {
             const loginBtn = document.getElementById("loginBtn");
-            const startBtn = document.getElementById("startBtn");
+            const startBtns = document.querySelectorAll(".mode-btn"); // Select all mode buttons
             const userDisplay = document.getElementById("userDisplay");
 
             if (user) {
                 window.currentUser = user;
                 
-                // Show Name at Top
                 if(userDisplay) {
                     userDisplay.innerHTML = `COMMANDER: <span>${user.displayName}</span>`;
                 }
 
-                // Hide Login, Show Start
+                // Hide Login, Show Start Modes
                 if(loginBtn) loginBtn.classList.add('hidden');
-                if(startBtn) startBtn.classList.remove('hidden');
+                startBtns.forEach(btn => btn.classList.remove('hidden'));
 
                 console.log("User logged in:", window.currentUser.displayName);
             } else {
                 window.currentUser = null;
                 
-                // Show Guest at Top
                 if(userDisplay) {
                     userDisplay.innerHTML = `GUEST`;
                 }
 
-                // Show Login, Hide Start
+                // Show Login, Hide Start Modes
                 if(loginBtn) loginBtn.classList.remove('hidden');
-                if(startBtn) startBtn.classList.add('hidden');
+                startBtns.forEach(btn => btn.classList.add('hidden'));
             }
         });
 
@@ -77,7 +75,7 @@
             }
         };
 
-        // Save Score to Firestore (UPDATED LOGIC: Prioritize WPM)
+        // Save Score to Firestore (Prioritize WPM)
         window.saveScore = async function(score, wpm) {
             if (!window.currentUser) {
                 console.log("Cannot save score: User not logged in");
@@ -92,18 +90,13 @@
                     let shouldSave = false;
 
                     if (!sfDoc.exists()) {
-                        // First time playing
                         shouldSave = true;
                         console.log("First game. Saving score.");
                     } else {
                         const existingData = sfDoc.data();
-                        
-                        // CHANGE: Now comparing WPM instead of Score
-                        // Only update if new WPM is strictly higher
                         if (wpm > existingData.wpm) {
                             shouldSave = true;
                             console.log(`New High WPM! Old: ${existingData.wpm}, New: ${wpm}`);
-                            console.log(`Previous Score: ${existingData.score} replaced by new Score: ${score}`);
                         } else {
                             console.log(`WPM ${wpm} is not higher than current best ${existingData.wpm}. Not saving.`);
                         }
@@ -113,7 +106,7 @@
                         transaction.set(userDocRef, {
                             name: window.currentUser.displayName,
                             email: window.currentUser.email,
-                            score: score, // Save the score achieved at this high WPM
+                            score: score,
                             wpm: wpm,
                             time: serverTimestamp()
                         });
@@ -127,7 +120,7 @@
             }
         };
 
-        // Fetch Leaderboard (UPDATED: Accepts list ID to be reusable)
+        // Fetch Leaderboard
         window.loadLeaderboard = async function(listId = 'leaderboard-list') {
             const listEl = document.getElementById(listId);
             if(!listEl) return;
@@ -135,7 +128,6 @@
             listEl.innerHTML = '<li>Loading...</li>';
             
             try {
-                // CHANGE: Ordering by "wpm" descending instead of "score"
                 const q = query(collection(db, "leaderboard"), orderBy("wpm", "desc"), limit(10));
                 const querySnapshot = await getDocs(q);
                 
@@ -150,7 +142,7 @@
                     const data = docSnapshot.data();
                     const li = document.createElement('li');
                     li.innerHTML = `
-                        <span class="lb-name">${data.name}</span>
+                        <span class="lb-name" title="${data.name}">${data.name}</span>
                         <span class="lb-stats">SCORE: ${data.score}</span>
                         <span class="lb-score">WPM: ${data.wpm}</span>
                     `;
@@ -196,7 +188,6 @@
             height: 100%;
         }
 
-        /* UI Layer - adjusted for top bar */
         .ui-layer {
             position: absolute;
             pointer-events: none;
@@ -207,12 +198,12 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 0; /* Removed padding to let hud-top handle its own spacing */
+            padding: 0;
             box-sizing: border-box;
             z-index: 10;
         }
 
-        /* HUD TOP - Improved for Visibility */
+        /* HUD TOP - BLUR EFFECT */
         .hud-top {
             display: flex;
             justify-content: space-between;
@@ -220,12 +211,14 @@
             flex-wrap: wrap;
             font-size: 1rem;
             padding: 0 20px;
-            height: 70px; /* Fixed height */
+            height: 70px;
             
-            /* VISIBILITY FIX: Solid background and border */
-            background: #02020a; 
-            border-bottom: 2px solid var(--primary);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            /* Transparent Blur Background */
+            background: rgba(5, 5, 16, 0.7); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
             
             text-shadow: 0 0 5px var(--primary);
             gap: 15px;
@@ -234,7 +227,7 @@
         }
 
         .hud-stat {
-            background: rgba(0, 243, 255, 0.05);
+            background: rgba(0, 243, 255, 0.1);
             border: 1px solid var(--primary);
             padding: 8px 15px;
             border-radius: 4px;
@@ -249,7 +242,7 @@
 
         .hud-combo {
             position: absolute;
-            top: 90px; /* Pushed down to be below the HUD bar */
+            top: 90px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
@@ -341,6 +334,14 @@
             line-height: 1.6;
         }
 
+        .mode-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
         .btn {
             background: transparent;
             color: var(--primary);
@@ -361,8 +362,19 @@
             background: var(--primary);
             color: #000;
             box-shadow: 0 0 30px var(--primary);
+            transform: translateY(-2px);
         }
 
+        /* Specific styles for difficulty buttons */
+        .mode-btn {
+            flex: 1 1 120px;
+            font-size: 1.2rem;
+            padding: 12px 20px;
+        }
+        .mode-btn.easy:hover { border-color: var(--success); color: var(--success); box-shadow: 0 0 20px var(--success); background: transparent; }
+        .mode-btn.hard:hover { border-color: var(--primary); color: var(--primary); box-shadow: 0 0 20px var(--primary); background: transparent; }
+        .mode-btn.expert:hover { border-color: var(--danger); color: var(--danger); box-shadow: 0 0 20px var(--danger); background: transparent; }
+        
         .btn:disabled {
             border-color: #555;
             color: #555;
@@ -421,11 +433,22 @@
             border-bottom: 1px solid #333;
             font-family: var(--type-font);
             font-size: 0.9rem;
+            align-items: center;
         }
         ul.leaderboard-list li:last-child { border-bottom: none; }
-        .lb-name { color: #fff; flex: 1; }
-        .lb-stats { color: #aaa; margin-right: 15px; }
-        .lb-score { color: var(--primary); font-weight: bold; }
+        
+        /* Fixed Name Layout to prevent overflow */
+        .lb-name { 
+            color: #fff; 
+            flex: 1; 
+            margin-right: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 40%; 
+        }
+        .lb-stats { color: #aaa; margin-right: 15px; text-align: right; min-width: 80px;}
+        .lb-score { color: var(--primary); font-weight: bold; min-width: 60px; text-align: right;}
 
         /* Mobile Adjustments */
         @media (max-width: 600px) {
@@ -434,6 +457,8 @@
             .hud-top { height: auto; padding: 10px; flex-direction: column; gap: 5px; }
             .hud-stat { width: 100%; text-align: center; padding: 5px; }
             .hud-combo { top: 120px; }
+            .mode-container { flex-direction: column; width: 100%; }
+            .mode-btn { width: 100%; }
         }
     </style>
 </head>
@@ -461,21 +486,25 @@
         <h1>TYPING GAME</h1>
         <h2>BY ANIL LAMA </h2>
         <p class="subtitle">Type words to destroy enemies.<br>
-        <strong>SMART TARGETING:</strong> If multiple words start the same, type until they differ to lock the correct one. <br>
+        <strong>SMART TARGETING:</strong> Type words to lock targets.<br>
         Typing a wrong letter resets your combo.<br>
         Press ESC to Pause.</p>
         
-        <!-- Start Button is Hidden by default, shows after login -->
-        <button id="startBtn" class="btn hidden" onclick="game.start()">START GAME</button>
+        <!-- Game Mode Buttons (Hidden by default until login) -->
+        <div class="mode-container hidden" id="modeButtons">
+            <button class="btn mode-btn easy hidden" onclick="game.start('EASY')">EASY</button>
+            <button class="btn mode-btn hard hidden" onclick="game.start('HARD')">HARD</button>
+            <button class="btn mode-btn expert hidden" onclick="game.start('EXPERT')">EXPERT</button>
+        </div>
         
-        <!-- Login Button is visible by default, hides after login -->
+        <!-- Login Button (Visible by default) -->
         <button id="loginBtn" class="btn" onclick="loginWithGoogle()">Login with Gmail</button>
         
         <!-- New Leaderboard Button -->
         <button class="btn btn-small" onclick="openLeaderboardMenu()">LEADERBOARD</button>
     </div>
 
-    <!-- LEADERBOARD MENU (For Start Screen) -->
+    <!-- LEADERBOARD MENU -->
     <div class="modal hidden" id="leaderboardMenuScreen">
         <h1>TOP DEFENDERS</h1>
         
@@ -539,7 +568,6 @@
 window.openLeaderboardMenu = function() {
     document.getElementById('startScreen').classList.add('hidden');
     document.getElementById('leaderboardMenuScreen').classList.remove('hidden');
-    // Load data into the Start Screen specific list
     loadLeaderboard('leaderboard-list-start');
 };
 
@@ -680,7 +708,15 @@ class Game {
         this.wordsTyped = 0;
         this.totalKeystrokes = 0;
         this.missedKeystrokes = 0;
+        
+        // Difficulty Settings
         this.difficultyMultiplier = 1;
+        this.currentMode = 'HARD';
+        this.modeSettings = {
+            'EASY': { speedMod: 0.6, spawnMod: 1.5, ramp: 0.01 },
+            'HARD': { speedMod: 1.0, spawnMod: 1.0, ramp: 0.02 },
+            'EXPERT': { speedMod: 1.5, spawnMod: 0.7, ramp: 0.04 }
+        };
         
         this.shake = 0;
         this.currentInput = ""; 
@@ -730,8 +766,10 @@ class Game {
         }
     }
 
-    start() {
+    start(mode = 'HARD') {
         AudioSys.init();
+        this.currentMode = mode;
+        
         document.getElementById('startScreen').classList.add('hidden');
         document.getElementById('gameOverScreen').classList.add('hidden');
         document.getElementById('pauseScreen').classList.add('hidden');
@@ -744,7 +782,8 @@ class Game {
     }
 
     restart() {
-        this.start();
+        // Restart with the same mode that was being played
+        this.start(this.currentMode);
     }
 
     reset() {
@@ -771,24 +810,25 @@ class Game {
         if (this.state !== 'PLAYING') return;
         
         const word = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
-        // Spawn X: random within bounds (padding to avoid edges)
         const x = Math.random() * (this.width - 150) + 75;
-        // Spawn Y: Start above the solid HUD bar (which is 70px high)
-        const y = -50; 
-        const speed = (Math.random() * 0.5 + 0.5) * this.difficultyMultiplier;
+        const y = -50;
+        
+        // Apply Mode Settings to Speed
+        const settings = this.modeSettings[this.currentMode];
+        const speed = (Math.random() * 0.5 + 0.5) * this.difficultyMultiplier * settings.speedMod;
+        
         const type = Math.random() > 0.8 ? 'ARMORED' : 'NORMAL';
         
         this.enemies.push(new Enemy(x, y, word, speed, type));
         
-        const nextSpawn = Math.max(800, 2000 - (this.difficultyMultiplier * 200));
+        // Apply Mode Settings to Spawn Rate
+        const nextSpawn = Math.max(400, (2000 * settings.spawnMod) - (this.difficultyMultiplier * 200));
         
         this.spawnTimer = setTimeout(() => this.spawnEnemy(), nextSpawn);
     }
 
     handleInput(e) {
         if (this.state !== 'PLAYING') return;
-        
-        // REMOVED SPACEBAR SPAWN LOGIC AS REQUESTED
         
         if (e.key.length !== 1) return;
         const key = e.key.toLowerCase();
@@ -830,7 +870,10 @@ class Game {
         this.score += 10 * (1 + Math.floor(this.combo / 5)) * (enemy.type === 'ARMORED' ? 2 : 1);
         this.combo++;
         this.wordsTyped++;
-        this.difficultyMultiplier += 0.02;
+        
+        // Ramp up difficulty based on mode settings
+        const settings = this.modeSettings[this.currentMode];
+        this.difficultyMultiplier += settings.ramp;
         
         AudioSys.playExplosion();
         this.createExplosion(enemy.x, enemy.y, enemy.type === 'ARMORED' ? '#ffaa00' : '#00f3ff');
@@ -913,16 +956,12 @@ class Game {
         
         document.getElementById('gameOverScreen').classList.remove('hidden');
 
-        // SAVE AND LOAD LOGIC
         if (window.currentUser) {
-            // User is logged in, save their score
-            // Now logic checks WPM first
             await saveScore(this.score, finalWpm);
         } else {
             console.log("User not logged in. Score not saved to leaderboard.");
         }
         
-        // Load the latest leaderboard into the Game Over list
         loadLeaderboard('leaderboard-list');
     }
 
