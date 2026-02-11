@@ -6,7 +6,7 @@
     
     <!-- SEO Tags -->
     <title>Typing Game - Nepali Typing Game</title>
-    <meta name="description" content="Play Typing Defender, a free 3D typing shooter game. Improve your WPM and accuracy while defending system from cyber enemies.">
+    <meta name="description" content="Play Typing Defender, a free 3D typing shooter game.">
     <meta name="author" content="Anil Lama">
 
     <!-- Firebase SDKs (Modular) -->
@@ -36,31 +36,37 @@
         // Listen to Auth State changes
         onAuthStateChanged(auth, (user) => {
             const loginBtn = document.getElementById("loginBtn");
-            const startBtns = document.querySelectorAll(".mode-btn"); // Select all mode buttons
+            const modeContainer = document.getElementById("modeButtons"); // The container for Easy/Hard/Expert
             const userDisplay = document.getElementById("userDisplay");
 
             if (user) {
                 window.currentUser = user;
                 
+                // Show Name at Top
                 if(userDisplay) {
                     userDisplay.innerHTML = `COMMANDER: <span>${user.displayName}</span>`;
                 }
 
-                // Hide Login, Show Start Modes
+                // Hide Login Button
                 if(loginBtn) loginBtn.classList.add('hidden');
-                startBtns.forEach(btn => btn.classList.remove('hidden'));
+                
+                // SHOW GAME MODES (Easy/Hard/Expert)
+                if(modeContainer) modeContainer.classList.remove('hidden');
 
                 console.log("User logged in:", window.currentUser.displayName);
             } else {
                 window.currentUser = null;
                 
+                // Show Guest at Top
                 if(userDisplay) {
                     userDisplay.innerHTML = `GUEST`;
                 }
 
-                // Show Login, Hide Start Modes
+                // Show Login Button
                 if(loginBtn) loginBtn.classList.remove('hidden');
-                startBtns.forEach(btn => btn.classList.add('hidden'));
+                
+                // HIDE GAME MODES
+                if(modeContainer) modeContainer.classList.add('hidden');
             }
         });
 
@@ -91,14 +97,10 @@
 
                     if (!sfDoc.exists()) {
                         shouldSave = true;
-                        console.log("First game. Saving score.");
                     } else {
                         const existingData = sfDoc.data();
                         if (wpm > existingData.wpm) {
                             shouldSave = true;
-                            console.log(`New High WPM! Old: ${existingData.wpm}, New: ${wpm}`);
-                        } else {
-                            console.log(`WPM ${wpm} is not higher than current best ${existingData.wpm}. Not saving.`);
                         }
                     }
 
@@ -112,7 +114,6 @@
                         });
                     }
                 });
-                console.log("Transaction successfully committed!");
                 return true;
             } catch (e) {
                 console.error("Transaction failed: ", e);
@@ -213,7 +214,6 @@
             padding: 0 20px;
             height: 70px;
             
-            /* Transparent Blur Background */
             background: rgba(5, 5, 16, 0.7); 
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -437,7 +437,6 @@
         }
         ul.leaderboard-list li:last-child { border-bottom: none; }
         
-        /* Fixed Name Layout to prevent overflow */
         .lb-name { 
             color: #fff; 
             flex: 1; 
@@ -472,7 +471,7 @@
 
     <div class="ui-layer" id="hud">
         <div class="hud-top">
-            <!-- New User Display Area -->
+            <!-- User Display Area -->
             <div class="hud-stat" id="userDisplay">GUEST</div>
             
             <div class="hud-stat">SCORE: <span id="scoreDisplay">0</span></div>
@@ -485,7 +484,7 @@
     <div class="modal" id="startScreen">
         <h1>TYPING GAME</h1>
         <h2>BY ANIL LAMA </h2>
-        <p class="subtitle">Type words to destroy enemies.<br>
+        <p class="subtitle">Select your difficulty to begin.<br>
         <strong>SMART TARGETING:</strong> Type words to lock targets.<br>
         Typing a wrong letter resets your combo.<br>
         Press ESC to Pause.</p>
@@ -713,9 +712,9 @@ class Game {
         this.difficultyMultiplier = 1;
         this.currentMode = 'HARD';
         this.modeSettings = {
-            'EASY': { speedMod: 0.6, spawnMod: 1.5, ramp: 0.01 },
+            'EASY': { speedMod: 0.6, spawnMod: 1.8, ramp: 0.01 },
             'HARD': { speedMod: 1.0, spawnMod: 1.0, ramp: 0.02 },
-            'EXPERT': { speedMod: 1.5, spawnMod: 0.7, ramp: 0.04 }
+            'EXPERT': { speedMod: 1.6, spawnMod: 0.6, ramp: 0.05 }
         };
         
         this.shake = 0;
