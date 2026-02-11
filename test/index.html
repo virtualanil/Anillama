@@ -590,8 +590,8 @@
 
     <!-- START SCREEN -->
     <div class="modal" id="startScreen">
-        <h1>TYPING DEFENDER</h1>
-        <h2>ULTIMATE EDITION</h2>
+        <h1>TYPING GAME</h1>
+        <h2>By Anil</h2>
         <p class="subtitle">Defend the system from cyber threats. Type words to destroy enemies.<br>High combos trigger Fever Mode for double points!</p>
         
         <button id="modeSelectBtn" class="btn hidden" onclick="showModeSelect()">SELECT MODE</button>
@@ -602,7 +602,7 @@
     <!-- MODE SELECTION SCREEN -->
     <div class="modal hidden" id="modeSelectScreen">
         <h1>SELECT MODE</h1>
-        <h2>Choose Your Difficulty</h2>
+        <h2>Choose Your Mode</h2>
         
         <div class="mode-grid">
             <div class="mode-card easy" onclick="game.startWithMode('easy')">
@@ -669,14 +669,14 @@
     <!-- PAUSE SCREEN -->
     <div class="modal hidden" id="pauseScreen">
         <h1>SYSTEM PAUSED</h1>
-        <h2>Awaiting Input...</h2>
+        <h2>Game Rokyo!!!</h2>
         <button class="btn" onclick="game.togglePause()">RESUME</button>
         <button class="btn btn-small" onclick="game.quitToMenu()" style="border-color:var(--danger); color:var(--danger)">ABORT MISSION</button>
     </div>
 
     <!-- GAME OVER SCREEN -->
     <div class="modal hidden" id="gameOverScreen">
-        <h1 style="color: var(--danger); -webkit-text-fill-color: var(--danger);">MISSION FAILED</h1>
+        <h1 style="color: var(--danger); -webkit-text-fill-color: var(--danger);">GAME OVER</h1>
         <div class="difficulty-badge easy" id="gameOverModeBadge">EASY MODE</div>
         
         <div class="stats-grid">
@@ -706,7 +706,7 @@
         </div>
 
         <div style="margin-top: 20px;">
-            <button class="btn" onclick="game.restart()">RETRY MISSION</button>
+            <button class="btn" onclick="game.restart()">TRY AGAIN</button>
             <button class="btn btn-small" onclick="game.quitToMenu()">MAIN MENU</button>
         </div>
     </div>
@@ -839,10 +839,11 @@ const AudioSys = {
     }
 };
 
+// FIXED SYNTAX ERRORS HERE: Added missing commas
 const WORD_LIST = {
     short: ["nepal","code","data","fire","wind","rain","star","moon","sun","web","app","hack","bug","test","link","node","grid","light","dark","soul","mind","power","laser","neon","cyber","pixel","cloud","server","script","build","debug","async","await","class","style","color","font","alert","score","level","timer","angle","point","line","curve","scale","limit","range","check","token","route","sync","drag","drop","copy","paste","click","hover","focus","blur","core","dash","flux","warp","byte","cache","heap","loop","flag","hash","ping","pong","scan","lock","key","path","port","host","edge","mask","rate","tick","step","zone","push","pull","send","recv","play","pause","save","load","move","jump","roll","aim","hit","miss","heal","buff","gain","loss","zone","boss","mini","wave","spawn","trace","frame","speed"],
-    medium: ["vector","shield","plasma","rocket","meteor","planet","matrix","thunder","shadow","energy","attack","strike","defend","mission","command","control","network","firewall","database","compile","execute","keyboard","pointer","select","function","promise","boolean","encrypt","decrypt","gradient","transition","transform","overflow","viewport""gravity","quantum","asteroid","overdrive","stealth","protocol","payload","endpoint","backend","frontend","compiler","emulator","benchmark","renderer","pipeline","collision","hitbox","cooldown","multiplayer","spectator","tracker","observer","resolver","dispatcher","handshake","checksum","iterator","scheduler","allocator","viewporting","middleware"],
-    long: ["rajesh","anil","parth","saroj","malware","spyware","trojan","botnet","kernel","python","database","optimize","bandwidth","sensor","camera","gesture","callback","listener","module","import","export","default","undefined","leaderboard","algorithm","authentication","configuration","documentation","implementation","infrastructure","architecture","performance","responsive","navigation","container","component","framework","encryption","deployment","repository","application""virtualization","microservices","synchronization","serialization","deserialization","authorization","cryptography","compression","interpolation","extrapolation","telecommunication","instrumentation","visualization","containerization","orchestration","virtualreality","augmentedreality","proceduralgeneration","pathfinding","raytracing","loadbalancing","faulttolerance","highavailability","scalability","maintainability","observability","internationalization","localization","telemetrysystem","datapipeline"]
+    medium: ["vector","shield","plasma","rocket","meteor","planet","matrix","thunder","shadow","energy","attack","strike","defend","mission","command","control","network","firewall","database","compile","execute","keyboard","pointer","select","function","promise","boolean","encrypt","decrypt","gradient","transition","transform","overflow","viewport","gravity","quantum","asteroid","overdrive","stealth","protocol","payload","endpoint","backend","frontend","compiler","emulator","benchmark","renderer","pipeline","collision","hitbox","cooldown","multiplayer","spectator","tracker","observer","resolver","dispatcher","handshake","checksum","iterator","scheduler","allocator","viewporting","middleware"],
+    long: ["rajesh","anil","parth","saroj","malware","spyware","trojan","botnet","kernel","python","database","optimize","bandwidth","sensor","camera","gesture","callback","listener","module","import","export","default","undefined","leaderboard","algorithm","authentication","configuration","documentation","implementation","infrastructure","architecture","performance","responsive","navigation","container","component","framework","encryption","deployment","repository","application","virtualization","microservices","synchronization","serialization","deserialization","authorization","cryptography","compression","interpolation","extrapolation","telecommunication","instrumentation","visualization","containerization","orchestration","virtualreality","augmentedreality","proceduralgeneration","pathfinding","raytracing","loadbalancing","faulttolerance","highavailability","scalability","maintainability","observability","internationalization","localization","telemetrysystem","datapipeline"]
 };
 
 const ALL_WORDS = [...WORD_LIST.short, ...WORD_LIST.medium, ...WORD_LIST.long];
