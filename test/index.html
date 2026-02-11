@@ -673,7 +673,11 @@
         <button class="btn" onclick="game.togglePause()">RESUME</button>
         <button class="btn btn-small" onclick="game.quitToMenu()" style="border-color:var(--danger); color:var(--danger)">ABORT MISSION</button>
     </div>
-
+    
+<!-- 🎵 LOOPING AMBIENT SOUND -->
+<audio id="alarmSound" loop preload="auto">
+  <source src="Test Ringtone.mp3">
+</audio>
     <!-- GAME OVER SCREEN -->
     <div class="modal hidden" id="gameOverScreen">
         <h1 style="color: var(--danger); -webkit-text-fill-color: var(--danger);">GAME OVER</h1>
