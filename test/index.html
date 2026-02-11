@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Tags -->
-    <title>Typing Game - Nepali Typing Game</title>
-    <meta name="description" content="Play Typing Defender, a free 3D typing shooter game.">
+    <title>Typing Game - Advanced Nepali Typing Game</title>
+    <meta name="description" content="Play Typing Defender, a free 3D typing shooter game with multiple difficulty modes. Improve your WPM and accuracy while defending system from cyber enemies.">
     <meta name="author" content="Anil Lama">
 
     <!-- Firebase SDKs (Modular) -->
@@ -17,12 +17,12 @@
 
         // Firebase Config
         const firebaseConfig = {
-        apiKey: "AIzaSyCNVdBXRTJMkACc46EUmn38Vy4Flz3vDOQ",
-        authDomain: "typing-game-c5e84.firebaseapp.com",
-        projectId: "typing-game-c5e84",
-        storageBucket: "typing-game-c5e84.firebasestorage.app",
-        messagingSenderId: "1017813191155",
-        appId: "1:1017813191155:web:af354c72711c6488562a86"
+            apiKey: "AIzaSyCNVdBXRTJMkACc46EUmn38Vy4Flz3vDOQ",
+            authDomain: "typing-game-c5e84.firebaseapp.com",
+            projectId: "typing-game-c5e84",
+            storageBucket: "typing-game-c5e84.firebasestorage.app",
+            messagingSenderId: "1017813191155",
+            appId: "1:1017813191155:web:af354c72711c6488562a86"
         };
 
         // Initialize Firebase
@@ -36,7 +36,7 @@
         // Listen to Auth State changes
         onAuthStateChanged(auth, (user) => {
             const loginBtn = document.getElementById("loginBtn");
-            const modeContainer = document.getElementById("modeButtons"); // The container for Easy/Hard/Expert
+            const modeSelectBtn = document.getElementById("modeSelectBtn");
             const userDisplay = document.getElementById("userDisplay");
 
             if (user) {
@@ -47,11 +47,9 @@
                     userDisplay.innerHTML = `COMMANDER: <span>${user.displayName}</span>`;
                 }
 
-                // Hide Login Button
+                // Hide Login, Show Mode Select
                 if(loginBtn) loginBtn.classList.add('hidden');
-                
-                // SHOW GAME MODES (Easy/Hard/Expert)
-                if(modeContainer) modeContainer.classList.remove('hidden');
+                if(modeSelectBtn) modeSelectBtn.classList.remove('hidden');
 
                 console.log("User logged in:", window.currentUser.displayName);
             } else {
@@ -62,11 +60,9 @@
                     userDisplay.innerHTML = `GUEST`;
                 }
 
-                // Show Login Button
+                // Show Login, Hide Mode Select
                 if(loginBtn) loginBtn.classList.remove('hidden');
-                
-                // HIDE GAME MODES
-                if(modeContainer) modeContainer.classList.add('hidden');
+                if(modeSelectBtn) modeSelectBtn.classList.add('hidden');
             }
         });
 
@@ -81,14 +77,15 @@
             }
         };
 
-        // Save Score to Firestore (Prioritize WPM)
-        window.saveScore = async function(score, wpm) {
+        // Save Score to Firestore (by difficulty mode)
+        window.saveScore = async function(score, wpm, difficulty) {
             if (!window.currentUser) {
                 console.log("Cannot save score: User not logged in");
                 return false;
             }
             
-            const userDocRef = doc(db, "leaderboard", window.currentUser.uid);
+            const collectionName = `leaderboard_${difficulty}`;
+            const userDocRef = doc(db, collectionName, window.currentUser.uid);
 
             try {
                 await runTransaction(db, async (transaction) => {
@@ -97,10 +94,15 @@
 
                     if (!sfDoc.exists()) {
                         shouldSave = true;
+                        console.log("First game. Saving score.");
                     } else {
                         const existingData = sfDoc.data();
+                        
                         if (wpm > existingData.wpm) {
                             shouldSave = true;
+                            console.log(`New High WPM! Old: ${existingData.wpm}, New: ${wpm}`);
+                        } else {
+                            console.log(`WPM ${wpm} is not higher than current best ${existingData.wpm}. Not saving.`);
                         }
                     }
 
@@ -110,10 +112,12 @@
                             email: window.currentUser.email,
                             score: score,
                             wpm: wpm,
+                            difficulty: difficulty,
                             time: serverTimestamp()
                         });
                     }
                 });
+                console.log("Transaction successfully committed!");
                 return true;
             } catch (e) {
                 console.error("Transaction failed: ", e);
@@ -122,14 +126,15 @@
         };
 
         // Fetch Leaderboard
-        window.loadLeaderboard = async function(listId = 'leaderboard-list') {
+        window.loadLeaderboard = async function(listId, difficulty) {
             const listEl = document.getElementById(listId);
             if(!listEl) return;
             
             listEl.innerHTML = '<li>Loading...</li>';
             
             try {
-                const q = query(collection(db, "leaderboard"), orderBy("wpm", "desc"), limit(10));
+                const collectionName = `leaderboard_${difficulty}`;
+                const q = query(collection(db, collectionName), orderBy("wpm", "desc"), limit(10));
                 const querySnapshot = await getDocs(q);
                 
                 listEl.innerHTML = ''; 
@@ -143,7 +148,7 @@
                     const data = docSnapshot.data();
                     const li = document.createElement('li');
                     li.innerHTML = `
-                        <span class="lb-name" title="${data.name}">${data.name}</span>
+                        <span class="lb-name">${data.name}</span>
                         <span class="lb-stats">SCORE: ${data.score}</span>
                         <span class="lb-score">WPM: ${data.wpm}</span>
                     `;
@@ -156,13 +161,14 @@
         };
     </script>
 
-       <style>
+    <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap');
 
         :root {
             --primary: #00f3ff;
             --danger: #ff0055;
             --success: #00ff66;
+            --warning: #ffaa00;
             --bg: #050510;
             --ui-font: 'Orbitron', sans-serif;
             --type-font: 'Roboto Mono', monospace;
@@ -204,7 +210,6 @@
             z-index: 10;
         }
 
-        /* HUD TOP - BLUR EFFECT */
         .hud-top {
             display: flex;
             justify-content: space-between;
@@ -213,13 +218,9 @@
             font-size: 1rem;
             padding: 0 20px;
             height: 70px;
-            
-            background: rgba(5, 5, 16, 0.7); 
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 243, 255, 0.3);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-            
+            background: #02020a; 
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
             text-shadow: 0 0 5px var(--primary);
             gap: 15px;
             z-index: 100;
@@ -227,7 +228,7 @@
         }
 
         .hud-stat {
-            background: rgba(0, 243, 255, 0.1);
+            background: rgba(0, 243, 255, 0.05);
             border: 1px solid var(--primary);
             padding: 8px 15px;
             border-radius: 4px;
@@ -253,6 +254,24 @@
             transition: opacity 0.2s, transform 0.1s;
             width: 100%;
             pointer-events: none;
+        }
+
+        .powerup-display {
+            position: absolute;
+            top: 90px;
+            right: 20px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--success);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .powerup-display.active {
+            opacity: 1;
         }
 
         .current-input {
@@ -284,7 +303,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 5, 16, 0.9);
+            background: rgba(5, 5, 16, 0.95);
             backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
@@ -334,14 +353,6 @@
             line-height: 1.6;
         }
 
-        .mode-container {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
         .btn {
             background: transparent;
             color: var(--primary);
@@ -362,19 +373,8 @@
             background: var(--primary);
             color: #000;
             box-shadow: 0 0 30px var(--primary);
-            transform: translateY(-2px);
         }
 
-        /* Specific styles for difficulty buttons */
-        .mode-btn {
-            flex: 1 1 120px;
-            font-size: 1.2rem;
-            padding: 12px 20px;
-        }
-        .mode-btn.easy:hover { border-color: var(--success); color: var(--success); box-shadow: 0 0 20px var(--success); background: transparent; }
-        .mode-btn.hard:hover { border-color: var(--primary); color: var(--primary); box-shadow: 0 0 20px var(--primary); background: transparent; }
-        .mode-btn.expert:hover { border-color: var(--danger); color: var(--danger); box-shadow: 0 0 20px var(--danger); background: transparent; }
-        
         .btn:disabled {
             border-color: #555;
             color: #555;
@@ -385,6 +385,100 @@
         .btn-small {
             padding: 10px 20px;
             font-size: 1rem;
+        }
+
+        .btn-easy {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .btn-easy:hover {
+            background: var(--success);
+            box-shadow: 0 0 30px var(--success);
+        }
+
+        .btn-hard {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .btn-hard:hover {
+            background: var(--warning);
+            box-shadow: 0 0 30px var(--warning);
+        }
+
+        .btn-expert {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-expert:hover {
+            background: var(--danger);
+            box-shadow: 0 0 30px var(--danger);
+        }
+
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+            margin: 30px 0;
+        }
+
+        .mode-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--primary);
+            padding: 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .mode-card.easy {
+            border-color: var(--success);
+        }
+
+        .mode-card.hard {
+            border-color: var(--warning);
+        }
+
+        .mode-card.expert {
+            border-color: var(--danger);
+        }
+
+        .mode-card h3 {
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+        }
+
+        .mode-card.easy h3 { color: var(--success); }
+        .mode-card.hard h3 { color: var(--warning); }
+        .mode-card.expert h3 { color: var(--danger); }
+
+        .mode-card p {
+            font-family: var(--type-font);
+            color: #aaa;
+            font-size: 0.9rem;
+            margin: 10px 0;
+        }
+
+        .mode-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0 0 0;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .mode-card ul li {
+            padding: 5px 0;
         }
 
         .stats-grid {
@@ -404,7 +498,6 @@
         .stat-label { font-size: 0.8rem; color: #888; }
         .stat-value { font-size: 1.5rem; font-weight: bold; }
 
-        /* Leaderboard Styles */
         .leaderboard-container {
             margin-top: 20px;
             width: 100%;
@@ -414,6 +507,7 @@
             padding: 20px;
             border-radius: 8px;
         }
+
         .leaderboard-container h3 {
             margin: 0 0 15px 0;
             color: var(--success);
@@ -421,11 +515,13 @@
             text-transform: uppercase;
             font-size: 1.2rem;
         }
+
         ul.leaderboard-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
+
         ul.leaderboard-list li {
             display: flex;
             justify-content: space-between;
@@ -433,31 +529,44 @@
             border-bottom: 1px solid #333;
             font-family: var(--type-font);
             font-size: 0.9rem;
-            align-items: center;
         }
-        ul.leaderboard-list li:last-child { border-bottom: none; }
-        
-        .lb-name { 
-            color: #fff; 
-            flex: 1; 
-            margin-right: 15px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 40%; 
-        }
-        .lb-stats { color: #aaa; margin-right: 15px; text-align: right; min-width: 80px;}
-        .lb-score { color: var(--primary); font-weight: bold; min-width: 60px; text-align: right;}
 
-        /* Mobile Adjustments */
+        ul.leaderboard-list li:last-child { border-bottom: none; }
+        .lb-name { color: #fff; flex: 1; }
+        .lb-stats { color: #aaa; margin-right: 15px; }
+        .lb-score { color: var(--primary); font-weight: bold; }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .difficulty-badge.easy {
+            background: var(--success);
+            color: #000;
+        }
+
+        .difficulty-badge.hard {
+            background: var(--warning);
+            color: #000;
+        }
+
+        .difficulty-badge.expert {
+            background: var(--danger);
+            color: #fff;
+        }
+
         @media (max-width: 600px) {
             h1 { font-size: 2.5rem; }
             .stats-grid { grid-template-columns: 1fr; }
+            .mode-grid { grid-template-columns: 1fr; }
             .hud-top { height: auto; padding: 10px; flex-direction: column; gap: 5px; }
             .hud-stat { width: 100%; text-align: center; padding: 5px; }
             .hud-combo { top: 120px; }
-            .mode-container { flex-direction: column; width: 100%; }
-            .mode-btn { width: 100%; }
         }
     </style>
 </head>
@@ -466,46 +575,85 @@
 <div id="game-container">
     <canvas id="gameCanvas"></canvas>
 
-    <!-- Visual Input Buffer -->
     <div class="current-input" id="inputBufferDisplay"></div>
 
     <div class="ui-layer" id="hud">
         <div class="hud-top">
-            <!-- User Display Area -->
             <div class="hud-stat" id="userDisplay">GUEST</div>
-            
             <div class="hud-stat">SCORE: <span id="scoreDisplay">0</span></div>
             <div class="hud-stat">WPM: <span id="wpmDisplay">0</span></div>
+            <div class="hud-stat">LIVES: <span id="livesDisplay">3</span></div>
         </div>
         <div class="hud-combo" id="comboDisplay">COMBO x1</div>
+        <div class="powerup-display" id="powerupDisplay">SHIELD ACTIVE</div>
     </div>
 
     <!-- START SCREEN -->
     <div class="modal" id="startScreen">
-        <h1>TYPING GAME</h1>
-        <h2>BY ANIL LAMA </h2>
-        <p class="subtitle">Select your difficulty to begin.<br>
-        <strong>SMART TARGETING:</strong> Type words to lock targets.<br>
-        Typing a wrong letter resets your combo.<br>
-        Press ESC to Pause.</p>
+        <h1>TYPING DEFENDER</h1>
+        <h2>BY ANIL LAMA</h2>
+        <p class="subtitle">Type words to destroy enemies and defend your system.<br>
+        Choose your difficulty and prove your typing skills!</p>
         
-        <!-- Game Mode Buttons (Hidden by default until login) -->
-        <div class="mode-container hidden" id="modeButtons">
-            <button class="btn mode-btn easy hidden" onclick="game.start('EASY')">EASY</button>
-            <button class="btn mode-btn hard hidden" onclick="game.start('HARD')">HARD</button>
-            <button class="btn mode-btn expert hidden" onclick="game.start('EXPERT')">EXPERT</button>
+        <button id="modeSelectBtn" class="btn hidden" onclick="showModeSelect()">SELECT MODE</button>
+        <button id="loginBtn" class="btn" onclick="loginWithGoogle()">Login with Gmail</button>
+        <button class="btn btn-small" onclick="openLeaderboardMenu()">LEADERBOARD</button>
+    </div>
+
+    <!-- MODE SELECTION SCREEN -->
+    <div class="modal hidden" id="modeSelectScreen">
+        <h1>SELECT DIFFICULTY</h1>
+        <h2>Choose Your Challenge</h2>
+        
+        <div class="mode-grid">
+            <div class="mode-card easy" onclick="game.startWithMode('easy')">
+                <h3>EASY</h3>
+                <p>Perfect for beginners</p>
+                <ul>
+                    <li>✓ Slower enemy speed</li>
+                    <li>✓ 5 Lives</li>
+                    <li>✓ Shorter words</li>
+                    <li>✓ Power-ups enabled</li>
+                </ul>
+            </div>
+            
+            <div class="mode-card hard" onclick="game.startWithMode('hard')">
+                <h3>HARD</h3>
+                <p>For experienced typers</p>
+                <ul>
+                    <li>⚡ Medium speed</li>
+                    <li>⚡ 3 Lives</li>
+                    <li>⚡ Mixed word length</li>
+                    <li>⚡ Armored enemies</li>
+                </ul>
+            </div>
+            
+            <div class="mode-card expert" onclick="game.startWithMode('expert')">
+                <h3>EXPERT</h3>
+                <p>Ultimate challenge</p>
+                <ul>
+                    <li>🔥 Fast enemies</li>
+                    <li>🔥 1 Life only</li>
+                    <li>🔥 Long words</li>
+                    <li>🔥 No power-ups</li>
+                </ul>
+            </div>
         </div>
         
-        <!-- Login Button (Visible by default) -->
-        <button id="loginBtn" class="btn" onclick="loginWithGoogle()">Login with Gmail</button>
-        
-        <!-- New Leaderboard Button -->
-        <button class="btn btn-small" onclick="openLeaderboardMenu()">LEADERBOARD</button>
+        <button class="btn btn-small" onclick="backToStart()">BACK</button>
     </div>
 
     <!-- LEADERBOARD MENU -->
     <div class="modal hidden" id="leaderboardMenuScreen">
         <h1>TOP DEFENDERS</h1>
+        
+        <div style="margin: 20px 0;">
+            <button class="btn btn-small btn-easy" onclick="switchLeaderboard('easy')">EASY</button>
+            <button class="btn btn-small btn-hard" onclick="switchLeaderboard('hard')">HARD</button>
+            <button class="btn btn-small btn-expert" onclick="switchLeaderboard('expert')">EXPERT</button>
+        </div>
+        
+        <div class="difficulty-badge easy" id="leaderboardModeBadge">EASY MODE</div>
         
         <div class="leaderboard-container">
             <h3>Top 10 (By WPM)</h3>
@@ -522,13 +670,16 @@
     <!-- PAUSE SCREEN -->
     <div class="modal hidden" id="pauseScreen">
         <h1>GAME PAUSED</h1>
-        <h2>Game Rokyo!!</h2>
+        <h2>Take a break, Commander!</h2>
         <button class="btn" onclick="game.togglePause()">RESUME</button>
+        <button class="btn btn-small" onclick="game.quitToMenu()">QUIT TO MENU</button>
     </div>
 
     <!-- GAME OVER SCREEN -->
     <div class="modal hidden" id="gameOverScreen">
         <h1 style="color: var(--danger); -webkit-text-fill-color: var(--danger);">GAME OVER</h1>
+        <div class="difficulty-badge easy" id="gameOverModeBadge">EASY MODE</div>
+        
         <div class="stats-grid">
             <div class="stat-box">
                 <div class="stat-label">FINAL SCORE</div>
@@ -548,7 +699,6 @@
             </div>
         </div>
         
-        <!-- Leaderboard Section -->
         <div class="leaderboard-container">
             <h3>Top 10 Defenders (By WPM)</h3>
             <ul id="leaderboard-list" class="leaderboard-list">
@@ -558,21 +708,43 @@
 
         <div style="margin-top: 20px;">
             <button class="btn" onclick="game.restart()">TRY AGAIN</button>
+            <button class="btn btn-small" onclick="game.quitToMenu()">CHANGE MODE</button>
         </div>
     </div>
 </div>
 
 <script>
-// Helper Functions for Menus
+// Current leaderboard mode for menu
+let currentLeaderboardMode = 'easy';
+
+window.showModeSelect = function() {
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('modeSelectScreen').classList.remove('hidden');
+};
+
+window.backToStart = function() {
+    document.getElementById('modeSelectScreen').classList.add('hidden');
+    document.getElementById('startScreen').classList.remove('hidden');
+};
+
 window.openLeaderboardMenu = function() {
     document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('modeSelectScreen').classList.add('hidden');
     document.getElementById('leaderboardMenuScreen').classList.remove('hidden');
-    loadLeaderboard('leaderboard-list-start');
+    switchLeaderboard('easy');
 };
 
 window.closeLeaderboardMenu = function() {
     document.getElementById('leaderboardMenuScreen').classList.add('hidden');
     document.getElementById('startScreen').classList.remove('hidden');
+};
+
+window.switchLeaderboard = function(mode) {
+    currentLeaderboardMode = mode;
+    const badge = document.getElementById('leaderboardModeBadge');
+    badge.className = `difficulty-badge ${mode}`;
+    badge.textContent = `${mode.toUpperCase()} MODE`;
+    loadLeaderboard('leaderboard-list-start', mode);
 };
 
 const AudioSys = {
@@ -631,57 +803,22 @@ const AudioSys = {
     },
     playError() {
         this.playTone(150, 'sawtooth', 0.2, 0.05);
+    },
+    playPowerup() {
+        this.playTone(800, 'square', 0.3, 0.08);
+    },
+    playShield() {
+        this.playTone(600, 'triangle', 0.4, 0.06);
     }
 };
 
-const WORD_LIST = [
-  "nepal","malai","ramro","lagchha","vector","laser","shield","plasma","orbit","space",
-  "planet","meteor","rocket","alien","ufo","robot","cyborg","neon","pulse","matrix",
-  "data","link","node","grid","flash","spark","blast","fire","storm","wind","rain",
-  "thunder","light","dark","shadow","ghost","spirit","soul","mind","power","energy",
-  "force","speed","agility","defense","attack","strike","guard","protect","save",
-  "rescue","mission","command","control","system","network","server","client","proxy",
-  "access","denied","allowed","secure","lock","key","cipher","code","hack","breach",
-  "firewall","virus","malware","spyware","trojan","worm","botnet","root","kernel",
-  "bash","script","python","java","rajesh","anil","parth","saroj","cloud","server",
-  "database","query","select","insert","update","delete","compile","execute","render",
-  "debug","deploy","commit","lama","pull","merge","branch","build","test","optimize",
-  "thread","process","memory","cache","buffer","stream","packet","socket","router",
-  "switch","gateway","domain","host","ping","trace","latency","bandwidth","signal",
-  "sensor","camera","vision","audio","image","scalar","random","sample","filter",
-  "noise","smooth","sharp","pixel","frame","motion","engine","driver","device",
-  "screen","input","output","mouse","keyboard","touch","gesture","click","scroll",
-  "zoom","pan",
-  "love","you","string","number","boolean","null","undefined","function","method","class",
-  "module","import","export","default","async","await","promise","callback","event","listener",
-  "state","props","mount","unmount","effect","layout","theme","style","color","font",
-  "border","margin","padding","radius","fonepay","layer","panel","window","dialog",
-  "modal","alert","csd","prompt","toast","notify","message","status","success",
-  "error","warning","info","retry","cancel","submit","reset","start","pause","resume",
-  "stop","finish","score","level","stage","round","timer","clock","second","minute",
-  "hour","day","night","dawn","dusk","sun","moon","star","galaxy","cosmos","comet",
-  "asteroid","gravity","vacuum","beacon","radar","probe","drone","pilot","crew","fleet",
-  "station","cargo","supply","fuel","thrust","angle","radius","circle","square","triangle",
-  "polygon","point","line","plane","curve","slope","axis","origin","scale","ratio","factor",
-  "value","limit","range","min","max","total","count","index","offset","length","width",
-  "height","depth","volume","mass","weight","density","tempo","rhythm","pattern","cycle",
-  "loop","repeat","break","continue","return","yield","throw","catch","try","finally",
-  "check","verify","validate","sanitize","escape","encode","decode","encrypt","decrypt",
-  "token","session","cookie","header","payload","request","response","route","path",
-  "param","query","body","json","xml","yaml","text","binary","queue","stack","heap","tree",
-  "graph","edge","vertex","weight","cost","pathway","bridge","tunnel","portal","gate",
-  "door","keypad","button","toggle","slider","knob","lever","handle","grip","touchpad",
-  "cursor","pointer","caret","select","focus","blur","hover","drag","drop","copy","paste",
-  "cut","undo","redo","saveas","backup","restore","sync","share","publish","release",
-  "version","patch","minor","major","stable","beta","legacy","modern","future","design",
-  "model","schema","wireframe","mockup","prototype","draft","final","review","approve",
-  "reject","conflict","resolve","history","tag","issue","ticket","bug","fix","hotfix",
-  "crash","freeze","lag","delay","jitter","glitch","fault","monitor","metrics","profile",
-  "benchmark","tune","refactor","cleanup","organize","format","lint","bundle","minify",
-  "compress","prefetch","lazyload","repaint","reflow","animate","transition","transform",
-  "rotate","translate","skew","tilt","center","align","justify","wrap","nowrap","truncate",
-  "ellipsis","overflow","scrollbar","viewport","container","wrapper"
-];
+const WORD_LIST = {
+    short: ["nepal","code","data","fire","wind","rain","star","moon","sun","web","app","hack","bug","test","link","node","grid","light","dark","soul","mind","power","laser","neon","cyber","pixel","cloud","server","script","build","debug","async","await","class","style","color","font","alert","score","level","timer","angle","point","line","curve","scale","limit","range","check","token","route","sync","drag","drop","copy","paste","click","hover","focus","blur"],
+    medium: ["vector","shield","plasma","rocket","meteor","planet","matrix","thunder","shadow","energy","attack","strike","defend","mission","command","control","network","firewall","database","compile","execute","keyboard","pointer","select","function","promise","boolean","encrypt","decrypt","gradient","transition","transform","overflow","viewport"],
+    long: ["rajesh","anil","parth","saroj","malware","spyware","trojan","botnet","kernel","python","database","optimize","bandwidth","sensor","camera","gesture","callback","listener","module","import","export","default","undefined","leaderboard","algorithm","authentication","configuration","documentation","implementation","infrastructure","architecture","performance","responsive","navigation","container","component","framework","encryption","deployment","repository","application"]
+};
+
+const ALL_WORDS = [...WORD_LIST.short, ...WORD_LIST.medium, ...WORD_LIST.long];
 
 class Game {
     constructor() {
@@ -691,6 +828,7 @@ class Game {
         this.height = this.canvas.height = window.innerHeight;
         
         this.state = 'MENU';
+        this.difficulty = 'easy';
         this.lastTime = 0;
         this.pauseTime = 0;
         
@@ -700,22 +838,20 @@ class Game {
         this.enemies = [];
         this.bullets = [];
         this.particles = [];
+        this.powerups = [];
         
         this.score = 0;
         this.combo = 0;
+        this.lives = 3;
+        this.maxLives = 3;
         this.startTime = 0;
         this.wordsTyped = 0;
         this.totalKeystrokes = 0;
         this.missedKeystrokes = 0;
-        
-        // Difficulty Settings
         this.difficultyMultiplier = 1;
-        this.currentMode = 'HARD';
-        this.modeSettings = {
-            'EASY': { speedMod: 0.6, spawnMod: 1.8, ramp: 0.01 },
-            'HARD': { speedMod: 1.0, spawnMod: 1.0, ramp: 0.02 },
-            'EXPERT': { speedMod: 1.6, spawnMod: 0.6, ramp: 0.05 }
-        };
+        
+        this.activePowerup = null;
+        this.powerupTimer = 0;
         
         this.shake = 0;
         this.currentInput = ""; 
@@ -765,11 +901,15 @@ class Game {
         }
     }
 
-    start(mode = 'HARD') {
+    startWithMode(mode) {
+        this.difficulty = mode;
+        this.start();
+    }
+
+    start() {
         AudioSys.init();
-        this.currentMode = mode;
-        
         document.getElementById('startScreen').classList.add('hidden');
+        document.getElementById('modeSelectScreen').classList.add('hidden');
         document.getElementById('gameOverScreen').classList.add('hidden');
         document.getElementById('pauseScreen').classList.add('hidden');
         
@@ -781,8 +921,16 @@ class Game {
     }
 
     restart() {
-        // Restart with the same mode that was being played
-        this.start(this.currentMode);
+        this.start();
+    }
+
+    quitToMenu() {
+        this.reset();
+        this.state = 'MENU';
+        document.getElementById('pauseScreen').classList.add('hidden');
+        document.getElementById('gameOverScreen').classList.add('hidden');
+        document.getElementById('modeSelectScreen').classList.add('hidden');
+        document.getElementById('startScreen').classList.remove('hidden');
     }
 
     reset() {
@@ -791,39 +939,92 @@ class Game {
             this.spawnTimer = null;
         }
 
+        // Difficulty settings
+        switch(this.difficulty) {
+            case 'easy':
+                this.maxLives = 5;
+                this.difficultyMultiplier = 0.7;
+                break;
+            case 'hard':
+                this.maxLives = 3;
+                this.difficultyMultiplier = 1;
+                break;
+            case 'expert':
+                this.maxLives = 1;
+                this.difficultyMultiplier = 1.5;
+                break;
+        }
+
         this.enemies = [];
         this.bullets = [];
         this.particles = [];
+        this.powerups = [];
         this.score = 0;
         this.combo = 0;
+        this.lives = this.maxLives;
         this.wordsTyped = 0;
         this.totalKeystrokes = 0;
         this.missedKeystrokes = 0;
-        this.difficultyMultiplier = 1;
         this.currentInput = "";
+        this.activePowerup = null;
+        this.powerupTimer = 0;
         this.updateHUD();
         this.updateInputDisplay();
+    }
+
+    getWordForDifficulty() {
+        switch(this.difficulty) {
+            case 'easy':
+                return Math.random() > 0.3 
+                    ? WORD_LIST.short[Math.floor(Math.random() * WORD_LIST.short.length)]
+                    : WORD_LIST.medium[Math.floor(Math.random() * WORD_LIST.medium.length)];
+            case 'hard':
+                return Math.random() > 0.5
+                    ? WORD_LIST.medium[Math.floor(Math.random() * WORD_LIST.medium.length)]
+                    : WORD_LIST.long[Math.floor(Math.random() * WORD_LIST.long.length)];
+            case 'expert':
+                return Math.random() > 0.3
+                    ? WORD_LIST.long[Math.floor(Math.random() * WORD_LIST.long.length)]
+                    : WORD_LIST.medium[Math.floor(Math.random() * WORD_LIST.medium.length)];
+            default:
+                return ALL_WORDS[Math.floor(Math.random() * ALL_WORDS.length)];
+        }
     }
 
     spawnEnemy() {
         if (this.state !== 'PLAYING') return;
         
-        const word = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
+        const word = this.getWordForDifficulty();
         const x = Math.random() * (this.width - 150) + 75;
-        const y = -50;
+        const y = -50; 
+        const speed = (Math.random() * 0.5 + 0.5) * this.difficultyMultiplier;
         
-        // Apply Mode Settings to Speed
-        const settings = this.modeSettings[this.currentMode];
-        const speed = (Math.random() * 0.5 + 0.5) * this.difficultyMultiplier * settings.speedMod;
-        
-        const type = Math.random() > 0.8 ? 'ARMORED' : 'NORMAL';
+        let type = 'NORMAL';
+        if (this.difficulty === 'hard' || this.difficulty === 'expert') {
+            type = Math.random() > 0.7 ? 'ARMORED' : 'NORMAL';
+        }
         
         this.enemies.push(new Enemy(x, y, word, speed, type));
         
-        // Apply Mode Settings to Spawn Rate
-        const nextSpawn = Math.max(400, (2000 * settings.spawnMod) - (this.difficultyMultiplier * 200));
+        // Spawn power-ups occasionally (not in expert mode)
+        if (this.difficulty !== 'expert' && Math.random() > 0.95 && this.powerups.length < 2) {
+            this.spawnPowerup();
+        }
+        
+        let nextSpawn = Math.max(800, 2000 - (this.difficultyMultiplier * 200));
+        if (this.difficulty === 'expert') {
+            nextSpawn = Math.max(600, nextSpawn - 300);
+        }
         
         this.spawnTimer = setTimeout(() => this.spawnEnemy(), nextSpawn);
+    }
+
+    spawnPowerup() {
+        const types = ['shield', 'slowtime', 'multikill'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        const x = Math.random() * (this.width - 150) + 75;
+        const y = -50;
+        this.powerups.push(new Powerup(x, y, type));
     }
 
     handleInput(e) {
@@ -866,13 +1067,23 @@ class Game {
     }
 
     destroyEnemy(enemy) {
-        this.score += 10 * (1 + Math.floor(this.combo / 5)) * (enemy.type === 'ARMORED' ? 2 : 1);
+        let points = 10 * (1 + Math.floor(this.combo / 5)) * (enemy.type === 'ARMORED' ? 2 : 1);
+        
+        // Multikill powerup bonus
+        if (this.activePowerup === 'multikill') {
+            points *= 2;
+        }
+        
+        this.score += points;
         this.combo++;
         this.wordsTyped++;
         
-        // Ramp up difficulty based on mode settings
-        const settings = this.modeSettings[this.currentMode];
-        this.difficultyMultiplier += settings.ramp;
+        // Increase difficulty over time
+        if (this.difficulty !== 'expert') {
+            this.difficultyMultiplier += 0.01;
+        } else {
+            this.difficultyMultiplier += 0.02;
+        }
         
         AudioSys.playExplosion();
         this.createExplosion(enemy.x, enemy.y, enemy.type === 'ARMORED' ? '#ffaa00' : '#00f3ff');
@@ -896,8 +1107,66 @@ class Game {
     }
 
     createExplosion(x, y, color) {
-        for (let i = 0; i < 20; i++) {
+        const count = this.activePowerup === 'multikill' ? 30 : 20;
+        for (let i = 0; i < count; i++) {
             this.particles.push(new Particle(x, y, color));
+        }
+    }
+
+    activatePowerup(type) {
+        this.activePowerup = type;
+        this.powerupTimer = 10; // 10 seconds
+        
+        const display = document.getElementById('powerupDisplay');
+        display.classList.add('active');
+        
+        switch(type) {
+            case 'shield':
+                display.textContent = '🛡️ SHIELD ACTIVE';
+                display.style.borderColor = 'var(--primary)';
+                AudioSys.playShield();
+                break;
+            case 'slowtime':
+                display.textContent = '⏰ SLOW TIME';
+                display.style.borderColor = 'var(--warning)';
+                AudioSys.playPowerup();
+                break;
+            case 'multikill':
+                display.textContent = '⚡ DOUBLE POINTS';
+                display.style.borderColor = 'var(--danger)';
+                AudioSys.playPowerup();
+                break;
+        }
+    }
+
+    updatePowerup(dt) {
+        if (this.activePowerup) {
+            this.powerupTimer -= dt;
+            if (this.powerupTimer <= 0) {
+                this.activePowerup = null;
+                document.getElementById('powerupDisplay').classList.remove('active');
+            }
+        }
+    }
+
+    loseLife() {
+        if (this.activePowerup === 'shield') {
+            // Shield absorbs the hit
+            this.activePowerup = null;
+            document.getElementById('powerupDisplay').classList.remove('active');
+            AudioSys.playShield();
+            this.createExplosion(this.player.x, this.player.y, '#00f3ff');
+            this.shake = 3;
+        } else {
+            this.lives--;
+            this.updateHUD();
+            AudioSys.playExplosion();
+            this.createExplosion(this.player.x, this.player.y, '#ff0000');
+            this.shake = 8;
+            
+            if (this.lives <= 0) {
+                this.gameOver();
+            }
         }
     }
 
@@ -928,6 +1197,7 @@ class Game {
 
     updateHUD() {
         document.getElementById('scoreDisplay').innerText = this.score;
+        document.getElementById('livesDisplay').innerText = this.lives;
         document.getElementById('comboDisplay').innerText = `COMBO x${this.combo}`;
         
         const elapsedMin = (Date.now() - this.startTime) / 60000;
@@ -953,15 +1223,19 @@ class Game {
         document.getElementById('finalAcc').innerText = accuracy + '%';
         document.getElementById('finalWords').innerText = this.wordsTyped;
         
+        const badge = document.getElementById('gameOverModeBadge');
+        badge.className = `difficulty-badge ${this.difficulty}`;
+        badge.textContent = `${this.difficulty.toUpperCase()} MODE`;
+        
         document.getElementById('gameOverScreen').classList.remove('hidden');
 
         if (window.currentUser) {
-            await saveScore(this.score, finalWpm);
+            await saveScore(this.score, finalWpm, this.difficulty);
         } else {
             console.log("User not logged in. Score not saved to leaderboard.");
         }
         
-        loadLeaderboard('leaderboard-list');
+        loadLeaderboard('leaderboard-list', this.difficulty);
     }
 
     loop(timestamp) {
@@ -983,6 +1257,8 @@ class Game {
         this.drawGrid();
 
         if (this.state === 'PLAYING') {
+            this.updatePowerup(dt);
+            
             this.player.update(dt);
             this.player.draw(this.ctx);
 
@@ -990,15 +1266,33 @@ class Game {
                 this.currentInput.length > 0 && e.word.startsWith(this.currentInput)
             );
 
+            // Slow time effect
+            const timeScale = this.activePowerup === 'slowtime' ? 0.5 : 1;
+
             this.enemies.forEach((enemy, index) => {
-                enemy.update(dt);
+                enemy.update(dt * timeScale);
                 const isMatch = activeMatches.includes(enemy);
                 const isLocked = isMatch && activeMatches.length === 1; 
                 enemy.draw(this.ctx, this.currentInput, isMatch, isLocked);
                 
                 if (enemy.y > this.height - 50) {
-                    this.createExplosion(this.player.x, this.player.y, '#ff0000');
-                    this.gameOver();
+                    this.enemies.splice(index, 1);
+                    this.loseLife();
+                }
+            });
+
+            this.powerups.forEach((powerup, i) => {
+                powerup.update(dt * timeScale);
+                powerup.draw(this.ctx);
+                
+                // Check collision with player
+                if (Math.hypot(powerup.x - this.player.x, powerup.y - this.player.y) < 40) {
+                    this.activatePowerup(powerup.type);
+                    this.powerups.splice(i, 1);
+                }
+                
+                if (powerup.y > this.height) {
+                    this.powerups.splice(i, 1);
                 }
             });
 
@@ -1041,6 +1335,7 @@ class Game {
                 enemy.draw(this.ctx, this.currentInput, isMatch, isLocked);
             });
             
+            this.powerups.forEach((p) => p.draw(this.ctx));
             this.bullets.forEach((b) => b.draw(this.ctx));
             this.particles.forEach((p) => p.draw(this.ctx));
         }
@@ -1084,6 +1379,16 @@ class Player {
     draw(ctx) {
         ctx.save();
         ctx.translate(this.x, this.y);
+        
+        // Shield effect
+        if (this.game.activePowerup === 'shield') {
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.5)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(0, 0, 50, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+        
         ctx.shadowBlur = 15;
         ctx.shadowColor = 'rgba(0, 243, 255, 0.5)';
         ctx.fillStyle = '#0a1a2a';
@@ -1228,6 +1533,61 @@ class Enemy {
             ctx.fillText(remainPart, startX + ctx.measureText(typedPart).width + ctx.measureText(remainPart).width/2, -30);
         }
 
+        ctx.restore();
+    }
+}
+
+class Powerup {
+    constructor(x, y, type) {
+        this.x = x;
+        this.y = y;
+        this.type = type;
+        this.speed = 0.8;
+        this.wobble = 0;
+    }
+
+    update(dt) {
+        this.y += this.speed;
+        this.wobble += dt * 3;
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y + Math.sin(this.wobble) * 10);
+        
+        let color;
+        let symbol;
+        switch(this.type) {
+            case 'shield':
+                color = '#00f3ff';
+                symbol = '🛡️';
+                break;
+            case 'slowtime':
+                color = '#ffaa00';
+                symbol = '⏰';
+                break;
+            case 'multikill':
+                color = '#ff0055';
+                symbol = '⚡';
+                break;
+        }
+        
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = color;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        
+        ctx.beginPath();
+        ctx.arc(0, 0, 20, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        
+        ctx.font = '24px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(symbol, 0, 0);
+        
         ctx.restore();
     }
 }
