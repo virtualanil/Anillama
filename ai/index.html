@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My AI Portal</title>
+</head>
+<body>
+
+<h2>My AI Portal</h2>
+
+<input type="text" id="chatInput" placeholder="Ask something...">
+<button onclick="sendMessage()">Send</button>
+
+<div id="chatBox"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "YOUR_FIREBASE_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  async function sendMessage() {
+    const message = document.getElementById("chatInput").value;
+    const chatBox = document.getElementById("chatBox");
+
+    chatBox.innerHTML += "<p><b>You:</b> " + message + "</p>";
+
+    const chatAI = firebase.functions().httpsCallable("chatAI");
+    const result = await chatAI({ message });
+
+    chatBox.innerHTML += "<p><b>AI:</b> " + result.data.reply + "</p>";
+  }
+</script>
+
+</body>
+</html>
