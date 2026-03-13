@@ -1,332 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="author" content="Anil Lama" />
-  <meta name="description" content="Anil Lama (अनिल लामा) - Personal portfolio website showing my projects, experience, awards, skills, Nepali Typing Center, and professional profile from Nepal.">
-  <title>Anil Lama (अनिल लामा) - Portfolio | Web Professional from Nepal</title>
-  
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-30TJT4D1LD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-30TJT4D1LD');
-</script>
-  <!-- SEO -->
-<meta name="description" content="Fast & Accurate Nepali & English typing, PDF to Word, Thesis Typing, and Form Filling services in Nepal.">
-<meta name="keywords" content="Nepali typing, Unicode typing, typing service Nepal, PDF to Word Nepal, thesis typing Nepal, government form typing,PDF to Word, typing Near Me, Nepali typing center, Portfolio, english to nepali">
-<meta name="author" content="Nepali Typing Center">
-<meta name="description" content="Official portfolio website of Anil Lama from Nepal. Explore my projects, skills and professional experience.">
-    <!-- Indexing -->
-  <meta name="robots" content="index, follow">
-  
-    <!-- Canonical URL -->
-  <link rel="canonical" href="https://anillama.com.np/">
-  
-  <!-- Font Awesome for Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    /* ---------- Reset ---------- */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: "Poppins", sans-serif;
-      background-color: #f4f6f8;
-      color: #333;
-      line-height: 1.6;
-      scroll-behavior: smooth;
-    }
-    a { text-decoration: none; color: inherit; transition: color 0.3s ease; }
-    a:hover { color: #1565c0; }
+<title>Anil Lama Portfolio</title>
 
-    /* ---------- Header ---------- */
-    header {
-      background-color: #0d47a1;
-      color: #fff;
-      padding: 30px 20px;
-      text-align: center;
-    }
-    header img {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      border: 4px solid #fff;
-      object-fit: cover;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    header img:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
-    header h1 { font-size: 2.2rem; margin-bottom: 8px; }
-    header h2 { font-weight: 400; font-size: 1.1rem; margin-bottom: 15px; }
+<link rel="stylesheet" href="css/style.css">
 
-    /* ---------- Social Links ---------- */
-    .social-nav { margin-top: 10px; }
-    .social-nav a { margin: 0 8px; font-size: 1.3rem; color: #fff; transition: color 0.3s ease; }
-    .social-nav a:hover { color: #ffca28; }
-
-    /* ---------- Sections ---------- */
-    section {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 25px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    section:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.2); }
-    section h2 {
-      color: #0d47a1;
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      border-bottom: 3px solid #ffca28;
-      display: inline-block;
-      padding-bottom: 5px;
-    }
-
-    /* ---------- Cards ---------- */
-    .card {
-      background: #fafafa;
-      padding: 18px;
-      border-radius: 8px;
-      margin-top: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
-    }
-    .card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.15); transform: translateY(-3px); }
-
-    /* ---------- Certificates ---------- */
-    .certificate-img {
-      width: 80%;
-      max-width: 350px;
-      display: block;
-      margin: 12px auto;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-    }
-
-    /* ---------- Buttons ---------- */
-    .btn {
-      display: inline-block;
-      padding: 8px 18px;
-      background-color: #0d47a1;
-      color: #fff;
-      border-radius: 25px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-top: 10px;
-      text-align: center;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-      transition: all 0.3s ease;
-    }
-    .btn:hover {
-      background-color: #1565c0;
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 5px 12px rgba(0,0,0,0.25);
-    }
-
-    /* ---------- Footer ---------- */
-    footer {
-      background-color: #0d47a1;
-      color: #fff;
-      padding: 20px 15px;
-      text-align: center;
-      margin-top: 50px;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
-    }
-    .footer-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 25px;
-      margin-bottom: 10px;
-    }
-    .footer-container a {
-      color: #fff;
-      font-size: 0.95rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      position: relative;
-      padding: 5px 8px;
-      transition: all 0.3s ease-in-out;
-    }
-    .footer-container a i { color: #ffca28; transition: transform 0.3s ease; }
-    .footer-container a:hover { color: #ffca28; }
-    .footer-container a:hover i { transform: rotate(15deg) scale(1.2); }
-    .footer-container a::after {
-      content: "";
-      position: absolute;
-      width: 0%;
-      height: 2px;
-      bottom: -3px;
-      left: 0;
-      background-color: #ffca28;
-      transition: width 0.3s ease-in-out;
-    }
-    .footer-container a:hover::after { width: 100%; }
-    footer p { font-size: 0.85rem; color: #ccc; margin-top: 8px; }
-
-    /* ---------- Responsive ---------- */
-    @media (max-width: 768px) {
-      header img { width: 100px; height: 100px; }
-      .footer-container { flex-direction: column; gap: 12px; }
-    }
-  </style>
-
-  <!-- Scroll to top on refresh -->
-  <script>
-    window.addEventListener("load", () => {
-      // Scroll to top
-      window.scrollTo(0, 0);
-
-      // Remove hash if any
-      if (window.location.hash) {
-        history.replaceState(null, null, window.location.pathname);
-      }
-    });
-  </script>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 </head>
+
 <body>
 
-  <!-- Header -->
-  <header>
-    <img src="assets/img/Amal.jpg" alt="Anil Lama" />
-    <h1>ANIL LAMA (अनिल लामा)- Personal Portfolio</h1>
-    <h2>Founder | Nepali Typing Center | L1 Lead at Fonepay</h2>
+<header>
 
-    <div class="social-nav">
-      <a href="https://www.youtube.com/@anillama9033" target="_blank"><i class="fab fa-youtube"></i></a>
-      <a href="https://www.facebook.com/profile.php?id=100005158245674" target="_blank"><i class="fab fa-facebook"></i></a>
-      <a href="https://www.linkedin.com/in/anil-l-3b0a23236/" target="_blank"><i class="fab fa-linkedin"></i></a>
-      <a href="https://www.instagram.com/anil.lama__/#" target="_blank"><i class="fab fa-instagram"></i></a>
-    </div>
+<img src="assets/img/Amal.jpg" alt="Anil Lama">
 
-    <div class="footer-container">
-      <a href="#about"><i class="fas fa-user"></i> About</a>
-      <a href="#awards"><i class="fas fa-award"></i> Awards</a>
-      <a href="#education"><i class="fas fa-graduation-cap"></i> Education</a>
-      <a href="#training"><i class="fas fa-certificate"></i> Certifications</a>
-      <a href="#experience"><i class="fas fa-briefcase"></i> Experience</a>
-      <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
-      <a href="#typing"><i class="fas fa-keyboard"></i> Typing Tool</a>
-    </div>
-  </header>
+<h1>ANIL LAMA (अनिल लामा)</h1>
+<h2>Founder | Nepali Typing Center | L1 Lead at Fonepay</h2>
 
-  <!-- About Section -->
-  <section id="about">
-    <h2>About Me</h2>
-    <p>Welcome to my professional portfolio! I am <strong>Anil Lama</strong>, as an L1 Lead at Fonepay, dedicated to driving efficiency and innovation in the digital payment sector. With a strong work ethic and a passion for technology, I thrive in fast-paced environments, ensuring seamless operations and delivering impactful solutions.</p>
-    <p>I enjoy solving challenges, improving processes, and continuously enhancing digital experiences.</p>
-  </section>
+<div class="social-nav">
 
-  <!-- Awards Section -->
-  <section id="awards">
-    <h2>Awards & Achievements</h2>
-    <div class="card">
-      <h3>Quarterly Impact Award - 2024</h3>
-      <p>I am honored to have received the Quarterly Impact Award, recognizing my dedication and contributions at Fonepay.</p>
-      <a href="https://www.linkedin.com/posts/fonepaynepal_hardwork-dedication-impact-activity-7339135682180800513-Jhej/" target="_blank" class="btn">View Achievement</a>
-    </div>
+<a href="https://www.youtube.com/@anillama9033"><i class="fab fa-youtube"></i></a>
+<a href="https://www.facebook.com/profile.php?id=100005158245674"><i class="fab fa-facebook"></i></a>
+<a href="https://www.linkedin.com/in/anil-l-3b0a23236/"><i class="fab fa-linkedin"></i></a>
+<a href="https://www.instagram.com/anil.lama__/#"><i class="fab fa-instagram"></i></a>
 
-    <div class="card">
-      <h3>Nepali Typing Center</h3>
-      <p>I successfully launched and manage the Nepali Typing Center, which is now running smoothly on Google Marketplace.</p>
-      <a href="https://g.co/kgs/sqaEEzb" target="_blank" class="btn">Check It Out</a>
-          </div>
-  </section>
+</div>
 
-  <!-- Education Section -->
-  <section id="education">
-    <h2>Education</h2>
-    <div class="card">
-      <h3>Bachelor in Social Work (BSW)</h3>
-      <p>Tribhuvan University | 2020 – 2025 (Expected)</p>
-    </div>
-    <div class="card">
-      <h3>Higher Secondary (12th Grade)</h3>
-      <p>Unique College | 2018 – 2020</p>
-    </div>
-  </section>
+</header>
 
-  <!-- Training Section -->
-  <section id="training">
-    <h2>Training & Certifications</h2>
-    <div class="card">
-      <h3>Microsoft Excel 101</h3>
-      <p>Satyava Digital Class – 2023</p>
-      <img src="assets/img/excel.png" alt="Microsoft Excel Certificate" class="certificate-img" />
-    </div>
-    <div class="card">
-      <h3>Google Analytics Certification</h3>
-      <p>Issued by Google Skillshop</p>
-      <img src="assets/img/Google Analytics.png" alt="Google Analytics Certificate" class="certificate-img" />
-    </div>
-    <div class="card">
-      <h3>Photoshop,Design & Editing (Basic)</h3>
-      <p>I have learned Photoshop and image editing through self-study on YouTube, enabling me to create visually appealing graphics, edit images, and enhance digital content.</p>
-<img src="assets/img/NT.jpg" alt="Photoshop,Design &editing" class="certificate-img" />
-    </div>
+<section id="about">
+
+<h2>About Me</h2>
+
+<p>
+Welcome to my professional portfolio! I am
+<strong>Anil Lama</strong>, L1 Lead at Fonepay.
+</p>
+
+</section>
+
+<section id="experience">
+
+<h2>Experience</h2>
+
 <div class="card">
-      <h3>CCEP(Certified Cybersecurity Educator Professional)</h3>
-      <p>I’m thrilled to share that I’ve successfully passed the CCEP Exam! This milestone reflects my dedication to advancing my knowledge in cybersecurity. A huge thank you to everyone for who supported me along the way – the journey of continuous learning is always better with a great network.I’m excited to apply these insights to real-world security challenges and contribute to building safer, more resilient systems.</p>
-<img src="assets/img/CCEP.jpg" alt="CCEP(Certified Cybersecurity Educator Professional)" class="certificate-img" />
-    </div>
-  </section>
 
-  <!-- Experience Section -->
-  <section id="experience">
-    <h2>Experience</h2>
-    <div class="card">
-      <h3>Manish Enterprises | Accountant & Marketing Manager</h3>
-      <p>2018 – 2022</p>
-      <p>Managed accounting operations and marketing initiatives for four years. Responsible for building customer relationships, providing top-notch services, and contributing to technical aspects of DIY product development.</p>
-    </div>
-    <div class="card">
-      <h3>Roshi Handicraft | Manager</h3>
-      <p>2022</p>
-      <p>Oversaw multiple projects, organized training for women empowerment initiatives, and enhanced personal and professional skills.</p>
-    </div>
-    <div class="card">
-      <h3>Fonepay | Lead- L1 Support & Social Media Support</h3>
-      <p>2022 – Present</p>
-      <p>Key role in ensuring seamless digital payment operations, optimizing processes, and contributing to company growth through innovation and efficiency.</p>
-    </div>
-  </section>
+<h3>Fonepay</h3>
+<p>Lead - L1 Support</p>
 
-  <!-- Contact Section -->
-  <section id="contact">
-    <h2>Contact</h2>
-    <div class="card">
-      <p><strong>Email:</strong> <a href="mailto:info@anillama.com.np">info@anillama.com.np</a></p>
-      <p><strong>Phone:</strong> <a href="tel:+9865585569">+977 9865585569</a></p>
-    </div>
-  </section>
+</div>
 
-  <!-- Nepali Typing Tool Section -->
-  <section id="typing">
-    <h2>Nepali Typing Converter</h2>
-    <iframe src="https://www.ashesh.com.np/linknepali-unicode3.php?api=492041p542"
-            width="100%" height="360" frameborder="0" scrolling="no"
-            style="border-radius: 8px;"></iframe>
-    <p style="font-size: 12px; text-align: center; margin-top: 8px; color: #888;">© Nepali Unicode</p>
-<a href="https://anillama.com.np/nepali-typing/" target="_blank" class="btn">Check Website</a>
-    <a href="https://anillama.com.np/typinggame/" target="_blank" class="btn">Typing Game</a>
-  </section>
-    
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 Anil Lama | All Rights Reserved.</p>
-  </footer>
+</section>
+
+<footer>
+
+<p>© 2025 Anil Lama</p>
+
+</footer>
+
+<script src="js/script.js"></script>
 
 </body>
 </html>
