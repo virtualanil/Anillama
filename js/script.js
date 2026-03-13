@@ -1,104 +1,103 @@
 // ===== Initialize on DOM Ready =====
 document.addEventListener('DOMContentLoaded', () => {
-  initParticles();
+  initDragon();
   initScrollReveal();
   initSmoothScroll();
   initScrollToTop();
 });
 
-// ===== Particle Background System =====
-function initParticles() {
-  const canvas = document.getElementById('particles');
-  const ctx = canvas.getContext('2d');
+// ===== Dragon Movement System (Mobile + Desktop) =====
+function initDragon() {
+  const dragon = document.getElementById('dragon');
   
+  if (!dragon) return;
+
   // Check for reduced motion preference
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion) return;
-  
-  let particles = [];
-  let animationId = null;
-  
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  if (prefersReducedMotion) {
+    dragon.style.display = 'none';
+    return;
   }
+
+  // Initial State
+  let currentX = window.innerWidth / 2;
+  let currentY = window.innerHeight / 2;
+  let targetX = currentX;
+  let targetY = currentY;
   
-  function createParticles() {
-    particles = [];
-    const particleCount = Math.floor((canvas.width * canvas.height) / 15000);
+  let isIdle = true; // Start in idle mode so it moves immediately
+  let idleTimer = null;
+
+  // Function to pick a random spot on screen
+  const setRandomTarget = () => {
+    const margin = 50; // Keep away from edges
+    targetX = Math.random() * (window.innerWidth - margin * 2) + margin;
+    targetY = Math.random() * (window.innerHeight - margin * 2) + margin;
+  };
+
+  // Set first random target
+  setRandomTarget();
+
+  // Function to handle interaction (Mouse or Touch)
+  const handleInteraction = (x, y) => {
+    targetX = x;
+    targetY = y;
+    isIdle = false;
     
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.max(0.5, Math.random() * 2),
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        opacity: Math.random() * 0.5 + 0.2
-      });
-    }
-  }
-  
-  function drawParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    particles.forEach(p => {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, Math.max(0.1, p.radius), 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(249, 115, 22, ${p.opacity})`;
-      ctx.fill();
-    });
-    
-    // Draw connections
-    particles.forEach((p1, i) => {
-      particles.slice(i + 1).forEach(p2 => {
-        const dx = p1.x - p2.x;
-        const dy = p1.y - p2.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        
-        if (dist < 120) {
-          ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-          const opacity = Math.max(0, (1 - dist / 120) * 0.15);
-          ctx.strokeStyle = `rgba(249, 115, 22, ${opacity})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      });
-    });
-  }
-  
-  function updateParticles() {
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      
-      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-    });
-  }
-  
-  function animate() {
-    updateParticles();
-    drawParticles();
-    animationId = requestAnimationFrame(animate);
-  }
-  
-  // Initialize
-  resize();
-  createParticles();
-  animate();
-  
-  // Handle resize
-  let resizeTimeout;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      resize();
-      createParticles();
-    }, 250);
+    // Reset idle timer
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      isIdle = true;
+      setRandomTarget();
+    }, 3000); // 3 seconds of no interaction -> start wandering
+  };
+
+  // 1. Mouse Move Event (Desktop)
+  document.addEventListener('mousemove', (e) => {
+    handleInteraction(e.clientX, e.clientY);
   });
+
+  // 2. Touch Events (Mobile)
+  // touchstart: When user taps screen
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 0) {
+      handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: true });
+
+  // touchmove: When user drags finger
+  document.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 0) {
+      handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: true });
+
+  // Animation Loop
+  function animate() {
+    // If in idle mode, check if dragon reached destination
+    if (isIdle) {
+      const dist = Math.hypot(targetX - currentX, targetY - currentY);
+      // If close to target, pick a new random spot
+      if (dist < 40) {
+        setRandomTarget();
+      }
+    }
+
+    // Smooth easing movement
+    const speed = 0.05; // Lower = smoother/slower
+    currentX += (targetX - currentX) * speed;
+    currentY += (targetY - currentY) * speed;
+
+    // Apply position to dragon
+    // Using transform is smoother than top/left, but we keep top/left for simplicity with CSS
+    dragon.style.left = currentX - 20 + 'px'; // Offset by half its size (approx 40px)
+    dragon.style.top = currentY - 20 + 'px';
+
+    requestAnimationFrame(animate);
+  }
+
+  // Start the loop
+  animate();
 }
 
 // ===== Scroll Reveal Animation =====
@@ -114,7 +113,6 @@ function initScrollReveal() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, index) => {
       if (entry.isIntersecting) {
-        // Stagger animation delay
         setTimeout(() => {
           entry.target.classList.add('visible');
         }, index * 100);
@@ -152,10 +150,7 @@ function initSmoothScroll() {
 // ===== Scroll to Top on Page Load =====
 function initScrollToTop() {
   window.addEventListener('load', () => {
-    // Scroll to top
     window.scrollTo(0, 0);
-    
-    // Remove hash if any
     if (window.location.hash) {
       history.replaceState(null, null, window.location.pathname);
     }
