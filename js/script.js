@@ -9,3 +9,7 @@ history.replaceState(null,null,window.location.pathname);
 }
 
 });
+
+document.addEventListener("contextmenu", function(e){
+e.preventDefault();
+});
