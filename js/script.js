@@ -1,102 +1,65 @@
 // ===== Initialize on DOM Ready =====
 document.addEventListener('DOMContentLoaded', () => {
-  initDragon();
+  initDragonBackground();
   initScrollReveal();
   initSmoothScroll();
   initScrollToTop();
 });
 
-// ===== Dragon Movement System (Mobile + Desktop) =====
-function initDragon() {
-  const dragon = document.getElementById('dragon');
+// ===== Massive Dragon Background Parallax =====
+function initDragonBackground() {
+  const dragonBg = document.querySelector('.dragon-visual');
   
-  if (!dragon) return;
+  if (!dragonBg) return;
 
   // Check for reduced motion preference
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReducedMotion) {
-    dragon.style.display = 'none';
-    return;
+    return; // Keep static if reduced motion preferred
   }
 
-  // Initial State
-  let currentX = window.innerWidth / 2;
-  let currentY = window.innerHeight / 2;
-  let targetX = currentX;
-  let targetY = currentY;
-  
-  let isIdle = true; // Start in idle mode so it moves immediately
-  let idleTimer = null;
+  // State
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let currentX = 0;
+  let currentY = 0;
 
-  // Function to pick a random spot on screen
-  const setRandomTarget = () => {
-    const margin = 50; // Keep away from edges
-    targetX = Math.random() * (window.innerWidth - margin * 2) + margin;
-    targetY = Math.random() * (window.innerHeight - margin * 2) + margin;
-  };
-
-  // Set first random target
-  setRandomTarget();
-
-  // Function to handle interaction (Mouse or Touch)
-  const handleInteraction = (x, y) => {
-    targetX = x;
-    targetY = y;
-    isIdle = false;
-    
-    // Reset idle timer
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-      isIdle = true;
-      setRandomTarget();
-    }, 3000); // 3 seconds of no interaction -> start wandering
-  };
-
-  // 1. Mouse Move Event (Desktop)
+  // Handle Mouse Move
   document.addEventListener('mousemove', (e) => {
-    handleInteraction(e.clientX, e.clientY);
+    mouseX = e.clientX;
+    mouseY = e.clientY;
   });
 
-  // 2. Touch Events (Mobile)
-  // touchstart: When user taps screen
-  document.addEventListener('touchstart', (e) => {
-    if (e.touches.length > 0) {
-      handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
-    }
-  }, { passive: true });
-
-  // touchmove: When user drags finger
+  // Handle Touch Move (Mobile)
   document.addEventListener('touchmove', (e) => {
     if (e.touches.length > 0) {
-      handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+      mouseX = e.touches[0].clientX;
+      mouseY = e.touches[0].clientY;
     }
   }, { passive: true });
 
   // Animation Loop
   function animate() {
-    // If in idle mode, check if dragon reached destination
-    if (isIdle) {
-      const dist = Math.hypot(targetX - currentX, targetY - currentY);
-      // If close to target, pick a new random spot
-      if (dist < 40) {
-        setRandomTarget();
-      }
-    }
+    // Calculate center
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
 
-    // Smooth easing movement
-    const speed = 0.05; // Lower = smoother/slower
-    currentX += (targetX - currentX) * speed;
-    currentY += (targetY - currentY) * speed;
+    // Calculate offset (Parallax effect)
+    // The larger the divisor (e.g., 50), the slower/subtler the movement
+    const destX = (mouseX - centerX) / 30; 
+    const destY = (mouseY - centerY) / 30;
 
-    // Apply position to dragon
-    // Using transform is smoother than top/left, but we keep top/left for simplicity with CSS
-    dragon.style.left = currentX - 20 + 'px'; // Offset by half its size (approx 40px)
-    dragon.style.top = currentY - 20 + 'px';
+    // Easing
+    currentX += (destX - currentX) * 0.05;
+    currentY += (destY - currentY) * 0.05;
+
+    // Apply transform (keeping the centering translate from CSS)
+    // We append the movement to the existing float animation via JS override
+    dragonBg.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px))`;
 
     requestAnimationFrame(animate);
   }
 
-  // Start the loop
   animate();
 }
 
