@@ -1,114 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Automation with n8n: A Complete Beginner's Guide</title>
-    <style>
-        /* Basic styling for a clean, modern blog look */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.8;
-            color: #333333;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 20px;
-        }
-        .blog-container {
-            max-width: 800px;
-            margin: 40px auto;
-            background-color: #ffffff;
-            padding: 40px 50px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-        h1 {
-            font-size: 2.4rem;
-            color: #1a1a1a;
-            margin-bottom: 20px;
-            line-height: 1.3;
-        }
-        h3 {
-            font-size: 1.5rem;
-            color: #2c3e50;
-            margin-top: 40px;
-            margin-bottom: 15px;
-        }
-        p {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-        }
-        ol {
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-            padding-left: 20px;
-        }
-        li {
-            margin-bottom: 15px;
-        }
-        strong {
-            color: #000000;
-        }
-        /* Mobile responsiveness */
-        @media (max-width: 600px) {
-            .blog-container {
-                padding: 20px;
-                margin: 10px auto;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Automation with n8n – Complete Beginner Guide | Anil Lama</title>
+<meta name="description" content="Learn AI Automation with n8n from scratch. A beginner-friendly guide covering workflows, APIs, Google Sheets, OpenAI and real-world automation.">
+<style>
+body{font-family:Arial,sans-serif;max-width:900px;margin:40px auto;line-height:1.8;padding:20px;color:#333}
+h1,h2{color:#0f4c81}code{background:#f3f3f3;padding:2px 5px}pre{background:#f7f7f7;padding:12px;overflow:auto}
+.toc{background:#eef7ff;padding:15px;border-radius:8px}
+</style>
 </head>
 <body>
+<h1>AI Automation with n8n – Complete Beginner Guide</h1>
+<p><strong>Author:</strong> Anil Lama</p>
+<p><strong>Published:</strong> July 2026</p>
 
-    <div class="blog-container">
-        
-        <h1>AI Automation with n8n: A Complete Beginner's Guide (That Actually Makes Sense)</h1>
+<div class="toc">
+<h2>Table of Contents</h2>
+<ol>
+<li>What is n8n?</li>
+<li>Why use AI Automation?</li>
+<li>Installing n8n</li>
+<li>Creating Your First Workflow</li>
+<li>Using Google Sheets</li>
+<li>Connecting AI Models</li>
+<li>Real-world Example</li>
+<li>Best Practices</li>
+<li>Conclusion</li>
+</ol>
+</div>
 
-        <p>Let's be honest. If you’re hearing about "AI automation" everywhere but you're still manually copying and pasting data between tabs, it feels a bit like you’re missing out on a massive secret.</p>
-        
-        <p>I've been there. You want to scale your work, maybe grow your audience, or just get things done faster, but there are only so many hours in the day.</p>
-        
-        <p>Enter <strong>n8n</strong>.</p>
-        
-        <p>If you haven't heard of it yet, n8n (pronounced "en-eight-en") is basically a visual builder that connects your apps together. Think of Zapier, but on steroids—and way friendlier to your wallet if you know what you're doing.</p>
-        
-        <p>Here’s a straightforward, fluff-free guide to getting started with n8n and actually putting AI to work for you today.</p>
+<h2>What is n8n?</h2>
+<p>n8n is an open-source workflow automation platform that allows you to connect different applications without writing large amounts of code. You can automate repetitive work, move data between apps, trigger notifications, call APIs, and integrate AI models into business processes.</p>
 
-        <h3>What exactly is n8n?</h3>
-        <p>At its core, n8n is a workflow automation tool. It acts as the digital middleman between different apps you already use. You drop little building blocks called "nodes" onto a canvas and draw lines between them. One node triggers an event, and the next node does something with that information.</p>
+<h2>Why AI Automation?</h2>
+<p>Businesses spend countless hours performing repetitive tasks such as copying data, replying to emails, updating spreadsheets, and generating reports. AI automation combines intelligent models with workflow automation to reduce manual effort, improve accuracy, and save time.</p>
 
-        <h3>Why not just use Zapier?</h3>
-        <p>Fair question. Zapier is great for simple things, but it gets incredibly expensive the moment you try to build complex, multi-step workflows.</p>
-        <p>n8n is source-available. This means you can host it yourself for free on your own server, or pay a much more reasonable flat fee for their cloud version. Plus, the way n8n handles branching logic (doing different things based on different conditions) is just brilliant once you get the hang of it.</p>
+<h2>Installing n8n</h2>
+<p>The easiest way is with Docker. After installation, access the editor in your browser and start building workflows visually using drag-and-drop nodes.</p>
 
-        <h3>Setting Up Your First AI Workflow</h3>
-        <p>Let's skip the boring theory and look at a real-world example of how you can use this.</p>
-        <p>Imagine you’re running a multi-day series of AI-focused posts for your professional network to build your brand. Manually drafting, formatting, and remembering to schedule every single post day after day is exhausting.</p>
-        
-        <p>With n8n, you can build a workflow that looks exactly like this:</p>
-        <ol>
-            <li><strong>The Trigger:</strong> A schedule node fires off every morning at 9:00 AM.</li>
-            <li><strong>The Brain (AI):</strong> An OpenAI node reads a specific row in a Google Sheet containing your rough, messy bullet points for that day's post. It takes those ideas and turns them into a highly engaging, professional post.</li>
-            <li><strong>The Action:</strong> A social media node automatically publishes that exact drafted post directly to your profile.</li>
-        </ol>
-        <p>Just like that, you built an automated content engine in three steps.</p>
+<h2>Creating Your First Workflow</h2>
+<p>A simple workflow could:</p>
+<ul>
+<li>Receive a form submission</li>
+<li>Store the data in Google Sheets</li>
+<li>Ask an AI model to summarize the request</li>
+<li>Send a confirmation email</li>
+</ul>
 
-        <h3>Step-by-step: How to actually start</h3>
-        <ol>
-            <li><strong>Pick your platform:</strong> If you aren't super technical and just want to get moving, grab the free trial of n8n Cloud. If you like tinkering and have a server (like DigitalOcean or Hetzner), you can install it yourself via Docker.</li>
-            <li><strong>Understand the Canvas:</strong> When you open n8n for the first time, it’s just a blank screen. Don't panic. On the right side, you'll see a plus button. That’s your node library. Every single workflow starts with a trigger. Search for "Schedule" or "Webhook" to kick things off.</li>
-            <li><strong>Connect your accounts (Credentials):</strong> This is where beginners usually get stuck. If you want n8n to talk to ChatGPT or your Google Sheets, you have to give it permission. You'll need to grab API keys from those services. n8n stores these securely in a "Credentials" tab. Take an hour on a Sunday just to get your main apps connected—it saves so much headache later.</li>
-            <li><strong>Test as you go:</strong> Don't try to build a 20-node monster on your first day. Build two nodes. Connect them. Hit "Execute Node" and make sure the data actually flows from A to B. I promise you, it is incredibly satisfying to see that little green checkmark pop up.</li>
-        </ol>
+<h2>Google Sheets Integration</h2>
+<p>Google Sheets is commonly used as a lightweight database. n8n can read, update, append, and search rows automatically, making it perfect for small business automation.</p>
 
-        <h3>The Takeaway</h3>
-        <p>AI automation isn't about replacing yourself; it's about freeing up your time so you can focus on the creative stuff that actually moves the needle.</p>
-        <p>n8n definitely has a bit of a learning curve. But once you connect your first few nodes and watch a tedious 30-minute task complete itself in three seconds while you sip your coffee? You'll never want to go back to doing things manually.</p>
+<hh2>Connecting AI Models</hh2>
+<p>You can connect OpenAI-compatible APIs or other LLM providers to classify text, generate content, summarize documents, translate languages, or answer customer queries.</p>
 
-    </div>
+<h2>Real-World Example</h2>
+<p>One practical workflow is an e-commerce order automation system:</p>
+<ul>
+<li>Read new orders from Google Sheets.</li>
+<li>Validate customer information.</li>
+<li>Calculate delivery charges using an API.</li>
+<li>Create a delivery request automatically.</li>
+<li>Update the order status.</li>
+<li>Notify the customer.</li>
+</ul>
 
+<h2>Best Practices</h2>
+<ul>
+<li>Use descriptive node names.</li>
+<li>Handle errors gracefully.</li>
+<li>Keep credentials secure.</li>
+<li>Test workflows before production.</li>
+<li>Monitor execution history regularly.</li>
+</ul>
+
+<h2>Conclusion</h2>
+<p>n8n is one of the most powerful automation tools available today. Whether you are a freelancer, developer, entrepreneur, or business owner, learning n8n can dramatically improve productivity. Combining AI with workflow automation opens the door to smarter, faster, and more scalable business processes.</p>
+
+<h2>Frequently Asked Questions</h2>
+<p><strong>Is n8n free?</strong><br>Yes, the self-hosted version is open source.</p>
+<p><strong>Can beginners learn n8n?</strong><br>Absolutely. The visual interface makes it beginner friendly.</p>
+<p><strong>Can I use AI with n8n?</strong><br>Yes. You can integrate AI APIs for content generation, summarization, classification, and more.</p>
+
+<hr>
+<p>© 2026 Anil Lama • anillama.com.np</p>
 </body>
 </html>
