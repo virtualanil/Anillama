@@ -1,175 +1,428 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Blogs | Anil Lama</title>
 
+<!-- Font Awesome & Google Fonts -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
+:root {
+    --primary: #0f4c81;
+    --primary-hover: #0284c7;
+    --bg-main: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --radius: 16px;
 }
 
-body{
-background:#f7f8fc;
-color:#222;
-padding:60px 20px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.container{
-max-width:900px;
-margin:auto;
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    padding: 60px 20px;
+    line-height: 1.6;
 }
 
-.header{
-margin-bottom:50px;
-text-align:center;
+.container {
+    max-width: 1040px;
+    margin: 0 auto;
 }
 
-.header h1{
-font-size:42px;
-margin-bottom:10px;
+/* Header & Intro Animation */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeInDown 0.6s ease-out;
 }
 
-.header p{
-color:#666;
+.header h1 {
+    font-size: 2.8rem;
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.8px;
 }
 
-.blog-item{
-
-padding:30px 0;
-
-border-bottom:1px solid #ddd;
-
+.header p {
+    color: var(--text-muted);
+    font-size: 1.15rem;
 }
 
-.blog-item h2{
-
-font-size:28px;
-
-margin-bottom:12px;
-
+/* Search & Filter Section */
+.controls-wrapper {
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    animation: fadeInUp 0.6s ease-out 0.1s backwards;
 }
 
-.blog-item p{
-
-color:#555;
-
-line-height:1.8;
-
-margin-bottom:18px;
-
+.search-box {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
 }
 
-.meta{
-
-display:flex;
-
-gap:25px;
-
-font-size:14px;
-
-color:#777;
-
-margin-bottom:20px;
-
+.search-box input {
+    width: 100%;
+    padding: 14px 20px 14px 48px;
+    border-radius: 30px;
+    border: 1px solid var(--border-color);
+    background: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-.meta i{
-
-margin-right:5px;
-
+.search-box input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(15, 76, 129, 0.15);
 }
 
-.read{
-
-text-decoration:none;
-
-color:#0066ff;
-
-font-weight:bold;
-
-transition:.3s;
-
+.search-box i {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
 }
 
-.read:hover{
-
-letter-spacing:1px;
-
+.categories {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
+.cat-btn {
+    border: none;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.cat-btn.active, .cat-btn:hover {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 76, 129, 0.2);
+}
+
+/* Blog Cards Grid */
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 28px;
+}
+
+.blog-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: fadeInUp 0.5s ease-out backwards;
+    position: relative;
+    overflow: hidden;
+}
+
+.blog-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.blog-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px -8px rgba(15, 76, 129, 0.12);
+    border-color: #cbd5e1;
+}
+
+.blog-card:hover::before {
+    opacity: 1;
+}
+
+.card-top {
+    margin-bottom: 20px;
+}
+
+.tag-badge {
+    display: inline-block;
+    background: #e0f2fe;
+    color: #0284c7;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+}
+
+.blog-card h2 {
+    font-size: 1.3rem;
+    color: var(--text-main);
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.4;
+    transition: color 0.2s ease;
+}
+
+.blog-card:hover h2 {
+    color: var(--primary);
+}
+
+.blog-card p {
+    color: var(--text-muted);
+    font-size: 0.94rem;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Meta & Action Link */
+.card-footer {
+    border-top: 1px solid #f1f5f9;
+    padding-top: 16px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.meta {
+    display: flex;
+    gap: 14px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.meta i {
+    margin-right: 4px;
+    color: var(--primary);
+}
+
+.read-btn {
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.25s ease;
+}
+
+.blog-card:hover .read-btn {
+    gap: 10px;
+    color: var(--primary-hover);
+}
+
+/* No Results Found */
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 0;
+    color: var(--text-muted);
+}
+
+.no-results i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+/* Animations Keyframes */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+    body { padding: 40px 16px; }
+    .header h1 { font-size: 2.2rem; }
+}
 </style>
-
 </head>
-
 <body>
 
 <div class="container">
 
-<div class="header">
+    <!-- Header Section -->
+    <header class="header">
+        <h1>📚 Knowledge Hub</h1>
+        <p>Insights on AI, Workflow Automation, Web Development, and Productivity.</p>
+    </header>
 
-<h1>📚 Blogs</h1>
+    <!-- Search & Filter Controls -->
+    <div class="controls-wrapper">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Search articles by title or keyword..." onkeyup="filterBlogs()">
+        </div>
 
-<p>Explore AI, Automation, Web Development, SEO and Productivity.</p>
+        <div class="categories" id="categoryContainer">
+            <!-- Rendered dynamically by JS -->
+        </div>
+    </div>
 
-</div>
-
-<div class="blog-item">
-
-<h2>🤖 AI Automation with n8n – Complete Beginner Guide</h2>
-
-<p>Learn how to automate repetitive tasks using AI, APIs, Google Sheets and n8n workflows.</p>
-
-<div class="meta">
-
-<span><i class="fa-regular fa-calendar"></i>July 2026</span>
-
-<span><i class="fa-regular fa-clock"></i>8 min read</span>
-
-</div>
-
-<a href="ai-automation-with-n8n" class="read">
-
-Read Article →
-
-</a>
-<h1>📚 Blogs</h1>
-
-<p>Explore AI, Automation, Web Development, SEO and Productivity.</p>
+    <!-- Dynamic Blog Grid Container -->
+    <main class="blog-grid" id="blogGrid">
+        <!-- Rendered dynamically by JS -->
+    </main>
 
 </div>
 
-<div class="blog-item">
+<script>
+/* ======================================================
+   ➕ HOW TO ADD A NEW BLOG IN FUTURE:
+   Bas tala ko `blogs` array bhitra euta naya object {} thapnuhos.
+   ====================================================== */
+const blogs = [
+    {
+        title: "AI Automation with n8n – Complete Beginner Guide",
+        description: "Learn how to automate repetitive tasks using AI, APIs, Google Sheets, and n8n workflows.",
+        slug: "ai-automation-with-n8n",
+        category: "Automation",
+        date: "July 2026",
+        readTime: "8 min read",
+        icon: "🤖"
+    },
+    {
+        title: "What is AI? A Beginner's Guide",
+        description: "A complete breakdown of Artificial Intelligence, Machine Learning, and Generative AI for total beginners.",
+        slug: "what-is-ai",
+        category: "AI Basics",
+        date: "July 21, 2026",
+        readTime: "6 min read",
+        icon: "💡"
+    },
+    {
+        title: "How AI is Growing in the World",
+        description: "Discover how Artificial Intelligence is transforming major global industries, workforce dynamics, and the future economy.",
+        slug: "how-ai-is-growing-in-the-world",
+        category: "AI Trends",
+        date: "July 2026",
+        readTime: "7 min read",
+        icon: "🌐"
+    },
+    {
+        title: "Best AI Tools for Students in 2026",
+        description: "Boost your productivity with top AI tools for research, literature review, writing, coding, and exam preparation.",
+        slug: "best-ai-tools-for-students",
+        category: "Productivity",
+        date: "July 2026",
+        readTime: "5 min read",
+        icon: "🎓"
+    }
+];
 
-<h2>🤖 What is AI? A Beginner's Guide</h2>
+let selectedCategory = "All";
 
-<p>Learn What is AI and What it's can do.</p>
+// Render Category Filter Buttons
+function renderCategories() {
+    const categories = ["All", ...new Set(blogs.map(b => b.category))];
+    const container = document.getElementById("categoryContainer");
+    
+    container.innerHTML = categories.map(cat => `
+        <button class="cat-btn ${cat === selectedCategory ? 'active' : ''}" 
+                onclick="setCategory('${cat}')">
+            ${cat}
+        </button>
+    `).join('');
+}
 
-<div class="meta">
+// Filter Action
+function setCategory(category) {
+    selectedCategory = category;
+    renderCategories();
+    filterBlogs();
+}
 
-<span><i class="fa-regular fa-calendar"></i>21,July 2026</span>
+// Render Blog Cards
+function filterBlogs() {
+    const query = document.getElementById("searchInput").value.toLowerCase();
+    const grid = document.getElementById("blogGrid");
 
-<span><i class="fa-regular fa-clock"></i>8 min read</span>
+    const filtered = blogs.filter(blog => {
+        const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
+        const matchesSearch = blog.title.toLowerCase().includes(query) || 
+                              blog.description.toLowerCase().includes(query);
+        return matchesCategory && matchesSearch;
+    });
 
-</div>
+    if (filtered.length === 0) {
+        grid.innerHTML = `
+            <div class="no-results">
+                <i class="fa-solid fa-folder-open"></i>
+                <p>No matching articles found.</p>
+            </div>
+        `;
+        return;
+    }
 
-<a href="what-is-ai" class="read">
+    grid.innerHTML = filtered.map((blog, index) => `
+        <article class="blog-card" style="animation-delay: ${index * 0.08}s">
+            <div class="card-top">
+                <span class="tag-badge">${blog.category}</span>
+                <h2>${blog.icon ? blog.icon + ' ' : ''}${blog.title}</h2>
+                <p>${blog.description}</p>
+            </div>
+            
+            <div class="card-footer">
+                <div class="meta">
+                    <span><i class="fa-regular fa-calendar"></i>${blog.date}</span>
+                    <span><i class="fa-regular fa-clock"></i>${blog.readTime}</span>
+                </div>
+                <a href="${blog.slug}" class="read-btn">
+                    Read <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </article>
+    `).join('');
+}
 
-Read Article →
-</a>
-  
-</div>
-
-</div>
+// Initial Load
+renderCategories();
+filterBlogs();
+</script>
 
 </body>
 </html>
