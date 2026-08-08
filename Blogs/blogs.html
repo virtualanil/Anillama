@@ -1,482 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blogs | Anil Lama</title>
-
-<!-- Font Awesome & Google Fonts -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<style>
-:root {
-    --primary: #0f4c81;
-    --primary-hover: #0284c7;
-    --bg-main: #f8fafc;
-    --card-bg: #ffffff;
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --border-color: #e2e8f0;
-    --radius: 16px;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-body {
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    padding: 60px 20px;
-    line-height: 1.6;
-}
-
-.container {
-    max-width: 1040px;
-    margin: 0 auto;
-}
-
-/* Header & Intro Animation */
-.header {
-    text-align: center;
-    margin-bottom: 40px;
-    animation: fadeInDown 0.6s ease-out;
-}
-
-.header h1 {
-    font-size: 2.8rem;
-    color: var(--primary);
-    font-weight: 700;
-    margin-bottom: 10px;
-    letter-spacing: -0.8px;
-}
-
-.header p {
-    color: var(--text-muted);
-    font-size: 1.15rem;
-}
-
-/* Search & Filter Section */
-.controls-wrapper {
-    margin-bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-    animation: fadeInUp 0.6s ease-out 0.1s backwards;
-}
-
-.search-box {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-}
-
-.search-box input {
-    width: 100%;
-    padding: 14px 20px 14px 48px;
-    border-radius: 30px;
-    border: 1px solid var(--border-color);
-    background: #ffffff;
-    font-size: 0.95rem;
-    outline: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.search-box input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(15, 76, 129, 0.15);
-}
-
-.search-box i {
-    position: absolute;
-    left: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-}
-
-.categories {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.cat-btn {
-    border: none;
-    background: #ffffff;
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-.cat-btn.active, .cat-btn:hover {
-    background: var(--primary);
-    color: #ffffff;
-    border-color: var(--primary);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(15, 76, 129, 0.2);
-}
-
-/* Blog Cards Grid */
-.blog-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    gap: 28px;
-}
-
-.blog-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    padding: 28px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    animation: fadeInUp 0.5s ease-out backwards;
-    position: relative;
-    overflow: hidden;
-}
-
-.blog-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: var(--primary);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.blog-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 16px 32px -8px rgba(15, 76, 129, 0.12);
-    border-color: #cbd5e1;
-}
-
-.blog-card:hover::before {
-    opacity: 1;
-}
-
-.card-top {
-    margin-bottom: 20px;
-}
-
-.tag-badge {
-    display: inline-block;
-    background: #e0f2fe;
-    color: #0284c7;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 14px;
-}
-
-.blog-card h2 {
-    font-size: 1.3rem;
-    color: var(--text-main);
-    font-weight: 700;
-    margin-bottom: 12px;
-    line-height: 1.4;
-    transition: color 0.2s ease;
-}
-
-.blog-card:hover h2 {
-    color: var(--primary);
-}
-
-.blog-card p {
-    color: var(--text-muted);
-    font-size: 0.94rem;
-    line-height: 1.6;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* Meta & Action Link */
-.card-footer {
-    border-top: 1px solid #f1f5f9;
-    padding-top: 16px;
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.meta {
-    display: flex;
-    gap: 14px;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-}
-
-.meta i {
-    margin-right: 4px;
-    color: var(--primary);
-}
-
-.read-btn {
-    text-decoration: none;
-    color: var(--primary);
-    font-weight: 700;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: gap 0.25s ease;
-}
-
-.blog-card:hover .read-btn {
-    gap: 10px;
-    color: var(--primary-hover);
-}
-
-/* No Results Found */
-.no-results {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 50px 0;
-    color: var(--text-muted);
-}
-
-.no-results i {
-    font-size: 3rem;
-    margin-bottom: 15px;
-    opacity: 0.5;
-}
-
-/* Animations Keyframes */
-@keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 640px) {
-    body { padding: 40px 16px; }
-    .header h1 { font-size: 2.2rem; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Hub - Insights & Articles</title>
+    
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-<div class="container">
+    <div class="ambient-bg"></div>
 
-    <!-- Header Section -->
-    <header class="header">
-        <h1>📚 Knowledge Hub</h1>
-        <p>Insights on AI, Workflow Automation, Web Development, and Productivity.</p>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="logo">
+            <span class="logo-icon">📚</span>
+            <h2>Knowledge<span>Hub</span></h2>
+        </div>
+        <button class="theme-toggle" id="themeToggle" title="Toggle Light/Dark Mode">
+            <i class="fa-solid fa-moon"></i>
+        </button>
     </header>
 
-    <!-- Search & Filter Controls -->
-    <div class="controls-wrapper">
-        <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" placeholder="Search articles by title or keyword..." onkeyup="filterBlogs()">
-        </div>
+    <main class="container">
+        <!-- Featured Spotlight Hero Section -->
+        <section class="featured-wrapper" id="featuredContainer">
+            <!-- Dynamic Featured Blog Rendered by JS -->
+        </section>
 
-        <div class="categories" id="categoryContainer">
-            <!-- Rendered dynamically by JS -->
-        </div>
-    </div>
+        <!-- Search & Sorting Filter Controls -->
+        <section class="controls-section">
+            <div class="search-sort-bar">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" placeholder="Search articles by title, tags, or keywords...">
+                    <button id="clearSearch" class="clear-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
 
-    <!-- Dynamic Blog Grid Container -->
-    <main class="blog-grid" id="blogGrid">
-        <!-- Rendered dynamically by JS -->
+                <div class="sort-box">
+                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+                    <select id="sortSelect">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="readTime">Quickest Reads</option>
+                        <option value="az">Title (A-Z)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Category Filter Pills -->
+            <div class="categories" id="categoryContainer">
+                <!-- Rendered Dynamically by JS -->
+            </div>
+
+            <div class="results-meta">
+                <span id="articleCount">Showing 0 articles</span>
+            </div>
+        </section>
+
+        <!-- Blog Grid Container -->
+        <section class="blog-grid" id="blogGrid">
+            <!-- Rendered Dynamically by JS -->
+        </section>
     </main>
 
-</div>
+    <!-- Toast Notification for Share Link -->
+    <div id="toast" class="toast">Link copied to clipboard! 🚀</div>
 
-<script>
-/* ======================================================
-   ➕ HOW TO ADD A NEW BLOG IN FUTURE:
-   Bas tala ko `blogs` array bhitra euta naya object {} thapnuhos.
-   ====================================================== */
-const blogs = [
-            {
-        title: "Top 10 AI Tools for App Developers in 2026",
-        description: "Discover the best AI tools to speed up your app development workflow.",
-        slug: "Top-10-AI-Tools",
-        category: "AI Tools",
-        date: "August 2026",
-        readTime: "12 min read",
-        icon: "🚀"
-    },      
-    {
-        title: "AI for App Building",
-        description: "Discover how AI tools are transforming modern app development.",
-        slug: "Machine-Learning-Works",
-        category: "Development By AI",
-        date: "August 2026",
-        readTime: "12 min read",
-        icon: "🚀"
-    },    
-    {
-        title: "What Are Large Language Models (LLMs)? A Complete Beginner's Guide",
-        description: "Power of a Large Language Model (LLM).",
-        slug: "LLMs-A-Beginner's Guide",
-        category: "AI Trends",
-        date: "July 21, 2026",
-        readTime: "15 min read",
-        icon: "💡"
-    },    
-    {
-        title: "How Machine Learning Works with Real Examples",
-        description: "Every time you unlock your phone with your face, scroll through personalized video recommendations on YouTube, or receive a text message warning you about a suspicious credit card transaction, you are interacting with Machine Learning (ML).",
-        slug: "Machine-Learning-Works",
-        category: "AI Basics",
-        date: "July 2026",
-        readTime: "10 min read",
-        icon: "⚙"
-    },
-    {
-        title: "Install and Set Up Nepali Unicode Keyboard on Windows, Mac, Android, and iOS",
-        description: "A complete, multi-platform guide to setting up native Devanagari typing on all your devices. Learn how to enable system-level language packs, switch between Traditional and Romanized layouts, master keyboard shortcuts, and fix common rendering glitches on Windows, Mac, Android, and iOS.",
-        slug: "Set-Up-Nepali-Unicode-Keyboard",
-        category: "Setup",
-        date: "July 2026",
-        readTime: "8 min read",
-        icon: "🔑"
-    },
-    {
-        title: "AI Automation with n8n – Complete Beginner Guide",
-        description: "Learn how to automate repetitive tasks using AI, APIs, Google Sheets, and n8n workflows.",
-        slug: "ai-automation-with-n8n",
-        category: "Automation",
-        date: "July 2026",
-        readTime: "8 min read",
-        icon: "🤖"
-    },
-    {
-        title: "What is AI? A Beginner's Guide",
-        description: "A complete breakdown of Artificial Intelligence, Machine Learning, and Generative AI for total beginners.",
-        slug: "what-is-ai",
-        category: "AI Basics",
-        date: "July 21, 2026",
-        readTime: "6 min read",
-        icon: "💡"
-    },
-    {
-        title: "How AI is Growing in the World",
-        description: "Discover how Artificial Intelligence is transforming major global industries, workforce dynamics, and the future economy.",
-        slug: "how-ai-is-growing-in-the-world",
-        category: "AI Trends",
-        date: "July 2026",
-        readTime: "7 min read",
-        icon: "🌐"
-    },
-        {
-        title: "AI for Data Analysis: A Complete Beginner's Guide & Key Learnings",
-        description: "Discover how Artificial Intelligence is transforming major global industries, workforce dynamics, and the future economy.",
-        slug: "AI-for-Data-Analysis",
-        category: "AI Trends",
-        date: "August 2026",
-        readTime: "10 min read",
-        icon: "🎓"
-    },
-    {
-        title: "Best AI Tools for Students in 2026",
-        description: "Boost your productivity with top AI tools for research, literature review, writing, coding, and exam preparation.",
-        slug: "best-ai-tools-for-students",
-        category: "Productivity",
-        date: "July 2026",
-        readTime: "5 min read",
-        icon: "🎓"
-    }
-];
-
-let selectedCategory = "All";
-
-// Render Category Filter Buttons
-function renderCategories() {
-    const categories = ["All", ...new Set(blogs.map(b => b.category))];
-    const container = document.getElementById("categoryContainer");
-    
-    container.innerHTML = categories.map(cat => `
-        <button class="cat-btn ${cat === selectedCategory ? 'active' : ''}" 
-                onclick="setCategory('${cat}')">
-            ${cat}
-        </button>
-    `).join('');
-}
-
-// Filter Action
-function setCategory(category) {
-    selectedCategory = category;
-    renderCategories();
-    filterBlogs();
-}
-
-// Render Blog Cards
-function filterBlogs() {
-    const query = document.getElementById("searchInput").value.toLowerCase();
-    const grid = document.getElementById("blogGrid");
-
-    const filtered = blogs.filter(blog => {
-        const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
-        const matchesSearch = blog.title.toLowerCase().includes(query) || 
-                              blog.description.toLowerCase().includes(query);
-        return matchesCategory && matchesSearch;
-    });
-
-    if (filtered.length === 0) {
-        grid.innerHTML = `
-            <div class="no-results">
-                <i class="fa-solid fa-folder-open"></i>
-                <p>No matching articles found.</p>
-            </div>
-        `;
-        return;
-    }
-
-    grid.innerHTML = filtered.map((blog, index) => `
-        <article class="blog-card" style="animation-delay: ${index * 0.08}s">
-            <div class="card-top">
-                <span class="tag-badge">${blog.category}</span>
-                <h2>${blog.icon ? blog.icon + ' ' : ''}${blog.title}</h2>
-                <p>${blog.description}</p>
-            </div>
-            
-            <div class="card-footer">
-                <div class="meta">
-                    <span><i class="fa-regular fa-calendar"></i>${blog.date}</span>
-                    <span><i class="fa-regular fa-clock"></i>${blog.readTime}</span>
-                </div>
-                <a href="${blog.slug}" target="_blank" rel="noopener noreferrer" class="read-btn">
-    Read <i class="fa-solid fa-arrow-right"></i>
-</a>
-            </div>
-        </article>
-    `).join('');
-}
-
-// Initial Load
-renderCategories();
-filterBlogs();
-</script>
-
+    <!-- JavaScript Link -->
+    <script src="script.js"></script>
 </body>
 </html>
