@@ -1,342 +1,184 @@
 <!DOCTYPE html>
-<html lang="ne">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI for Data Analysis: A Complete Beginner's Guide & Key Learnings</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.7;
-            color: #333;
-            max-width: 850px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-        }
-        h1 {
-            color: #1a1a1a;
-            font-size: 2.2rem;
-            margin-bottom: 5px;
-        }
-        .meta {
-            color: #666;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-        }
-        hr {
-            border: 0;
-            height: 1px;
-            background: #e0e0e0;
-            margin: 25px 0;
-        }
-        h2 {
-            color: #2c3e50;
-            margin-top: 35px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 8px;
-        }
-        h3 {
-            color: #34495e;
-            margin-top: 20px;
-        }
-        ul, ol {
-            padding-left: 20px;
-        }
-        li {
-            margin-bottom: 8px;
-        }
-        blockquote {
-            background-color: #f8f9fa;
-            border-left: 4px solid #007bff;
-            margin: 20px 0;
-            padding: 15px 20px;
-            font-style: italic;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
-            font-size: 0.95rem;
-        }
-        th, td {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f6f8;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-        .toc {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #eee;
-            margin-bottom: 30px;
-        }
-        .toc h3 {
-            margin-top: 0;
-        }
-        .toc ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        .toc li {
-            margin-bottom: 6px;
-        }
-        .toc a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        .toc a:hover {
-            text-decoration: underline;
-        }
-        .footer {
-            margin-top: 50px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #777;
-        }
-        .faq-item {
-            margin-bottom: 20px;
-        }
-        .faq-question {
-            font-weight: bold;
-            color: #1a1a1a;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI for Data Analysis: A Complete Beginner's Guide & Key Learnings | Anil Lama</title>
+<meta name="description" content="Discover how AI is revolutionizing data analysis. Insights from the AI Association Nepal Google Learning Program, core mechanics, lifecycle, and real-world applications.">
+<style>
+body{font-family:Arial,sans-serif;max-width:900px;margin:40px auto;line-height:1.8;padding:20px;color:#333}
+h1,h2{color:#0f4c81}code{background:#f3f3f3;padding:2px 5px}pre{background:#f7f7f7;padding:12px;overflow:auto}
+.toc{background:#eef7ff;padding:15px;border-radius:8px}
+.blog-hero{
+    margin:30px 0;
+}
+
+.blog-image{
+    width:100%;
+    max-height:500px;
+    object-fit:cover;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+table{width:100%;border-collapse:collapse;margin:20px 0;}
+th,td{border:1px solid #ddd;padding:10px;text-align:left;}
+th{background-color:#eef7ff;color:#0f4c81;}
+blockquote{background:#f9f9f9;border-left:4px solid #0f4c81;margin:20px 0;padding:10px 15px;font-style:italic;}
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N50CL3ZTT5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-N50CL3ZTT5');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7335396742183776"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-7335396742183776"
+     data-ad-slot="8837589714"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
 </head>
 <body>
+<h1>AI for Data Analysis: A Complete Beginner's Guide & Key Learnings</h1>
+<p><strong>Author:</strong> Anil Lama</p>
+<p><strong>Published:</strong> August 2026</p>
 
-    <article>
-        <h1>AI for Data Analysis: A Complete Beginner's Guide & Key Learnings</h1>
-        <p class="meta"><strong>Author:</strong> Anil Lama | <strong>Published:</strong> August 2026</p>
+<div class="blog-hero">
+    <img src="../assets/img/blogs/ai-data-analysis.png" alt="AI for Data Analysis - A Complete Beginner's Guide" class="blog-image">
+</div>
 
-        <hr>
+<div class="toc">
+<h2>Table of Contents</h2>
+<ol>
+<li>What is AI for Data Analysis & My Learning Journey</li>
+<li>The Core Mechanics: How AI Interprets Raw Data</li>
+<li>The 4-Step Lifecycle: How AI Analyzes Data from Scratch</li>
+<li>Essential Data AI Jargon Demystified</li>
+<li>Spreadsheets vs. SQL/Python vs. AI-Powered Analytics</li>
+<li>Real-World Applications of AI in Data Analysis</li>
+<li>Limitations and Key Challenges You Must Know</li>
+<li>The Future of AI in Data Analysis</li>
+<li>Conclusion</li>
+<li>Frequently Asked Questions</li>
+</ol>
+</div>
 
-        <!-- Table of Contents -->
-        <div class="toc">
-            <h3>Table of Contents</h3>
-            <ul>
-                <li><a href="#intro">1. Introduction: My AI Learning Journey & What is AI for Data Analysis?</a></li>
-                <li><a href="#mechanics">2. The Core Mechanics: How AI Interprets Raw Data</a></li>
-                <li><a href="#lifecycle">3. The 4-Step Lifecycle: How AI Analyzes Data from Scratch</a></li>
-                <li><a href="#jargon">4. Essential Data AI Jargon Demystified</a></li>
-                <li><a href="#comparison">5. Spreadsheets vs. SQL/Python vs. AI-Powered Analytics</a></li>
-                <li><a href="#applications">6. Real-World Applications of AI in Data Analysis</a></li>
-                <li><a href="#limitations">7. Limitations and Key Challenges You Must Know</a></li>
-                <li><a href="#future">8. The Future of AI in Data Analysis</a></li>
-                <li><a href="#conclusion">9. Conclusion</a></li>
-                <li><a href="#faq">10. Frequently Asked Questions (FAQ)</a></li>
-            </ul>
-        </div>
+<h2>What is AI for Data Analysis & My Learning Journey</h2>
+<p>I am currently taking the <strong>AI for Data Analysis</strong> course through the <strong>AI Association Nepal Google Learning Program</strong>, and I could not be more thrilled to share what I have been learning! Navigating through the modules has been an incredible experience—concepts that once seemed complex are finally falling into place and making complete sense.</p>
+<p>Whether you are trying to understand sales trends, clean a messy spreadsheet, or build predictive business reports, artificial intelligence is fundamentally changing how we interact with numbers.</p>
+<p>At its core, <strong>AI for Data Analysis</strong> refers to using machine learning models, statistical algorithms, and natural language processing (NLP) to automate, accelerate, and elevate the process of turning raw data into actionable insights.</p>
+<p>Instead of manually writing complex nested formulas or spending hours wrangling dirty datasets, AI allows analysts to interact with data conversationally, detect hidden patterns automatically, and generate predictive forecasts in a fraction of the time.</p>
 
-        <!-- Section 1 -->
-        <section id="intro">
-            <h2>Introduction: My AI Learning Journey & What is AI for Data Analysis?</h2>
-            <p>I am currently taking the <strong>AI for Data Analysis</strong> course through the <strong>AI Association Nepal Google Learning Program</strong>, and I could not be more thrilled to share what I have been learning! Navigating through the modules has been an incredible experience—concepts that once seemed complex are finally falling into place and making complete sense.</p>
-            
-            <p>Whether you are trying to understand sales trends, clean a messy spreadsheet, or build predictive business reports, artificial intelligence is fundamentally changing how we interact with numbers.</p>
-            
-            <p>At its core, <strong>AI for Data Analysis</strong> refers to using machine learning models, statistical algorithms, and natural language processing (NLP) to automate, accelerate, and elevate the process of turning raw data into actionable insights.</p>
-            
-            <p>Instead of manually writing complex nested formulas or spending hours wrangling dirty datasets, AI allows analysts to interact with data conversationally, detect hidden patterns automatically, and generate predictive forecasts in a fraction of the time.</p>
+<h2>The Core Mechanics: How AI Interprets Raw Data</h2>
+<p>Traditional data tools require human operators to know <strong>what</strong> questions to ask and <strong>how</strong> to write the code (SQL queries, Python scripts, or Excel macros) to extract answers. AI flips this workflow on its head through two core breakthroughs:</p>
+<ul>
+<li><strong>Natural Language Querying (NLQ):</strong> With modern AI, you do not need to memorize syntax to analyze a dataset. Advanced algorithms act as an expert translator between human speech and database queries. You can simply ask: <em>"Which region had the highest customer churn last quarter?"</em> and the AI processes the answer.</li>
+<li><strong>Automated Pattern Recognition:</strong> Machine learning models evaluate thousands of parameters simultaneously. They surface subtle anomalies, multi-variable correlations, and non-linear trends across massive datasets that human eyes or traditional filters easily miss.</li>
+</ul>
 
-            <blockquote>
-                <strong>Prerequisite Reading:</strong> AI-driven analytics builds on foundational statistical and machine learning concepts. If you want a refresher on how language models process information, check out our previous guide: <em>What Are Large Language Models (LLMs)? A Complete Beginner's Guide.</em>
-            </blockquote>
-        </section>
+<h2>The 4-Step Lifecycle: How AI Analyzes Data from Scratch</h2>
+<p>From raw, unorganized rows to an executive report, AI transforms the traditional data analysis pipeline across four distinct stages:</p>
+<ul>
+<li><strong>Stage 1: Data Cleaning & Preprocessing:</strong> Raw data is almost always messy—filled with duplicate entries, missing values, mismatched date formats, and human typos. AI models automatically identify missing points and standardize formats in seconds.</li>
+<li><strong>Stage 2: Exploratory Data Analysis (EDA):</strong> AI conducts automated EDA by computing statistical summaries, flagging outliers, generating distribution plots, and highlighting significant variable correlations.</li>
+<li><strong>Stage 3: Predictive & Prescriptive Modeling:</strong> Machine learning models analyze historical patterns to project <em>what will happen next</em> (Predictive) and suggest <em>what action to take</em> (Prescriptive).</li>
+<li><strong>Stage 4: Automated Storytelling & Visualization:</strong> AI converts complex statistical matrices into clean charts, executive summaries, and interactive dashboards tailored to stakeholders.</li>
+</ul>
 
-        <!-- Section 2 -->
-        <section id="mechanics">
-            <h2>The Core Mechanics: How AI Interprets Raw Data</h2>
-            <p>Traditional data tools require human operators to know <strong>what</strong> questions to ask and <strong>how</strong> to write the code (SQL queries, Python scripts, or Excel macros) to extract answers. AI flips this workflow on its head through two core breakthroughs:</p>
+<blockquote><strong>Did You Know?</strong> Data scientists traditionally spend up to 80% of their time just cleaning and preparing raw data. AI tools reduce this prep time down to a fraction, allowing analysts to focus on strategy.</blockquote>
 
-            <h3>1. Natural Language Querying (NLQ)</h3>
-            <p>With modern AI, you do not need to memorize syntax to analyze a dataset. Advanced algorithms act as an expert translator between human speech and database queries. You can simply ask: <em>"Which region had the highest customer churn last quarter, and what factors correlated with it?"</em> The AI translates this query into executable code behind the scenes, runs the calculation, and presents the output in plain language.</p>
+<h2>Essential Data AI Jargon Demystified</h2>
+<p>When diving into AI-driven analytics, you will constantly hear these foundational terms:</p>
+<ul>
+<li><strong>Exploratory Data Analysis (EDA):</strong> The initial investigation of a dataset to discover patterns, spot anomalies, and test hypotheses using summary statistics.</li>
+<li><strong>Feature Engineering:</strong> Selecting, manipulating, and transforming raw data variables into formats that machine learning algorithms learn from effectively.</li>
+<li><strong>Prompt-Driven Analytics:</strong> Using conversational natural language instructions to guide AI tools in filtering datasets and generating visual charts.</li>
+<li><strong>Synthetic Data:</strong> Artificially generated data created by AI that mimics the statistical properties of real-world data without compromising private user information.</li>
+</ul>
 
-            <h3>2. Automated Pattern Recognition</h3>
-            <p>While humans struggle to visualize dimensions beyond 2D or 3D charts, machine learning models evaluate thousands of parameters simultaneously. They can surface subtle anomalies, multi-variable correlations, and non-linear trends across massive datasets that human eyes or traditional filters would easily overlook.</p>
-        </section>
+<h2>Spreadsheets vs. SQL/Python vs. AI-Powered Analytics</h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Traditional Spreadsheets</th>
+<th>SQL / Python</th>
+<th>AI-Powered Analytics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Primary Interface</strong></td>
+<td>Grid cells & manual formulas.</td>
+<td>Scripts, queries, & notebooks.</td>
+<td>Conversational prompts & low-code UI.</td>
+</tr>
+<tr>
+<td><strong>Data Scale</strong></td>
+<td>Limited (hundreds of thousands of rows).</td>
+<td>High (billions of database records).</td>
+<td>Scalable (petabytes via cloud integrations).</td>
+</tr>
+<tr>
+<td><strong>Speed to Insight</strong></td>
+<td>Slow; manual calculations.</td>
+<td>Moderate; requires custom code.</td>
+<td>Near-Instant; automated cleaning & insights.</td>
+</tr>
+<tr>
+<td><strong>Technical Barrier</strong></td>
+<td>Low to Moderate.</td>
+<td>High (requires programming).</td>
+<td>Low (accessible via plain language).</td>
+</tr>
+</tbody>
+</table>
 
-        <!-- Section 3 -->
-        <section id="lifecycle">
-            <h2>The 4-Step Lifecycle: How AI Analyzes Data from Scratch</h2>
-            <p>From raw, unorganized rows to an executive report, AI transforms the traditional data analysis pipeline across four distinct stages:</p>
+<h2>Real-World Applications of AI in Data Analysis</h2>
+<p>AI is being applied in practical scenarios across multiple domains:</p>
+<ul>
+<li><strong>Financial Forecasting:</strong> Banks use AI models to analyze millions of transactional data points in real time to flag unusual spending patterns and predict cash flow needs.</li>
+<li><strong>E-Commerce & Retail:</strong> Retailers leverage AI to analyze customer browsing habits, cart abandonments, and purchase histories for personalized recommendations.</li>
+<li><strong>Supply Chain Optimization:</strong> Logistics companies combine historical weather data, traffic patterns, and shipping logs to predict delivery delays and optimize routes.</li>
+</ul>
 
-            <p><strong>Stage 1: Data Cleaning & Preprocessing</strong><br>
-            Raw data is almost always messy—filled with duplicate entries, missing values, mismatched date formats, and human typos. AI models automatically identify missing points, infer probable values based on distribution patterns, and standardize formats in seconds.</p>
+<h2>Limitations and Key Challenges You Must Know</h2>
+<p>Despite its power, relying on AI blindly introduces operational risks:</p>
+<ul>
+<li><strong>Garbage In, Garbage Out (GIGO):</strong> If input data is flawed or biased, AI will produce incorrect conclusions with high confidence.</li>
+<li><strong>Data Privacy & Security:</strong> Feeding proprietary records or personal user details into public AI models can lead to security breaches.</li>
+<li><strong>Hallucinations in Math:</strong> Text-focused LLMs can occasionally struggle with precise multi-step arithmetic unless paired with code execution tools.</li>
+</ul>
 
-            <p><strong>Stage 2: Exploratory Data Analysis (EDA)</strong><br>
-            Once the data is structured, AI conducts automated EDA. It computes statistical summaries (mean, median, standard deviation), flags statistical outliers, generates distribution plots, and highlights significant variable correlations without manual scripting.</p>
+<h2>The Future of AI in Data Analysis</h2>
+<p>The future lies in autonomous AI data agents that continuously monitor live metrics, detect drops, investigate root causes, and present actionable solutions directly to managers—democratizing data science for non-technical teams.</p>
 
-            <p><strong>Stage 3: Predictive & Prescriptive Modeling</strong><br>
-            Going beyond <em>what happened</em>, machine learning models analyze historical patterns to project <em>what will happen next</em> (Predictive) and suggest <em>what action to take</em> (Prescriptive). For example, forecasting inventory needs for an upcoming festival season based on past sales trends and local economic indicators.</p>
+<h2>Conclusion</h2>
+<p>My journey through the <strong>AI Association Nepal Google Learning Program</strong> has shown me that AI is not here to replace human data analysts—it is here to empower us. By handling tedious data preparation and automating scripting, AI frees us to focus on critical thinking and business strategy.</p>
 
-            <p><strong>Stage 4: Automated Storytelling & Visualization</strong><br>
-            Data is useless if stakeholders cannot understand it. In this final stage, AI converts complex statistical matrices into clean charts, executive summaries, and interactive dashboards tailored to your target audience.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>Do I need to be a programmer to use AI for data analysis?</strong><br>No! While basic statistical understanding helps, modern AI tools allow you to perform sophisticated analyses using plain language prompts without writing code.</p>
+<p><strong>Will AI completely replace human Data Analysts?</strong><br>Unlikely. AI automates data processing, but human expertise remains essential for context interpretation, business strategy, and ethical oversight.</p>
+<p><strong>How does AI handle messy or missing data?</strong><br>AI models use advanced statistical techniques to analyze existing patterns, fill in missing values, remove duplicates, and fix formatting errors automatically.</p>
+<p><strong>What is the best way to start learning AI for data analysis?</strong><br>Master foundational data concepts, practice writing clear prompts using tools like ChatGPT Advanced Data Analysis or Gemini, and join community programs like the AI Association Nepal initiative!</p>
 
-            <blockquote>
-                <strong>Did You Know?</strong> Data scientists traditionally spend up to <strong>80% of their time</strong> just cleaning and preparing raw data. AI tools reduce this prep time down to a fraction, allowing analysts to focus on strategy and decision-making.
-            </blockquote>
-        </section>
+<hr>
+<p>© 2026 Anil Lama • anillama.com.np</p>
 
-        <!-- Section 4 -->
-        <section id="jargon">
-            <h2>Essential Data AI Jargon Demystified</h2>
-            <p>When diving into AI-driven analytics, you will constantly hear these four foundational terms:</p>
-
-            <h3>1. Exploratory Data Analysis (EDA)</h3>
-            <p>The initial investigation of a dataset to discover patterns, spot anomalies, test hypotheses, and verify assumptions using summary statistics and graphical representations.</p>
-
-            <h3>2. Feature Engineering</h3>
-            <p>The process of selecting, manipulating, and transforming raw data variables (features) into formats that machine learning algorithms can understand and learn from more effectively.</p>
-
-            <h3>3. Prompt-Driven Analytics</h3>
-            <p>The practice of using conversational natural language instructions (prompts) to guide AI tools in filtering datasets, executing statistical tests, and generating visual charts.</p>
-
-            <h3>4. Synthetic Data</h3>
-            <p>Artificially generated data created by AI algorithms that mimics the statistical properties of real-world data. It allows teams to test models and run analyses without compromising sensitive or private user information.</p>
-        </section>
-
-        <!-- Section 5 -->
-        <section id="comparison">
-            <h2>Spreadsheets vs. SQL/Python vs. AI-Powered Analytics</h2>
-            <p>Understanding where AI fits alongside traditional data analysis tools clears up common confusion:</p>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Dimension</th>
-                        <th>Traditional Spreadsheets (Excel / Sheets)</th>
-                        <th>Database & Scripting (SQL / Python)</th>
-                        <th>AI-Powered Data Analytics</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Primary Interface</strong></td>
-                        <td>Grid cells, manual formulas, and pivot tables.</td>
-                        <td>Command-line scripts, queries, and code notebooks.</td>
-                        <td>Conversational prompts, automated dashboards, and low-code UI.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Data Scale</strong></td>
-                        <td>Limited (typically hundreds of thousands of rows).</td>
-                        <td>High (handles millions to billions of database records).</td>
-                        <td>Scalable (processes petabytes via cloud ML integrations).</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Speed to Insight</strong></td>
-                        <td>Slow; manual calculations and chart creation.</td>
-                        <td>Moderate; requires writing and debugging custom code.</td>
-                        <td>Near-Instant; automated cleaning, insights, and visualizations.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Technical Barrier</strong></td>
-                        <td>Low to Moderate (formula knowledge needed).</td>
-                        <td>High (requires database syntax and programming skills).</td>
-                        <td>Low (accessible to anyone who can write clear prompts).</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Pattern Detection</strong></td>
-                        <td>Manual inspection; prone to human bias.</td>
-                        <td>Query-dependent; only finds what you explicitly script.</td>
-                        <td>Autonomous; discovers hidden correlations and anomalies automatically.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Section 6 -->
-        <section id="applications">
-            <h2>Real-World Applications of AI in Data Analysis</h2>
-            
-            <h3>1. Financial Forecasting and Fraud Detection</h3>
-            <p>Banks and financial institutions use AI models to analyze millions of transactional data points in real time, instantly flagging unusual spending patterns and accurately predicting quarterly cash flow needs.</p>
-
-            <h3>2. E-Commerce & Customer Behavior Analysis</h3>
-            <p>Retail businesses leverage AI to analyze customer browsing habits, cart abandonments, and purchase histories to deliver personalized recommendations and optimize dynamic pricing strategies.</p>
-
-            <h3>3. Operational & Supply Chain Optimization</h3>
-            <p>Logistics companies combine historical weather data, traffic patterns, and shipping logs using AI to predict delivery delays, optimize route planning, and reduce fuel consumption.</p>
-        </section>
-
-        <!-- Section 7 -->
-        <section id="limitations">
-            <h2>Limitations and Key Challenges You Must Know</h2>
-            <p>While AI tools for data analysis are incredibly capable, relying on them blindly introduces serious risks:</p>
-            <ul>
-                <li><strong>Garbage In, Garbage Out (GIGO):</strong> If your underlying training or input data is flawed, incomplete, or biased, AI will produce incorrect conclusions with high statistical confidence.</li>
-                <li><strong>Data Privacy and Security:</strong> Feeding proprietary company records, confidential customer details, or personal financial data into public AI models can lead to severe security breaches and regulatory non-compliance.</li>
-                <li><strong>Hallucinations in Math & Logic:</strong> While LLMs are great at language, general text models sometimes struggle with precise calculations or complex multi-step arithmetic unless paired with dedicated code execution tools (like Python interpreters).</li>
-                <li><strong>The "Black Box" Problem:</strong> Deep learning models often reach conclusions through complex mathematical weights that humans cannot easily interpret, making regulatory auditing difficult.</li>
-            </ul>
-        </section>
-
-        <!-- Section 8 -->
-        <section id="future">
-            <h2>The Future of AI in Data Analysis</h2>
-            <p>The evolution of data analytics is moving faster than ever. Key trends shaping the next generation of data tools include:</p>
-            <ul>
-                <li><strong>Autonomous AI Data Agents:</strong> AI assistants that do not just wait for prompts, but autonomously monitor live data streams, detect metric drops, investigate root causes, and notify managers with proposed solutions.</li>
-                <li><strong>Real-Time Natural Language BI:</strong> Executive dashboards where team members can verbally ask questions during meetings and watch charts re-render dynamically in real time.</li>
-                <li><strong>Democratization of Analytics:</strong> Non-technical domain experts (marketing leads, HR managers, operational staff) will be able to perform complex data science workflows without needing dedicated data engineering support.</li>
-            </ul>
-        </section>
-
-        <!-- Section 9 -->
-        <section id="conclusion">
-            <h2>Conclusion</h2>
-            <p>My journey through the <strong>AI Association Nepal Google Learning Program</strong> has shown me that AI is not here to replace human data analysts—it is here to empower us. By handling tedious data preparation, automating repetitive scripting, and revealing non-obvious patterns, AI frees us to focus on critical thinking, strategic planning, and storytelling.</p>
-            
-            <p>As these tools continue to mature, combining solid foundational data knowledge with effective AI prompt engineering will be one of the most valuable skill sets for professionals across every industry.</p>
-        </section>
-
-        <hr>
-
-        <!-- Section 10: FAQ -->
-        <section id="faq">
-            <h2>Frequently Asked Questions (FAQ)</h2>
-            
-            <div class="faq-item">
-                <p class="faq-question">Do I need to be a programmer or mathematician to use AI for data analysis?</p>
-                <p>No! While basic statistical understanding helps you evaluate results critically, modern AI tools allow you to perform sophisticated analyses using natural language prompts without writing code.</p>
-            </div>
-
-            <div class="faq-item">
-                <p class="faq-question">Will AI completely replace human Data Analysts?</p>
-                <p>Unlikely. AI automates data processing, cleaning, and pattern finding, but human expertise remains essential for context interpretation, business strategy, ethical oversight, and domain-specific decision-making.</p>
-            </div>
-
-            <div class="faq-item">
-                <p class="faq-question">How does AI handle messy or missing data?</p>
-                <p>AI models use advanced statistical techniques (such as predictive imputation) to analyze existing patterns and fill in missing values, remove duplicate entries, and fix formatting errors automatically.</p>
-            </div>
-
-            <div class="faq-item">
-                <p class="faq-question">Is my sensitive business data safe when using AI tools?</p>
-                <p>It depends on the platform you choose. Standard public models may use your inputs for training unless opted out. Enterprise-grade AI tools provide end-to-end encryption, strict access controls, and strict guarantees that your data will not be used for model training.</p>
-            </div>
-
-            <div class="faq-item">
-                <p class="faq-question">What is the best way to start learning AI for data analysis?</p>
-                <p>Start by mastering foundational data concepts, practice writing clear analytical prompts with datasets using tools like ChatGPT Advanced Data Analysis or Google Gemini, and participate in structured training initiatives like the AI Association Nepal programs!</p>
-            </div>
-        </section>
-
-        <hr>
-
-        <footer class="footer">
-            <p>&copy; 2026 Anil Lama • <a href="https://anillama.com.np" target="_blank" style="color: #666;">anillama.com.np</a></p>
-        </footer>
-
-    </article>
-
+<!-- Clean URL Script -->
+<script>
+  if (window.location.pathname.endsWith('.html')) {
+    var cleanUrl = window.location.pathname.replace(/\.html$/, '') + window.location.search + window.location.hash;
+    window.history.replaceState(null, '', cleanUrl);
+  }
+</script>
 </body>
 </html>
