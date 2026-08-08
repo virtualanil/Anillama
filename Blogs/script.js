@@ -1,43 +1,113 @@
-// Sample Blog Data Array
+// Complete 10 Blog Posts Data Array (Strictly using YOUR original data)
 const blogs = [
     {
         id: 1,
-        title: "Top AI Automation Tools to Master in August 2026",
+        title: "Top 10 AI Tools for App Developers",
+        description: "Discover the best AI tools to speed up your app development workflow.",
+        slug: "Top-10-AI-Tools",
         category: "AI Tools",
-        date: "2026-08-05",
-        readTime: "5 min read",
-        summary: "Discover cutting-edge workflow automation platforms transforming modern software development and digital productivity.",
-        icon: "🤖",
-        featured: true
-    },
+        date: "August 2026",
+        readTime: "12 min read",
+        icon: "🚀",
+        featured: true // Hero section
+    },    
     {
         id: 2,
-        title: "Building Modern Responsive UIs with Pure CSS",
-        category: "Web Dev",
-        date: "2026-07-28",
-        readTime: "8 min read",
-        summary: "Learn container queries, modern layout techniques, and smooth glassmorphism effects without heavy frameworks.",
-        icon: "🎨",
+        title: "AI for App Building",
+        description: "Discover how AI tools are transforming modern app development.",
+        slug: "Machine-Learning-Works",
+        category: "Development By AI",
+        date: "August 2026",
+        readTime: "12 min read",
+        icon: "🚀",
         featured: false
-    },
+    },    
     {
         id: 3,
-        title: "How Agentic AI Workflows Are Replacing Traditional Scripts",
+        title: "What Are Large Language Models (LLMs)? A Complete Beginner's Guide",
+        description: "Power of a Large Language Model (LLM).",
+        slug: "LLMs-A-Beginner's Guide",
         category: "AI Trends",
-        date: "2026-08-01",
-        readTime: "6 min read",
-        summary: "Autonomous AI agents can now execute multi-step complex engineering pipelines with minimal human oversight.",
-        icon: "⚡",
+        date: "July 21, 2026",
+        readTime: "15 min read",
+        icon: "💡",
+        featured: false
+    },    
+    {
+        id: 4,
+        title: "How Machine Learning Works with Real Examples",
+        description: "Every time you unlock your phone with your face, scroll through personalized video recommendations on YouTube, or receive a text message warning you about a suspicious credit card transaction, you are interacting with Machine Learning (ML).",
+        slug: "Machine-Learning-Works",
+        category: "AI Basics",
+        date: "July 2026",
+        readTime: "10 min read",
+        icon: "⚙",
         featured: false
     },
     {
-        id: 4,
-        title: "10 Habits for Ultra-Productive Software Developers",
+        id: 5,
+        title: "Install and Set Up Nepali Unicode Keyboard on Windows, Mac, Android, and iOS",
+        description: "A complete, multi-platform guide to setting up native Devanagari typing on all your devices. Learn how to enable system-level language packs, switch between Traditional and Romanized layouts, master keyboard shortcuts, and fix common rendering glitches on Windows, Mac, Android, and iOS.",
+        slug: "Set-Up-Nepali-Unicode-Keyboard",
+        category: "Setup",
+        date: "July 2026",
+        readTime: "8 min read",
+        icon: "🔑",
+        featured: false
+    },
+    {
+        id: 6,
+        title: "AI Automation with n8n – Complete Beginner Guide",
+        description: "Learn how to automate repetitive tasks using AI, APIs, Google Sheets, and n8n workflows.",
+        slug: "ai-automation-with-n8n",
+        category: "Automation",
+        date: "July 2026",
+        readTime: "8 min read",
+        icon: "🤖",
+        featured: false
+    },
+    {
+        id: 7,
+        title: "What is AI? A Beginner's Guide",
+        description: "A complete breakdown of Artificial Intelligence, Machine Learning, and Generative AI for total beginners.",
+        slug: "what-is-ai",
+        category: "AI Basics",
+        date: "July 21, 2026",
+        readTime: "6 min read",
+        icon: "💡",
+        featured: false
+    },
+    {
+        id: 8,
+        title: "How AI is Growing in the World",
+        description: "Discover how Artificial Intelligence is transforming major global industries, workforce dynamics, and the future economy.",
+        slug: "how-ai-is-growing-in-the-world",
+        category: "AI Trends",
+        date: "July 2026",
+        readTime: "7 min read",
+        icon: "🌐",
+        featured: false
+    },
+    {
+        id: 9,
+        title: "AI for Data Analysis: A Complete Beginner's Guide & Key Learnings",
+        description: "Discover how Artificial Intelligence is transforming major global industries, workforce dynamics, and the future economy.",
+        slug: "AI-for-Data-Analysis",
+        category: "AI Trends",
+        date: "August 2026",
+        readTime: "10 min read",
+        icon: "🎓",
+        featured: false
+    },
+    {
+        id: 10,
+        title: "Best AI Tools for Students in 2026",
+        description: "Boost your productivity with top AI tools for research, literature review, writing, coding, and exam preparation.",
+        slug: "best-ai-tools-for-students",
         category: "Productivity",
-        date: "2026-06-15",
-        readTime: "4 min read",
-        summary: "Optimize your daily focus time, streamline context switches, and leverage intelligent coding assistants.",
-        icon: "🎯",
+        date: "July 2026",
+        readTime: "5 min read",
+        icon: "🎓",
         featured: false
     }
 ];
@@ -66,25 +136,26 @@ document.addEventListener("DOMContentLoaded", () => {
     renderBlogs();
 
     // Event Listeners
-    searchInput.addEventListener("input", handleSearch);
-    clearSearchBtn.addEventListener("click", clearSearch);
-    sortSelect.addEventListener("change", (e) => {
+    if(searchInput) searchInput.addEventListener("input", handleSearch);
+    if(clearSearchBtn) clearSearchBtn.addEventListener("click", clearSearch);
+    if(sortSelect) sortSelect.addEventListener("change", (e) => {
         currentSort = e.target.value;
         renderBlogs();
     });
-    themeToggleBtn.addEventListener("click", toggleTheme);
+    if(themeToggleBtn) themeToggleBtn.addEventListener("click", toggleTheme);
 });
 
-// Helper: Check if date is recent (New tag)
+// Helper: Check if date is recent (New tag within 30 days)
 function isNew(dateString) {
     const blogDate = new Date(dateString);
-    const now = new Date("2026-08-08"); // Current date reference
+    const now = new Date("2026-08-08"); // Current date reference for logic
     const diffDays = (now - blogDate) / (1000 * 60 * 60 * 24);
-    return diffDays <= 14; // Marked NEW if within 14 days
+    return diffDays >= 0 && diffDays <= 30; // 30 days time window for "NEW"
 }
 
 // Render Categories with Count Badges
 function renderCategories() {
+    if(!categoryContainer) return;
     const categories = ["All", ...new Set(blogs.map(b => b.category))];
     categoryContainer.innerHTML = categories.map(cat => {
         const count = cat === "All" ? blogs.length : blogs.filter(b => b.category === cat).length;
@@ -105,28 +176,30 @@ function selectCategory(cat) {
 // Search Handler
 function handleSearch(e) {
     searchQuery = e.target.value.toLowerCase();
-    clearSearchBtn.style.display = searchQuery ? "block" : "none";
+    if(clearSearchBtn) clearSearchBtn.style.display = searchQuery ? "block" : "none";
     renderBlogs();
 }
 
 function clearSearch() {
     searchInput.value = "";
     searchQuery = "";
-    clearSearchBtn.style.display = "none";
+    if(clearSearchBtn) clearSearchBtn.style.display = "none";
     renderBlogs();
 }
 
 // Render Featured & Grid Blogs
 function renderBlogs() {
+    if(!blogGrid) return;
+    
     // 1. Filter Blogs
     let filtered = blogs.filter(blog => {
         const matchesCategory = currentCategory === "All" || blog.category === currentCategory;
         const matchesSearch = blog.title.toLowerCase().includes(searchQuery) || 
-                              blog.summary.toLowerCase().includes(searchQuery);
+                              blog.description.toLowerCase().includes(searchQuery); // Changed from summary to description
         return matchesCategory && matchesSearch;
     });
 
-    // 2. Sort Blogs (Date Wise: Newest First)
+    // 2. Sort Blogs
     filtered.sort((a, b) => {
         if (currentSort === "newest") return new Date(b.date) - new Date(a.date);
         if (currentSort === "oldest") return new Date(a.date) - new Date(b.date);
@@ -134,32 +207,38 @@ function renderBlogs() {
         if (currentSort === "az") return a.title.localeCompare(b.title);
     });
 
-    // 3. Render Featured Banner (If 'All' category & no active search)
+    // 3. Render Featured Banner (Only when in 'All' category & no active search)
     const featured = blogs.find(b => b.featured);
-    if (featured && currentCategory === "All" && !searchQuery) {
-        featuredContainer.innerHTML = `
-            <div class="featured-card">
-                <div class="featured-content">
-                    <span class="featured-badge">Featured Post</span>
-                    <h1>${featured.title}</h1>
-                    <p>${featured.summary}</p>
-                    <div class="meta-info">
-                        <span><i class="fa-regular fa-calendar"></i> ${featured.date}</span>
-                        <span><i class="fa-regular fa-clock"></i> ${featured.readTime}</span>
+    if (featuredContainer) {
+        if (featured && currentCategory === "All" && !searchQuery) {
+            featuredContainer.innerHTML = `
+                <div class="featured-card">
+                    <div class="featured-content">
+                        <span class="featured-badge">Featured Post</span>
+                        <h1>${featured.title}</h1>
+                        <p>${featured.description}</p>
+                        <div class="meta-info">
+                            <span><i class="fa-regular fa-calendar"></i> ${featured.date}</span>
+                            <span><i class="fa-regular fa-clock"></i> ${featured.readTime}</span>
+                        </div>
+                        <br>
+                        <a href="${featured.slug}" target="_blank" style="color: var(--accent); font-weight: bold; text-decoration: none;">Read Article <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                    <div class="featured-image-holder">
+                        ${featured.icon}
                     </div>
                 </div>
-                <div class="featured-image-holder">
-                    ${featured.icon}
-                </div>
-            </div>
-        `;
-        featuredContainer.style.display = "block";
-    } else {
-        featuredContainer.style.display = "none";
+            `;
+            featuredContainer.style.display = "block";
+        } else {
+            featuredContainer.style.display = "none";
+        }
     }
 
     // 4. Update Article Counter
-    articleCount.textContent = `Showing ${filtered.length} article${filtered.length !== 1 ? 's' : ''}`;
+    if(articleCount) {
+        articleCount.textContent = `Showing ${filtered.length} article${filtered.length !== 1 ? 's' : ''}`;
+    }
 
     // 5. Render Blog Grid Cards
     if (filtered.length === 0) {
@@ -184,12 +263,15 @@ function renderBlogs() {
                         </button>
                     </div>
                 </div>
-                <h3>${blog.title}</h3>
-                <p>${blog.summary}</p>
+                <h3>${blog.icon} ${blog.title}</h3>
+                <p>${blog.description}</p>
             </div>
             <div class="card-footer">
-                <span><i class="fa-regular fa-calendar"></i> ${blog.date}</span>
-                <span><i class="fa-regular fa-clock"></i> ${blog.readTime}</span>
+                <div>
+                    <span><i class="fa-regular fa-calendar"></i> ${blog.date}</span>
+                    <span style="margin-left: 10px;"><i class="fa-regular fa-clock"></i> ${blog.readTime}</span>
+                </div>
+                <a href="${blog.slug}" target="_blank" style="color: var(--accent); font-weight: 700; text-decoration: none; font-size: 0.9rem;">Read <i class="fa-solid fa-arrow-right"></i></a>
             </div>
         </article>
     `).join("");
@@ -207,14 +289,16 @@ function toggleBookmark(id) {
 
 function shareArticle(title) {
     navigator.clipboard.writeText(window.location.href);
-    toast.textContent = `Link copied for "${title.substring(0, 20)}..." 🚀`;
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 3000);
+    if(toast) {
+        toast.textContent = `Link copied for "${title.substring(0, 20)}..." 🚀`;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+    }
 }
 
 // Theme Switcher Logic
 function initTheme() {
-    const savedTheme = localStorage.getItem("theme") || "dark";
+    const savedTheme = localStorage.getItem("theme") || "light";
     document.documentElement.setAttribute("data-theme", savedTheme);
     updateThemeIcon(savedTheme);
 }
@@ -228,6 +312,7 @@ function toggleTheme() {
 }
 
 function updateThemeIcon(theme) {
+    if(!themeToggleBtn) return;
     themeToggleBtn.innerHTML = theme === "dark" 
         ? '<i class="fa-solid fa-sun"></i>' 
         : '<i class="fa-solid fa-moon"></i>';
