@@ -15,7 +15,7 @@ const blogs = [
         id: 2,
         title: "AI for App Building",
         description: "Discover how AI tools are transforming modern app development.",
-        slug: "Machine-Learning-Works",
+        slug: "AI-for-App-Building",
         category: "Development By AI",
         date: "August 2026",
         readTime: "12 min read",
