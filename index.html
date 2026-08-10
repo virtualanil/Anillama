@@ -5,10 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="author" content="Anil Lama" />
   <meta name="google-adsense-account" content="ca-pub-7335396742183776">
-  <meta name="description" content="Anil Lama (अनिल लामा) - Personal portfolio website showing my projects, experience, awards, skills, Nepali Typing Center, and professional profile from Nepal.">
-  <title>Anil Lama (अनिल लामा) - Portfolio | Web Professional from Nepal</title>
+  <meta name="description" content="Anil Lama (अनिल लामा) - Tech Portfolio | Lead Digital Support, Web Developer & Tech Creator from Nepal.">
+  <title>Anil Lama // Tech & Digital Specialist</title>
   
-  <!-- Google tag (gtag.js) -->
+  <!-- SEO & Canonical -->
+  <link rel="canonical" href="https://anillama.com.np/">
+  <meta name="robots" content="index, follow">
+  <meta name="keywords" content="Nepali typing, Unicode typing, typing service Nepal, PDF to Word Nepal, thesis typing Nepal, government form typing, PDF to Word, typing Near Me, Nepali typing center, Portfolio, english to nepali">
+
+  <!-- Tab Logo -->
+  <link rel="icon" type="image/png" href="../assets/img/tab.png">
+
+  <!-- Google Tag Manager -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-N50CL3ZTT5"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -17,197 +25,184 @@
     gtag('config', 'G-N50CL3ZTT5');
   </script>
 
-  <!-- SEO -->
-  <meta name="keywords" content="Nepali typing, Unicode typing, typing service Nepal, PDF to Word Nepal, thesis typing Nepal, government form typing, PDF to Word, typing Near Me, Nepali typing center, Portfolio, english to nepali">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://anillama.com.np/">
-  
-  <!-- Fonts -->
+  <!-- Google Fonts & Font Awesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/style.css">
+
+  <!-- External CSS Link -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Massive Animated Dragon Background -->
-  <div id="dragon-bg">
-    <div class="dragon-visual"></div>
+  <!-- Background Particle Animation Canvas -->
+  <canvas id="particle-canvas"></canvas>
+  <div class="grid-overlay"></div>
+
+  <!-- Top Cyber Floating Navbar -->
+  <nav class="navbar">
+    <a href="#" class="nav-logo">&lt;ANIL.LAMA /&gt;</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Stack_Projects</a></li>
+      <li><a href="#experience">Timeline</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="Blogs/blogs" class="nav-link"><i class="fas fa-blog"></i> <span>Blogs</span></a></li>
+      <li><a href="portfolio/a-n-i-l" class="nav-link"><i class="fas fa-portfolio"></i> <span>Portfolio</span></a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    
+    <!-- Hero Section -->
+    <section class="hero" id="about">
+      <div class="hero-content">
+        <div class="status-badge">
+          <span class="pulse-dot"></span> Available for Tech Support & Operations
+        </div>
+        <h1 class="hero-title">ANIL LAMA</h1>
+        <div class="hero-subtitle">Lead L1 Support & AI-powered Web App Developer</div>
+        <p class="hero-desc">
+          Building high-efficiency digital workflows at Fonepay, founding custom typing engines, and delivering next-gen digital assets for gamers and platforms.
+        </p>
+        <div class="cta-group">
+          <a href="#projects" class="btn-cyber">Explore Stack</a>
+          <a href="#contact" class="btn-outline">Initiate Contact</a>
+        </div>
+
+        <!-- Social Media Buttons -->
+        <div class="social-links">
+          <a href="https://facebook.com/your-profile" target="_blank" class="social-btn" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://instagram.com/your-profile" target="_blank" class="social-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://linkedin.com/in/your-profile" target="_blank" class="social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <!-- Live Interactive Terminal -->
+      <div class="hero-terminal">
+        <div class="terminal-header">
+          <span class="term-dot red"></span>
+          <span class="term-dot yellow"></span>
+          <span class="term-dot green"></span>
+          <span class="term-title">anil-lama@system:~</span>
+        </div>
+        <div class="terminal-body">
+          <div class="code-line"><span class="code-comment">// System Profile Overview</span></div>
+          <div class="code-line"><span class="code-keyword">const</span> <span class="code-func">developer</span> = {</div>
+          <div class="code-line">&nbsp;&nbsp;name: <span class="code-str">'Anil Lama (अनिल लामा)'</span>,</div>
+          <div class="code-line">&nbsp;&nbsp;role: <span class="code-str">'Lead L1 & Digital Support @ Fonepay'</span>,</div>
+          <div class="code-line">&nbsp;&nbsp;certifications: [<span class="code-str">'CCEP Security'</span>, <span class="code-str">'Google Analytics'</span>],</div>
+          <div class="code-line">&nbsp;&nbsp;projects: [<span class="code-str">'Nepali Typing Center'</span>, <span class="code-str">'Game Top-Up Hub'</span>],</div>
+          <div class="code-line">&nbsp;&nbsp;status: <span class="code-str">'Active & Innovating'</span></div>
+          <div class="code-line">};</div>
+          <div class="code-line"><span class="code-comment">&gt; System initialized successfully...</span></div>
+        </div>
+      </div>
+    </section>
+
   </div>
 
-  <!-- Header -->
-  <header>
-    <div class="header-content">
-      <div class="profile-wrapper">
-        <div class="profile-ring"></div>
-        <img src="assets/img/Amal.jpg" alt="Anil Lama" class="profile-img" />
-      </div>
-      <h1 class="name-title">ANIL LAMA</h1>
-      <p class="name-nepali">अनिल लामा</p>
-      <h2 class="tagline">Founder | Nepali Typing Center | Lead-L1 and Digital Support</h2>
+  <!-- Continuous Infinite Rotating Tech Stack Slider -->
+  <div class="ticker-section">
+    <div class="ticker-track">
+      <!-- Set 1 -->
+      <div class="tool-badge"><i class="fab fa-html5"></i> HTML5</div>
+      <div class="tool-badge"><i class="fab fa-css3-alt"></i> CSS3</div>
+      <div class="tool-badge"><i class="fab fa-js"></i> JavaScript</div>
+      <div class="tool-badge"><i class="fas fa-fire"></i> Firebase Database</div>
+      <div class="tool-badge"><i class="fab fa-github"></i> GitHub</div>
+      <div class="tool-badge"><i class="fas fa-cloud"></i> Cloudflare</div>
+      <div class="tool-badge"><i class="fas fa-robot"></i> AI Workflows</div>
 
-      <div class="social-nav">
-        <a href="https://www.youtube.com/@anillama9033" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=100005158245674" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-        <a href="https://www.linkedin.com/in/anil-l-3b0a23236/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-        <a href="https://www.instagram.com/anil.lama__/#" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      </div>
+      <!-- Set 2 (Duplicated) -->
+      <div class="tool-badge"><i class="fab fa-html5"></i> HTML5</div>
+      <div class="tool-badge"><i class="fab fa-css3-alt"></i> CSS3</div>
+      <div class="tool-badge"><i class="fab fa-js"></i> JavaScript</div>
+      <div class="tool-badge"><i class="fas fa-fire"></i> Firebase Database</div>
+      <div class="tool-badge"><i class="fab fa-github"></i> GitHub</div>
+      <div class="tool-badge"><i class="fas fa-cloud"></i> Cloudflare</div>
+      <div class="tool-badge"><i class="fas fa-robot"></i> AI Workflows</div>
     </div>
+  </div>
 
-    <nav class="main-nav">
-      <a href="#about" class="nav-link"><i class="fas fa-user"></i> <span>About</span></a>
-      <a href="#awards" class="nav-link"><i class="fas fa-award"></i> <span>Awards</span></a>
-      <a href="#education" class="nav-link"><i class="fas fa-graduation-cap"></i> <span>Education</span></a>
-      <a href="#training" class="nav-link"><i class="fas fa-certificate"></i> <span>Certifications</span></a>
-      <a href="#experience" class="nav-link"><i class="fas fa-briefcase"></i> <span>Experience</span></a>
-      <a href="#contact" class="nav-link"><i class="fas fa-envelope"></i> <span>Contact</span></a>
-      <a href="#typing" class="nav-link"><i class="fas fa-keyboard"></i> <span>Typing Tool</span></a>
-      <a href="Pages/privacy-policy" target="_blank" class="nav-link"><i class="fas fa-user-shield"></i> <span>Privacy Policy</span></a>
-      <a href="Pages/terms-and-conditions" target="_blank" class="nav-link"><i class="fas fa-file-contract"></i> <span>T&amp;C</span></a>
-      <a href="Pages/disclaimer" target="_blank" class="nav-link"><i class="fas fa-triangle-exclamation"></i> <span>Disclaimer</span></a>
-      <a href="Blogs/blogs" target="_blank" class="nav-link"><i class="fas fa-blog"></i> <span>Blogs</span></a>
-    </nav>
-  </header>
+  <div class="container">
 
-  <main>
-    <!-- About Section -->
-    <section id="about" class="reveal-section">
-      <div class="section-header">
-        <h2>About Me</h2>
-        <div class="section-line"></div>
-      </div>
-      <div class="card glass-card">
-        <p>Welcome to my professional portfolio! I am <strong>Anil Lama</strong>, as an Lead-L1 and Digital Support at Fonepay, dedicated to driving efficiency and innovation in the digital payment sector. With a strong work ethic and a passion for technology, I thrive in fast-paced environments, ensuring seamless operations and delivering impactful solutions.</p>
-        <p>I enjoy solving challenges, improving processes, and continuously enhancing digital experiences.</p>
-      </div>
-    </section>
-
-    <!-- Awards Section -->
-    <section id="awards" class="reveal-section">
-      <div class="section-header">
-        <h2>Awards & Achievements</h2>
-        <div class="section-line"></div>
-      </div>
-      <div class="card glass-card">
-        <div class="card-icon"><i class="fas fa-trophy"></i></div>
-        <h3>Quarterly Impact Award - 2024</h3>
-        <p>I am honored to have received the Quarterly Impact Award, recognizing my dedication and contributions at Fonepay.</p>
-        <a href="https://www.linkedin.com/posts/fonepaynepal_hardwork-dedication-impact-activity-7339135682180800513-Jhej/" target="_blank" class="btn">View Achievement</a>
-      </div>
-
-      <div class="card glass-card">
-        <div class="card-icon"><i class="fas fa-keyboard"></i></div>
-        <h3>Nepali Typing Center</h3>
-        <p>I successfully launched and manage the Nepali Typing Center, which is now running smoothly on Google Marketplace.</p>
-        <a href="https://g.co/kgs/sqaEEzb" target="_blank" class="btn">Check It Out</a>
-      </div>
-    </section>
-
-    <!-- Education Section (DOT REMOVED) -->
-    <section id="education" class="reveal-section">
-      <div class="section-header">
-        <h2>Education</h2>
-        <div class="section-line"></div>
-      </div>
-      <!-- Card 1 -->
-      <div class="card glass-card">
-        <h3>Bachelor in Social Work (BSW)</h3>
-        <p class="timeline-date">Tribhuvan University | 2020 – 2026 (Expected)</p>
-      </div>
-      <!-- Card 2 -->
-      <div class="card glass-card">
-        <h3>Higher Secondary (+2)</h3>
-        <p class="timeline-date">Unique College | 2018 – 2020</p>
-      </div>
-    </section>
-
-    <!-- Training Section -->
-    <section id="training" class="reveal-section">
-      <div class="section-header">
-        <h2>Training & Certifications</h2>
-        <div class="section-line"></div>
-      </div>
-      <div class="card glass-card certification-card">
-        <h3>Microsoft Excel 101</h3>
-        <p>Satyava Digital Class – 2023</p>
-        <img src="assets/img/excel.png" alt="Microsoft Excel Certificate" class="certificate-img" />
-      </div>
-      <div class="card glass-card certification-card">
-        <h3>Google Analytics Certification</h3>
-        <p>Issued by Google Skillshop</p>
-        <img src="assets/img/Google Analytics.png" alt="Google Analytics Certificate" class="certificate-img" />
-      </div>
-      <div class="card glass-card certification-card">
-        <h3>Photoshop, Design & Editing (Basic)</h3>
-        <p>I have learned Photoshop and image editing through self-study on YouTube, enabling me to create visually appealing graphics, edit images, and enhance digital content.</p>
-        <img src="assets/img/NT.jpg" alt="Photoshop, Design & Editing" class="certificate-img" />
-      </div>
-      <div class="card glass-card certification-card">
-        <h3>CCEP (Certified Cybersecurity Educator Professional)</h3>
-        <p>I'm thrilled to share that I've successfully passed the CCEP Exam! This milestone reflects my dedication to advancing my knowledge in cybersecurity. A huge thank you to everyone for who supported me along the way – the journey of continuous learning is always better with a great network. I'm excited to apply these insights to real-world security challenges and contribute to building safer, more resilient systems.</p>
-        <img src="assets/img/CCEP.jpg" alt="CCEP Certificate" class="certificate-img" />
-      </div>
-    </section>
-
-    <!-- Experience Section -->
-    <section id="experience" class="reveal-section">
-      <div class="section-header">
-        <h2>Experience</h2>
-        <div class="section-line"></div>
-      </div>
-      <div class="card glass-card experience-card">
-        <div class="experience-header">
-          <span class="experience-year">2018 – 2022</span>
+    <!-- Projects Section -->
+    <section id="projects">
+      <h2 class="section-title"><span class="section-num">01.</span> Core Projects & Engineering</h2>
+      <div class="cards-grid">
+        
+        <div class="tech-card">
+          <div class="card-icon"><i class="fas fa-keyboard"></i></div>
+          <h3>Nepali Typing Center</h3>
+          <p>An online web portal providing Unicode typing conversion, PDF-to-Word utility tools, and fast document processing.</p>
+          <div class="tech-tags">
+            <a href="https://anillama.com.np/nepali-typing/" target="_blank" class="btn-cyber" style="padding: 0.4rem 0.9rem; font-size: 0.8rem;">Explore</a>
+          </div>
         </div>
-        <h3>Manish Enterprises | Accountant & Marketing Manager</h3>
-        <p>Managed accounting operations and marketing initiatives for four years. Responsible for building customer relationships, providing top-notch services, and contributing to technical aspects of DIY product development.</p>
-      </div>
-      <div class="card glass-card experience-card">
-        <div class="experience-header">
-          <span class="experience-year">2022</span>
+
+        <div class="tech-card">
+          <div class="card-icon"><i class="fas fa-gamepad"></i></div>
+          <h3>Khaji Chat</h3>
+          <p>Modern real-time chat platform built with AI & web technologies. Instant messaging and smart integrations.</p>
+          <div class="tech-tags">
+            <a href="https://khaji.anillama.com.np" target="_blank" class="btn-cyber" style="padding: 0.4rem 0.9rem; font-size: 0.8rem;">Explore</a>
+          </div>
         </div>
-        <h3>Roshi Handicraft | Manager</h3>
-        <p>Oversaw multiple projects, organized training for women empowerment initiatives, and enhanced personal and professional skills.</p>
-      </div>
-      <div class="card glass-card experience-card current">
-        <div class="experience-header">
-          <span class="experience-year">2022 – Present</span>
-          <span class="current-badge">Current</span>
+
+        <div class="tech-card">
+          <div class="card-icon"><i class="fas fa-cube"></i></div>
+          <h3>3D Typing Game</h3>
+          <p>Browser-based interactive game designed for quick and fun gameplay experience without downloads.</p>
+          <div class="tech-tags">
+            <a href="https://game.anillama.com.np" target="_blank" class="btn-cyber" style="padding: 0.4rem 0.9rem; font-size: 0.8rem;">Explore</a>
+          </div>
         </div>
-        <h3>Fonepay | Lead - L1 Support & Social Media Support</h3>
-        <p>Key role in ensuring seamless digital payment operations, optimizing processes, and contributing to company growth through innovation and efficiency.</p>
+
+      </div>
+    </section>
+
+    <!-- Experience & Timeline -->
+    <section id="experience">
+      <h2 class="section-title"><span class="section-num">02.</span> Professional Timeline</h2>
+      <div class="cards-grid">
+        
+        <div class="tech-card">
+          <span style="color: var(--neon-cyan); font-family: var(--font-mono); font-size: 0.8rem;">2022 — PRESENT</span>
+          <h3 style="margin-top: 0.4rem;">Fonepay</h3>
+          <p><strong>Lead - L1 & Social Media Support</strong><br>Optimizing digital payment operations and driving service efficiency.</p>
+        </div>
+
+        <div class="tech-card">
+          <span style="color: var(--neon-cyan); font-family: var(--font-mono); font-size: 0.8rem;">2024 AWARD</span>
+          <h3 style="margin-top: 0.4rem;">Quarterly Impact Award</h3>
+          <p>Recognized at Fonepay for exceptional operational performance & technical leadership.</p>
+        </div>
+
+        <div class="tech-card">
+          <span style="color: var(--neon-cyan); font-family: var(--font-mono); font-size: 0.8rem;">CERTIFIED</span>
+          <h3 style="margin-top: 0.4rem;">Cybersecurity (CCEP)</h3>
+          <p>Certified Cybersecurity Educator Professional - building safer digital frameworks.</p>
+        </div>
+
       </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="reveal-section">
-      <div class="section-header">
-        <h2>Contact</h2>
-        <div class="section-line"></div>
-      </div>
-      <div class="card glass-card contact-card">
-        <div class="contact-item">
-          <i class="fas fa-envelope"></i>
-          <div>
-            <strong>Email</strong>
-            <a href="mailto:info@anillama.com.np">info@anillama.com.np</a>
-          </div>
+    <section id="contact" style="text-align: center;">
+      <h2 class="section-title" style="justify-content: center;"><span class="section-num">03.</span> Connect With Me</h2>
+      <div class="tech-card" style="max-width: 580px; margin: 0 auto;">
+        <h3 style="font-size: 1.5rem; margin-bottom: 0.8rem;">Let's Build Something Tech-Driven</h3>
+        <p>Whether it's technical support, digital service inquiries, or collaborations, feel free to reach out.</p>
+        
+        <div style="margin: 1.2rem 0; font-family: var(--font-mono); font-size: 0.9rem;">
+          <p style="margin-bottom: 0.4rem;"><i class="fas fa-envelope" style="color: var(--neon-cyan);"></i> info@anillama.com.np</p>
+          <p><i class="fas fa-phone" style="color: var(--neon-cyan);"></i> +977 9865585569</p>
         </div>
-        <div class="contact-item">
-          <i class="fas fa-phone"></i>
-          <div>
-            <strong>Phone</strong>
-            <a href="tel:+9865585569">+977 9865585569</a>
-          </div>
-        </div>
+        <a href="mailto:info@anillama.com.np" class="btn-cyber">Transmit Email</a>
       </div>
     </section>
-
     <!-- Nepali Typing Tool Section -->
     <section id="typing" class="reveal-section">
       <div class="section-header">
@@ -225,14 +220,19 @@
         </div>
       </div>
     </section>
-  </main>
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2025 Anil Lama | All Rights Reserved.</p>
+    <p>&copy; 2026 Anil Lama.</p>
+    
+    <div class="footer-links">
+      <a href="Pages/privacy-policy" target="_blank">Privacy Policy</a> | 
+      <a href="Pages/terms-and-conditions" target="_blank">Terms & Conditions</a> | 
+      <a href="Pages/disclaimer" target="_blank">Disclaimer</a>
+    </div>
   </footer>
 
-  <!-- Scripts -->
-  <script src="js/script.js"></script>
+  <!--External JS Link -->
+  <script src="script.js" defer></script>
 </body>
 </html>
