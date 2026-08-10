@@ -1,121 +1,133 @@
-// ===== Initialize on DOM Ready =====
-document.addEventListener('DOMContentLoaded', () => {
-  initDragonBackground();
-  initScrollReveal();
-  initSmoothScroll();
-  initScrollToTop();
-});
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let particlesArray = [];
 
-// ===== Massive Dragon Background Parallax =====
-function initDragonBackground() {
-  const dragonBg = document.querySelector('.dragon-visual');
-  
-  if (!dragonBg) return;
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
-  // Check for reduced motion preference
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion) {
-    return; // Keep static if reduced motion preferred
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2 + 0.5;
+    this.speedX = Math.random() * 1 - 0.5;
+    this.speedY = Math.random() * 1 - 0.5;
   }
-
-  // State
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
-  let currentX = 0;
-  let currentY = 0;
-
-  // Handle Mouse Move
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-
-  // Handle Touch Move (Mobile)
-  document.addEventListener('touchmove', (e) => {
-    if (e.touches.length > 0) {
-      mouseX = e.touches[0].clientX;
-      mouseY = e.touches[0].clientY;
-    }
-  }, { passive: true });
-
-  // Animation Loop
-  function animate() {
-    // Calculate center
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-
-    // Calculate offset (Parallax effect)
-    // The larger the divisor (e.g., 50), the slower/subtler the movement
-    const destX = (mouseX - centerX) / 30; 
-    const destY = (mouseY - centerY) / 30;
-
-    // Easing
-    currentX += (destX - currentX) * 0.05;
-    currentY += (destY - currentY) * 0.05;
-
-    // Apply transform (keeping the centering translate from CSS)
-    // We append the movement to the existing float animation via JS override
-    dragonBg.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px))`;
-
-    requestAnimationFrame(animate);
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.x > canvas.width) this.x = 0;
+    if (this.x < 0) this.x = canvas.width;
+    if (this.y > canvas.height) this.y = 0;
+    if (this.y < 0) this.y = canvas.height;
   }
-
-  animate();
+  draw() {
+    ctx.fillStyle = 'rgba(0, 242, 254, 0.4)';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
 }
 
-// ===== Scroll Reveal Animation =====
-function initScrollReveal() {
-  const sections = document.querySelectorAll('.reveal-section');
-  
-  const observerOptions = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.1
-  };
-  
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => {
-          entry.target.classList.add('visible');
-        }, index * 100);
-        observer.unobserve(entry.target);
+function initParticles() {
+  particlesArray = [];
+  const numberOfParticles = Math.floor((canvas.width * canvas.height) / 15000);
+  for (let i = 0; i < numberOfParticles; i++) {
+    particlesArray.push(new Particle());
+  }
+}
+initParticles();
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < particlesArray.length; i++) {
+    particlesArray[i].update();
+    particlesArray[i].draw();
+    
+    for (let j = i; j < particlesArray.length; j++) {
+      const dx = particlesArray[i].x - particlesArray[j].x;
+      const dy = particlesArray[i].y - particlesArray[j].y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < 100) {
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(0, 242, 254, ${1 - distance / 100 - 0.7})`;
+        ctx.lineWidth = 0.5;
+        ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+        ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+        ctx.stroke();
       }
-    });
-  }, observerOptions);
-  
-  sections.forEach(section => {
-    observer.observe(section);
-  });
-}
-
-// ===== Smooth Scroll for Navigation =====
-function initSmoothScroll() {
-  const navLinks = document.querySelectorAll('a[href^="#"]');
-  
-  navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      const href = link.getAttribute('href');
-      if (href && href !== '#') {
-        const target = document.querySelector(href);
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      }
-    });
-  });
-}
-
-// ===== Scroll to Top on Page Load =====
-function initScrollToTop() {
-  window.addEventListener('load', () => {
-    window.scrollTo(0, 0);
-    if (window.location.hash) {
-      history.replaceState(null, null, window.location.pathname);
     }
-  });
+  }
+  requestAnimationFrame(animateParticles);
 }
+animateParticles();const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let particlesArray = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2 + 0.5;
+    this.speedX = Math.random() * 1 - 0.5;
+    this.speedY = Math.random() * 1 - 0.5;
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.x > canvas.width) this.x = 0;
+    if (this.x < 0) this.x = canvas.width;
+    if (this.y > canvas.height) this.y = 0;
+    if (this.y < 0) this.y = canvas.height;
+  }
+  draw() {
+    ctx.fillStyle = 'rgba(0, 242, 254, 0.4)';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function initParticles() {
+  particlesArray = [];
+  const numberOfParticles = Math.floor((canvas.width * canvas.height) / 15000);
+  for (let i = 0; i < numberOfParticles; i++) {
+    particlesArray.push(new Particle());
+  }
+}
+initParticles();
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < particlesArray.length; i++) {
+    particlesArray[i].update();
+    particlesArray[i].draw();
+    
+    for (let j = i; j < particlesArray.length; j++) {
+      const dx = particlesArray[i].x - particlesArray[j].x;
+      const dy = particlesArray[i].y - particlesArray[j].y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < 100) {
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(0, 242, 254, ${1 - distance / 100 - 0.7})`;
+        ctx.lineWidth = 0.5;
+        ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+        ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
