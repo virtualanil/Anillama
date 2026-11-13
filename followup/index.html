@@ -2,511 +2,1040 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Follow-Up Portal</title>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7335396742183776"
-     crossorigin="anonymous"></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7335396742183776"
-     crossorigin="anonymous"></script>
-  
-    <!-- Tab Logo -->
-  <link rel="icon" type="image/png" href="../assets/img/tab.png">
-    :root {
-      --bg-body: #0f172a;
-      --bg-card: #1e293b;
-      --bg-input: #334155;
-      --primary: #6366f1;
-      --accent-ancient: #2dd4bf;
-      --accent-glow: rgba(45, 212, 191, 0.2);
-      --danger: #ef4444;
-      --warn: #f59e0b;
-      --success: #22c55e; /* Green for active signal */
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --border: #334155;
-      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-    }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Follow-Up & Reminder Portal</title>
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
     body {
-      font-family: Inter, system-ui, sans-serif;
-      background: radial-gradient(circle at top right, #1e293b, #0f172a);
-      color: var(--text-main);
+      font-family: 'Inter', system-ui, sans-serif;
+      background: radial-gradient(circle at top right, #1e293b 0%, #0f172a 55%, #090d16 100%);
+      color: #f1f5f9;
       min-height: 100vh;
-      padding-bottom: 40px;
     }
 
-    .container { max-width: 1200px; margin: auto; padding: 20px; }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
+    /* Glassmorphism Surface */
+    .glass-card {
+      background: rgba(30, 41, 59, 0.65);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.45);
     }
 
-    .brand h1 {
-      font-size: 24px;
-      font-weight: 700;
-      background: linear-gradient(to right, #818cf8, #2dd4bf);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: flex;
-      gap: 10px;
-    }
-
-    /* --- STATUS BADGE (GREEN SIGNAL) --- */
-    .status-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      transition: all 0.3s ease;
-    }
-
-    .status-dot {
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
-      border-radius: 50%;
-      background-color: #555; /* Grey when idle */
-      box-shadow: 0 0 0 transparent;
-      transition: all 0.3s ease;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
     }
 
-    /* Active State: Green Signal */
-    .status-badge.active {
-      border-color: var(--success);
-      color: var(--success);
-      background: rgba(34, 197, 94, 0.1);
-      box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+    /* Pulse Animations */
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+      }
     }
 
-    .status-badge.active .status-dot {
-      background-color: var(--success);
-      box-shadow: 0 0 10px var(--success);
-      animation: pulse-green 1.5s infinite;
+    @keyframes alarm-ring-pulse {
+      0%, 100% {
+        transform: scale(1) rotate(0deg);
+        box-shadow: 0 0 25px rgba(45, 212, 191, 0.35);
+      }
+      25% {
+        transform: scale(1.06) rotate(-6deg);
+        box-shadow: 0 0 40px rgba(244, 63, 94, 0.55);
+      }
+      75% {
+        transform: scale(1.06) rotate(6deg);
+        box-shadow: 0 0 40px rgba(99, 102, 241, 0.55);
+      }
     }
 
-    @keyframes pulse-green {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.5); opacity: 0.5; }
-      100% { transform: scale(1); opacity: 1; }
+    .dot-monitoring {
+      animation: pulse-ring 2.2s infinite;
     }
 
-    /* --- CARDS & FORM --- */
-    .card {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(10px);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: var(--shadow);
-      margin-bottom: 24px;
-      border: 1px solid rgba(255,255,255,0.05);
+    .alarm-active-badge {
+      border-color: #f43f5e !important;
+      background: rgba(244, 63, 94, 0.16) !important;
+      color: #fda4af !important;
+      box-shadow: 0 0 20px rgba(244, 63, 94, 0.35);
     }
 
-    h2 {
-      font-size: 18px;
-      margin-bottom: 20px;
-      border-left: 4px solid var(--accent-ancient);
-      padding-left: 12px;
+    .alarm-active-badge .status-dot {
+      background-color: #f43f5e !important;
+      animation: pulse-ring 0.9s infinite;
     }
 
-    .input-group {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 16px;
+    .animate-bell {
+      animation: alarm-ring-pulse 1.2s ease-in-out infinite;
     }
 
-    .form-control {
-      background: var(--bg-input);
-      border: 1px solid transparent;
-      border-radius: 8px;
-      padding: 12px;
-      color: var(--text-main);
-      outline: none;
-      transition: 0.2s;
-    }
-    
-    .form-control:focus {
-      border-color: var(--accent-ancient);
-    }
-
-    .form-control.full-width { grid-column: 1 / -1; }
-
-    button {
-      background: linear-gradient(135deg, var(--primary), #4f46e5);
-      border: none;
-      color: white;
-      padding: 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      width: 100%;
-      transition: opacity 0.2s;
-    }
-
-    button:hover { opacity: 0.9; }
-
-    /* --- TABLE --- */
-    .table-container {
-      overflow-x: auto;
-    }
-
-    table { 
-      width: 100%; 
-      border-collapse: collapse; 
-      min-width: 900px; 
-    }
-
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      text-align: left;
-      vertical-align: middle;
-    }
-
-    th { color: var(--text-muted); font-size: 12px; text-transform: uppercase; }
-    
-    .note-cell {
-      max-width: 200px;
-      color: var(--text-muted);
-      font-size: 13px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .status-pill {
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .status-pending { background: rgba(245,158,11,.15); color: var(--warn); }
-    .status-done { background: rgba(34,197,94,.15); color: #22c55e; }
-    .status-snoozed { background: rgba(99,102,241,.15); color: var(--primary); }
-
-    /* New Button Style for Table Actions */
-    .btn-action-done {
-      background-color: var(--success);
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      width: auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      transition: transform 0.1s;
-    }
-    
-    .btn-action-done:hover {
-      background-color: #16a34a;
-      transform: scale(1.05);
-    }
-
-    /* --- MODAL --- */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(2,6,23,.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: .4s;
-      z-index: 999;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-box {
-      background: linear-gradient(145deg,#1e293b,#0f172a);
-      border: 1px solid var(--accent-ancient);
-      padding: 40px;
-      border-radius: 24px;
-      text-align: center;
-      box-shadow: 0 0 30px rgba(45,212,191,.2);
-      width: 90%;
-      max-width: 450px;
-    }
-
-    .alarm-icon {
-      font-size: 64px;
-      margin-bottom: 20px;
-      display: block;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    .btn-snooze {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-main);
-    }
-
-    .btn-stop {
-      background: var(--accent-ancient);
-      color: #0f172a;
-    }
-
-    @keyframes float {
-      50% { transform: translateY(-10px); }
+    /* Color scheme for native date/time pickers in dark mode */
+    input[type="date"],
+    input[type="time"] {
+      color-scheme: dark;
     }
   </style>
 </head>
+<body class="antialiased selection:bg-teal-500/30 selection:text-teal-200 pb-14">
 
-<body>
-<div class="container">
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
 
-<header>
-  <div class="brand"><h1>🌙 Follow-Up/Reminder Portal (Keep This Tab Open To Receive Your Reminder.)</h1></div>
-  <!-- Green Signal Badge -->
-  <div class="status-badge" id="systemStatus">
-    <div class="status-dot"></div> System Active
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8">
+
+    <!-- HEADER -->
+    <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 mb-7 border-b border-slate-800/90">
+      <div>
+        <div class="flex items-center gap-3">
+          <span class="text-2xl sm:text-3xl select-none" aria-hidden="true">🌙</span>
+          <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-teal-300 to-emerald-300 bg-clip-text text-transparent">
+            Follow-Up & Reminder Portal
+          </h1>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+          Keep this tab open for real-time audio chimes &amp; desktop reminders.
+        </p>
+      </div>
+
+      <!-- Right Controls: Live Clock, Audio Test, Notification Permission & Status -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <!-- Live Clock -->
+        <div class="px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs sm:text-sm font-mono text-slate-200 flex items-center gap-2">
+          <span class="text-teal-400">🕒</span>
+          <span id="liveClock">--:--:--</span>
+        </div>
+
+        <!-- Test / Unlock Audio Button -->
+        <button
+          type="button"
+          id="btnTestAudio"
+          class="px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 active:scale-95 border border-slate-700 text-xs font-semibold text-teal-300 transition flex items-center gap-1.5 cursor-pointer"
+          title="Unlock browser audio and preview alarm chime"
+        >
+          <span>🔊</span>
+          <span id="audioBtnLabel">Test Sound</span>
+        </button>
+
+        <!-- Desktop Notifications Button -->
+        <button
+          type="button"
+          id="btnNotifyPerm"
+          class="px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 active:scale-95 border border-slate-700 text-xs font-semibold text-indigo-300 transition flex items-center gap-1.5 cursor-pointer"
+          title="Enable desktop notifications"
+        >
+          <span>🔔</span>
+          <span id="notifyBtnLabel">Enable Alerts</span>
+        </button>
+
+        <!-- Monitoring Signal Badge -->
+        <div
+          id="systemStatus"
+          class="flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 transition-all duration-300"
+        >
+          <span class="status-dot w-2.5 h-2.5 rounded-full bg-emerald-400 dot-monitoring"></span>
+          <span id="systemStatusText">Monitoring Active</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- STATS SUMMARY BAR -->
+    <section class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-7" aria-label="Task statistics">
+      <div class="glass-card rounded-2xl p-4 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Tasks</p>
+          <p id="statTotal" class="text-2xl font-bold text-white mt-1">0</p>
+        </div>
+        <div class="w-10 h-10 rounded-xl bg-slate-700/50 flex items-center justify-center text-lg">📋</div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-4 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-medium text-amber-400/90 uppercase tracking-wider">Pending</p>
+          <p id="statPending" class="text-2xl font-bold text-amber-400 mt-1">0</p>
+        </div>
+        <div class="w-10 h-10 rounded-xl bg-amber-500/15 flex items-center justify-center text-lg">⏳</div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-4 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-medium text-indigo-400/90 uppercase tracking-wider">Snoozed</p>
+          <p id="statSnoozed" class="text-2xl font-bold text-indigo-400 mt-1">0</p>
+        </div>
+        <div class="w-10 h-10 rounded-xl bg-indigo-500/15 flex items-center justify-center text-lg">💤</div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-4 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-medium text-emerald-400/90 uppercase tracking-wider">Completed</p>
+          <p id="statDone" class="text-2xl font-bold text-emerald-400 mt-1">0</p>
+        </div>
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-lg">✅</div>
+      </div>
+    </section>
+
+    <!-- NEW / EDIT FOLLOW-UP FORM -->
+    <section class="glass-card rounded-2xl p-5 sm:p-6 mb-7">
+      <div class="flex items-center justify-between mb-5">
+        <h2 id="formHeading" class="text-base sm:text-lg font-bold text-white border-l-4 border-teal-400 pl-3">
+          Schedule New Follow-Up
+        </h2>
+        <button
+          type="button"
+          id="btnCancelEdit"
+          class="hidden text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 transition cursor-pointer"
+        >
+          Cancel Edit
+        </button>
+      </div>
+
+      <form id="followForm" class="space-y-4">
+        <input type="hidden" id="editId" value="" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+          <div>
+            <label for="client" class="block text-xs font-medium text-slate-400 mb-1.5">Mobile / Client *</label>
+            <input
+              id="client"
+              type="text"
+              placeholder="e.g. +977-98XXXXXXXX or Name"
+              required
+              class="w-full bg-slate-800/90 border border-slate-700 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label for="subject" class="block text-xs font-medium text-slate-400 mb-1.5">Subject *</label>
+            <input
+              id="subject"
+              type="text"
+              placeholder="e.g. Proposal callback"
+              required
+              class="w-full bg-slate-800/90 border border-slate-700 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label for="date" class="block text-xs font-medium text-slate-400 mb-1.5">Date *</label>
+            <input
+              id="date"
+              type="date"
+              required
+              class="w-full bg-slate-800/90 border border-slate-700 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label for="time" class="block text-xs font-medium text-slate-400 mb-1.5">Time *</label>
+            <input
+              id="time"
+              type="time"
+              required
+              class="w-full bg-slate-800/90 border border-slate-700 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label for="snoozeMins" class="block text-xs font-medium text-slate-400 mb-1.5">Snooze (Mins)</label>
+            <input
+              id="snoozeMins"
+              type="number"
+              value="5"
+              min="1"
+              max="1440"
+              required
+              class="w-full bg-slate-800/90 border border-slate-700 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none transition"
+            />
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3.5 items-stretch sm:items-end">
+          <div class="flex-1">
+            <label for="notes" class="block text-xs font-medium text-slate-400 mb-1.5">Notes (Optional)</label>
+            <input
+              id="notes"
+              type="text"
+              placeholder="Add context, call details, or action items..."
+              class="w-full bg-slate-800/90 border border-slate-700 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition"
+            />
+          </div>
+
+          <button
+            type="submit"
+            id="btnSubmitForm"
+            class="sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-teal-500 hover:from-indigo-400 hover:to-teal-400 active:scale-[0.99] text-white font-semibold text-sm shadow-lg shadow-indigo-500/20 transition cursor-pointer whitespace-nowrap"
+          >
+            + Add Follow-Up
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- SCHEDULED TASKS TABLE CARD -->
+    <section class="glass-card rounded-2xl p-5 sm:p-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
+        <h2 class="text-base sm:text-lg font-bold text-white border-l-4 border-indigo-400 pl-3">
+          Scheduled Tasks
+        </h2>
+
+        <!-- Search, Filter & Clear Completed Controls -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Search Input -->
+          <div class="relative flex-1 sm:flex-initial min-w-[200px]">
+            <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 text-xs pointer-events-none">🔍</span>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search number, subject, notes..."
+              class="w-full bg-slate-800/90 border border-slate-700 focus:border-indigo-400 rounded-xl pl-8 pr-3 py-2 text-xs sm:text-sm text-white placeholder-slate-500 outline-none transition"
+            />
+          </div>
+
+          <!-- Status Filter Dropdown -->
+          <select
+            id="statusFilter"
+            aria-label="Filter tasks by status"
+            class="bg-slate-800/90 border border-slate-700 focus:border-indigo-400 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-200 outline-none cursor-pointer"
+          >
+            <option value="all">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="snoozed">Snoozed</option>
+            <option value="done">Completed</option>
+          </select>
+
+          <!-- Clear Completed Button -->
+          <button
+            type="button"
+            id="btnClearDone"
+            class="px-3.5 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-semibold transition cursor-pointer"
+          >
+            Clear Done
+          </button>
+        </div>
+      </div>
+
+      <!-- Responsive Table Wrapper -->
+      <div class="overflow-x-auto rounded-xl border border-slate-800/80">
+        <table class="w-full text-left border-collapse min-w-[820px]">
+          <thead>
+            <tr class="bg-slate-900/60 border-b border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              <th class="py-3.5 px-4">Mobile / Client</th>
+              <th class="py-3.5 px-4">Subject</th>
+              <th class="py-3.5 px-4">Schedule</th>
+              <th class="py-3.5 px-4">Notes</th>
+              <th class="py-3.5 px-4">Status</th>
+              <th class="py-3.5 px-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-slate-800/70 text-sm"></tbody>
+        </table>
+      </div>
+    </section>
   </div>
-</header>
 
-<section class="card">
-  <h2>New Follow-Up</h2>
-  <form id="followForm">
-    <div class="input-group">
-      <input id="client" class="form-control" placeholder="Mobile Number/Other" required>
-      <input id="subject" class="form-control" placeholder="Subject" required>
-      <input id="date" type="date" class="form-control" required>
-      <input id="time" type="time" class="form-control" required>
-      <input id="snoozeMins" type="number" class="form-control" value="5" min="1">
+  <!-- RINGING ALARM MODAL -->
+  <div
+    id="alarmModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="alarmMessage"
+    class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300"
+  >
+    <div class="bg-gradient-to-b from-slate-800 to-slate-900 border border-teal-400/50 rounded-3xl p-7 sm:p-9 max-w-md w-full text-center shadow-2xl transform scale-95 transition-transform duration-300" id="alarmModalBox">
+      <div class="w-20 h-20 mx-auto mb-5 rounded-full bg-teal-500/15 border border-teal-400/40 flex items-center justify-center text-4xl animate-bell select-none">
+        🌕
+      </div>
+
+      <span class="inline-block px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-teal-500/15 text-teal-300 mb-2">
+        Follow-Up Reminder
+      </span>
+
+      <h3 id="alarmMessage" class="text-xl sm:text-2xl font-extrabold text-white mb-1">
+        Follow-Up Due
+      </h3>
+      <p id="alarmSubject" class="text-sm font-semibold text-indigo-300 mb-3"></p>
+      <p id="alarmNotes" class="text-xs sm:text-sm text-slate-300 bg-slate-950/50 rounded-xl p-3 border border-slate-800 mb-6 hidden"></p>
+
+      <div class="grid grid-cols-2 gap-3">
+        <button
+          type="button"
+          id="btnSnooze"
+          class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-semibold text-sm transition cursor-pointer"
+        >
+          💤 Snooze (<span id="modalSnoozeMins">5</span>m)
+        </button>
+
+        <button
+          type="button"
+          id="btnStop"
+          class="py-3 px-4 rounded-xl bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-300 hover:to-emerald-300 text-slate-950 font-bold text-sm shadow-lg shadow-teal-500/25 transition cursor-pointer"
+        >
+          ✔ Mark Done
+        </button>
+      </div>
     </div>
-    <textarea id="notes" class="form-control full-width" rows="2" placeholder="Notes..."></textarea>
-    <br><br>
-    <button>Add Follow-Up</button>
-  </form>
-</section>
-
-<section class="card">
-  <h2>Scheduled Tasks</h2>
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Mobile Number</th>
-          <th>Subject</th>
-          <th>Date</th>
-          <th>Time</th>
-          <th>Notes</th>
-          <th>Status</th>
-          <th>Action</th> <!-- New Action Column -->
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
   </div>
-</section>
 
-</div>
+  <script>
+    /**
+     * Follow-Up & Reminder Portal
+     * Self-contained application with Web Audio API chime synthesis,
+     * local timezone scheduling, browser desktop notifications, and localStorage persistence.
+     */
 
-<!-- MODAL -->
-<div class="modal-overlay" id="alarmModal">
-  <div class="modal-box">
-    <div class="alarm-icon">🌕</div>
-    <h3 id="alarmMessage" style="margin-bottom: 10px; font-size: 20px;">Reminder</h3>
-    <p id="alarmNotes" style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;"></p>
-    <div class="modal-actions">
-      <button class="btn-snooze" id="btnSnooze">Snooze</button>
-      <button class="btn-stop" id="btnStop">Mark Done</button>
-    </div>
-  </div>
-</div>
+    const STORAGE_KEY = 'moon_followup_v3';
+    const LEGACY_STORAGE_KEY = 'moon_v2';
 
-<!-- 🔔 ONE-SHOT TING SOUND -->
-<audio id="tingSound" preload="auto">
-  <source src="Test Ringtone.mp3">
-</audio>
+    // Application State
+    let followUps = [];
+    let currentRingingId = null;
+    let alarmLoopTimer = null;
+    let titleFlashTimer = null;
+    const originalTitle = document.title;
 
-<!-- 🎵 LOOPING AMBIENT SOUND -->
-<audio id="alarmSound" loop preload="auto">
-  <source src="Test Ringtone.mp3">
-</audio>
+    // Web Audio API Context (Lazy initialized on user interaction or alarm)
+    let audioCtx = null;
 
-<script>
-// Initialize data
-let followUps = JSON.parse(localStorage.getItem("moon_v2") || "[]");
-let currentId = null;
+    // DOM Elements
+    const tableBody = document.getElementById('tableBody');
+    const alarmModal = document.getElementById('alarmModal');
+    const alarmModalBox = document.getElementById('alarmModalBox');
+    const alarmMessage = document.getElementById('alarmMessage');
+    const alarmSubject = document.getElementById('alarmSubject');
+    const alarmNotes = document.getElementById('alarmNotes');
+    const modalSnoozeMins = document.getElementById('modalSnoozeMins');
+    const systemStatus = document.getElementById('systemStatus');
+    const systemStatusText = document.getElementById('systemStatusText');
+    const followForm = document.getElementById('followForm');
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
 
-// DOM Elements
-const tableBody = document.getElementById("tableBody");
-const alarmModal = document.getElementById("alarmModal");
-const alarmMessage = document.getElementById("alarmMessage");
-const alarmNotes = document.getElementById("alarmNotes");
-const alarmSound = document.getElementById("alarmSound");
-const tingSound = document.getElementById("tingSound");
-const systemStatus = document.getElementById("systemStatus");
+    /**
+     * Safely escape HTML characters to prevent XSS in rendered table rows
+     */
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
 
-// Set default date to today
-document.getElementById("date").valueAsDate = new Date();
+    /**
+     * Get Local YYYY-MM-DD and HH:MM strings accurately without UTC shift bugs
+     */
+    function getLocalDateString(dateObj = new Date()) {
+      const year = dateObj.getFullYear();
+      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const day = String(dateObj.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
 
-function render() {
-  tableBody.innerHTML = "";
-  
-  if (followUps.length === 0) {
-    tableBody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding: 20px; color: var(--text-muted);'>No follow-ups scheduled.</td></tr>";
-  } else {
-    followUps.forEach(f => {
-      // Handle empty notes display
-      const notesDisplay = f.notes ? `<span title="${f.notes}">${f.notes}</span>` : "-";
-      
-      // Determine Action Cell Content
-      let actionHtml = `<span style="color: var(--text-muted); font-size: 12px;">-</span>`;
-      
-      if (f.status === 'pending') {
-        // Only show "Done" button if status is pending
-        actionHtml = `<button class="btn-action-done" onclick="manualComplete(${f.id})">✔ Done</button>`;
+    function getLocalTimeString(dateObj = new Date()) {
+      const hours = String(dateObj.getHours()).padStart(2, '0');
+      const mins = String(dateObj.getMinutes()).padStart(2, '0');
+      return `${hours}:${mins}`;
+    }
+
+    /**
+     * Parse local date & time strings into a Date object
+     */
+    function parseScheduledDateTime(dateStr, timeStr) {
+      return new Date(`${dateStr}T${timeStr}:00`);
+    }
+
+    /**
+     * Format 24h time string into user-friendly 12h AM/PM display
+     */
+    function formatDisplayTime(timeStr) {
+      if (!timeStr) return '';
+      const [hStr, mStr] = timeStr.split(':');
+      let h = parseInt(hStr, 10);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      return `${h}:${mStr} ${ampm}`;
+    }
+
+    /**
+     * Non-blocking Toast Banner Notification
+     */
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+
+      const colors = {
+        success: 'bg-emerald-950/95 border-emerald-500/50 text-emerald-200',
+        info: 'bg-slate-900/95 border-indigo-500/50 text-indigo-200',
+        warn: 'bg-amber-950/95 border-amber-500/50 text-amber-200',
+      };
+
+      toast.className = `pointer-events-auto px-4 py-3 rounded-xl border shadow-xl text-xs sm:text-sm font-medium backdrop-blur-md transition-all duration-300 transform translate-y-2 opacity-0 ${colors[type] || colors.info}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    /**
+     * Web Audio API Synthesizer: Plays a pleasant harmonic chime sequence
+     * Works offline with zero external MP3 dependencies.
+     */
+    function ensureAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
       }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    }
 
-      tableBody.innerHTML += `
-        <tr>
-          <td style="font-weight: 600;">${f.client}</td>
-          <td>${f.subject}</td>
-          <td>${f.date}</td>
-          <td>${f.time}</td>
-          <td class="note-cell">${notesDisplay}</td>
-          <td><span class="status-pill status-${f.status}">${f.status}</span></td>
-          <td>${actionHtml}</td>
-        </tr>`;
-    });
-  }
-  
-  localStorage.setItem("moon_v2", JSON.stringify(followUps));
-}
+    function playChimeBurst() {
+      try {
+        const ctx = ensureAudioContext();
+        if (!ctx) return;
 
-// Add New Item
-document.getElementById("followForm").onsubmit = function(e) {
-  e.preventDefault();
-  
-  const client = document.getElementById("client").value;
-  const subject = document.getElementById("subject").value;
-  const date = document.getElementById("date").value;
-  const time = document.getElementById("time").value;
-  const snooze = document.getElementById("snoozeMins").value;
-  const notes = document.getElementById("notes").value;
+        const now = ctx.currentTime;
+        // Harmonic notes: C5, E5, G5, B5 (Major 7th celestial chime)
+        const notes = [523.25, 659.25, 783.99, 987.77];
 
-  followUps.push({
-    id: Date.now(),
-    client,
-    subject,
-    date,
-    time,
-    snooze: +snooze,
-    notes,
-    status: "pending",
-    rung: false
-  });
-  
-  render();
-  e.target.reset();
-  document.getElementById("date").valueAsDate = new Date(); // Reset date
-};
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
 
-// Manual Complete from Table
-window.manualComplete = function(id) {
-  let item = followUps.find(f => f.id === id);
-  if (item) {
-    item.status = "done";
-    render();
-  }
-}
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.14);
 
-function trigger(item) {
-  currentId = item.id;
-  item.rung = true;
+          gain.gain.setValueAtTime(0.001, now + idx * 0.14);
+          gain.gain.exponentialRampToValueAtTime(0.18, now + idx * 0.14 + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.14 + 0.9);
 
-  alarmMessage.textContent = `Follow up: ${item.client}`;
-  alarmNotes.textContent = item.notes ? `Notes: ${item.notes}` : "";
-  
-  alarmModal.classList.add("active");
-  systemStatus.classList.add("active"); // Triggers Green Signal
+          osc.connect(gain);
+          gain.connect(ctx.destination);
 
-  // 🔔 TING
-  tingSound.currentTime = 0;
-  tingSound.play().catch(e => console.log("Ting blocked", e));
-
-  // 🎵 LOOP
-  alarmSound.currentTime = 0;
-  alarmSound.play().catch(e => console.log("Loop blocked", e));
-}
-
-function stopAlarm() {
-  // Stop both sounds immediately
-  alarmSound.pause();
-  alarmSound.currentTime = 0;
-  tingSound.pause();
-  tingSound.currentTime = 0;
-  
-  alarmModal.classList.remove("active");
-  systemStatus.classList.remove("active"); // Back to Grey
-
-  const item = followUps.find(f => f.id === currentId);
-  if (item) item.status = "done";
-  
-  currentId = null;
-  render();
-}
-
-function snoozeAlarm() {
-  let f = followUps.find(x => x.id === currentId);
-  if (f) {
-    let d = new Date();
-    d.setMinutes(d.getMinutes() + f.snooze);
-    f.date = d.toISOString().slice(0, 10);
-    f.time = d.toTimeString().slice(0, 5);
-    f.rung = false;
-    f.status = "snoozed";
-  }
-  stopAlarm(); // Use stopAlarm to clear audio/UI
-}
-
-// Event Listeners
-document.getElementById("btnStop").addEventListener("click", stopAlarm);
-document.getElementById("btnSnooze").addEventListener("click", snoozeAlarm);
-
-// Timer Loop
-setInterval(() => {
-  let now = new Date();
-  followUps.forEach(f => {
-    if (!f.rung && f.status !== "done") {
-      if (now >= new Date(f.date + "T" + f.time)) {
-        trigger(f);
+          osc.start(now + idx * 0.14);
+          osc.stop(now + idx * 0.14 + 0.95);
+        });
+      } catch (err) {
+        console.warn('Web Audio playback warning:', err);
       }
     }
-  });
-}, 1000);
 
-// Initial Render
-render();
-</script>
+    function startAlarmSoundLoop() {
+      stopAlarmSoundLoop();
+      playChimeBurst();
+      alarmLoopTimer = setInterval(playChimeBurst, 2800);
+    }
+
+    function stopAlarmSoundLoop() {
+      if (alarmLoopTimer) {
+        clearInterval(alarmLoopTimer);
+        alarmLoopTimer = null;
+      }
+    }
+
+    /**
+     * Browser Desktop Notification Helper
+     */
+    function updateNotificationButtonUI() {
+      const btn = document.getElementById('btnNotifyPerm');
+      const label = document.getElementById('notifyBtnLabel');
+      if (!('Notification' in window)) {
+        btn.classList.add('hidden');
+        return;
+      }
+      if (Notification.permission === 'granted') {
+        label.textContent = 'Alerts Enabled';
+        btn.classList.remove('text-indigo-300');
+        btn.classList.add('text-emerald-300', 'border-emerald-500/40');
+      } else if (Notification.permission === 'denied') {
+        label.textContent = 'Alerts Blocked';
+        btn.classList.add('text-rose-300');
+      } else {
+        label.textContent = 'Enable Alerts';
+      }
+    }
+
+    function sendDesktopNotification(item) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        try {
+          const notif = new Notification(`🌙 Follow-Up: ${item.client}`, {
+            body: `${item.subject}${item.notes ? ' — ' + item.notes : ''}`,
+            tag: `followup-${item.id}`,
+          });
+          notif.onclick = () => {
+            window.focus();
+            notif.close();
+          };
+        } catch (err) {
+          console.warn('Notification error:', err);
+        }
+      }
+    }
+
+    /**
+     * Load & Save Data (with seamless migration from v2 if present)
+     */
+    function loadFollowUps() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          followUps = JSON.parse(saved);
+          return;
+        }
+        const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+        if (legacy) {
+          followUps = JSON.parse(legacy);
+          saveFollowUps();
+        }
+      } catch (err) {
+        console.error('Failed to load saved follow-ups:', err);
+        followUps = [];
+      }
+    }
+
+    function saveFollowUps() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(followUps));
+      } catch (err) {
+        console.error('Failed to save follow-ups:', err);
+      }
+    }
+
+    /**
+     * Update Summary Statistics Cards
+     */
+    function updateStats() {
+      const total = followUps.length;
+      const pending = followUps.filter((f) => f.status === 'pending').length;
+      const snoozed = followUps.filter((f) => f.status === 'snoozed').length;
+      const done = followUps.filter((f) => f.status === 'done').length;
+
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statPending').textContent = pending;
+      document.getElementById('statSnoozed').textContent = snoozed;
+      document.getElementById('statDone').textContent = done;
+    }
+
+    /**
+     * Render Table Rows with Filtering, Sorting, and Overdue Indicators
+     */
+    function render() {
+      updateStats();
+      saveFollowUps();
+
+      const query = searchInput.value.trim().toLowerCase();
+      const filterVal = statusFilter.value;
+      const now = new Date();
+
+      // Filter
+      const filtered = followUps.filter((f) => {
+        const matchesStatus = filterVal === 'all' || f.status === filterVal;
+        const matchesQuery =
+          !query ||
+          f.client.toLowerCase().includes(query) ||
+          f.subject.toLowerCase().includes(query) ||
+          (f.notes && f.notes.toLowerCase().includes(query));
+        return matchesStatus && matchesQuery;
+      });
+
+      // Sort: Active (pending/snoozed) chronologically first, then completed
+      filtered.sort((a, b) => {
+        const aDone = a.status === 'done' ? 1 : 0;
+        const bDone = b.status === 'done' ? 1 : 0;
+        if (aDone !== bDone) return aDone - bDone;
+        return parseScheduledDateTime(a.date, a.time) - parseScheduledDateTime(b.date, b.time);
+      });
+
+      if (filtered.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-12 px-4 text-center text-slate-400">
+              <div class="text-3xl mb-2">📭</div>
+              <p class="font-medium text-slate-300">No matching follow-ups found</p>
+              <p class="text-xs text-slate-500 mt-1">Schedule a new reminder above or adjust your search filters.</p>
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tableBody.innerHTML = filtered
+        .map((f) => {
+          const scheduledDate = parseScheduledDateTime(f.date, f.time);
+          const isOverdue = f.status !== 'done' && scheduledDate < now;
+
+          let statusBadge = '';
+          if (f.status === 'done') {
+            statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">✔ Done</span>`;
+          } else if (f.status === 'snoozed') {
+            statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">💤 Snoozed</span>`;
+          } else if (isOverdue) {
+            statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase bg-rose-500/15 text-rose-400 border border-rose-500/30">⚠ Overdue</span>`;
+          } else {
+            statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase bg-amber-500/15 text-amber-400 border border-amber-500/25">⏳ Pending</span>`;
+          }
+
+          const notesHtml = f.notes
+            ? `<span class="text-slate-300 line-clamp-2" title="${escapeHTML(f.notes)}">${escapeHTML(f.notes)}</span>`
+            : `<span class="text-slate-600 italic">No notes</span>`;
+
+          const doneBtnHtml =
+            f.status !== 'done'
+              ? `<button type="button" onclick="manualComplete(${f.id})" class="px-2.5 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 font-semibold text-xs transition cursor-pointer" title="Mark as Done">✔ Done</button>`
+              : '';
+
+          return `
+            <tr class="hover:bg-slate-800/40 transition-colors ${f.status === 'done' ? 'opacity-65' : ''}">
+              <td class="py-3.5 px-4 font-semibold text-white whitespace-nowrap">${escapeHTML(f.client)}</td>
+              <td class="py-3.5 px-4 text-slate-200">${escapeHTML(f.subject)}</td>
+              <td class="py-3.5 px-4 whitespace-nowrap">
+                <div class="text-slate-200 font-medium">${escapeHTML(f.date)}</div>
+                <div class="text-xs ${isOverdue ? 'text-rose-400 font-semibold' : 'text-teal-400'}">${formatDisplayTime(f.time)}</div>
+              </td>
+              <td class="py-3.5 px-4 max-w-[230px] text-xs">${notesHtml}</td>
+              <td class="py-3.5 px-4 whitespace-nowrap">${statusBadge}</td>
+              <td class="py-3.5 px-4 whitespace-nowrap text-right">
+                <div class="inline-flex items-center justify-end gap-1.5">
+                  ${doneBtnHtml}
+                  <button type="button" onclick="editFollowUp(${f.id})" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition cursor-pointer" title="Edit Reminder">
+                    ✏️
+                  </button>
+                  <button type="button" onclick="deleteFollowUp(${f.id})" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-500/25 text-slate-400 hover:text-rose-300 text-xs font-medium transition cursor-pointer" title="Delete Reminder">
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>`;
+        })
+        .join('');
+    }
+
+    /**
+     * Form Submit Handler (Create or Update Follow-Up)
+     */
+    followForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      ensureAudioContext();
+
+      const editIdVal = document.getElementById('editId').value;
+      const client = document.getElementById('client').value.trim();
+      const subject = document.getElementById('subject').value.trim();
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+      const snooze = Math.max(1, parseInt(document.getElementById('snoozeMins').value, 10) || 5);
+      const notes = document.getElementById('notes').value.trim();
+
+      if (editIdVal) {
+        const idNum = Number(editIdVal);
+        const existing = followUps.find((item) => item.id === idNum);
+        if (existing) {
+          existing.client = client;
+          existing.subject = subject;
+          existing.date = date;
+          existing.time = time;
+          existing.snooze = snooze;
+          existing.notes = notes;
+          existing.rung = false;
+          if (existing.status === 'done') {
+            existing.status = 'pending';
+          }
+          showToast('Follow-up updated successfully.', 'success');
+        }
+        resetFormMode();
+      } else {
+        followUps.push({
+          id: Date.now(),
+          client,
+          subject,
+          date,
+          time,
+          snooze,
+          notes,
+          status: 'pending',
+          rung: false,
+        });
+        showToast(`Reminder set for ${client} at ${formatDisplayTime(time)}.`, 'success');
+        followForm.reset();
+        setDefaultFormDateTime();
+      }
+
+      render();
+    });
+
+    function setDefaultFormDateTime() {
+      const now = new Date();
+      document.getElementById('date').value = getLocalDateString(now);
+      // Suggest 15 minutes ahead as convenient default time
+      const future = new Date(now.getTime() + 15 * 60000);
+      document.getElementById('time').value = getLocalTimeString(future);
+      document.getElementById('snoozeMins').value = 5;
+    }
+
+    function resetFormMode() {
+      document.getElementById('editId').value = '';
+      document.getElementById('formHeading').textContent = 'Schedule New Follow-Up';
+      document.getElementById('btnSubmitForm').textContent = '+ Add Follow-Up';
+      document.getElementById('btnCancelEdit').classList.add('hidden');
+      followForm.reset();
+      setDefaultFormDateTime();
+    }
+
+    document.getElementById('btnCancelEdit').addEventListener('click', resetFormMode);
+
+    /**
+     * Table Row Action Handlers
+     */
+    window.manualComplete = function (id) {
+      const item = followUps.find((f) => f.id === id);
+      if (!item) return;
+      item.status = 'done';
+      item.rung = true;
+      if (currentRingingId === id) {
+        dismissAlarmUI();
+      }
+      showToast(`Marked "${item.client}" as completed.`, 'success');
+      render();
+    };
+
+    window.editFollowUp = function (id) {
+      const item = followUps.find((f) => f.id === id);
+      if (!item) return;
+
+      document.getElementById('editId').value = item.id;
+      document.getElementById('client').value = item.client;
+      document.getElementById('subject').value = item.subject;
+      document.getElementById('date').value = item.date;
+      document.getElementById('time').value = item.time;
+      document.getElementById('snoozeMins').value = item.snooze || 5;
+      document.getElementById('notes').value = item.notes || '';
+
+      document.getElementById('formHeading').textContent = 'Edit Follow-Up';
+      document.getElementById('btnSubmitForm').textContent = 'Save Changes';
+      document.getElementById('btnCancelEdit').classList.remove('hidden');
+
+      followForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    window.deleteFollowUp = function (id) {
+      const item = followUps.find((f) => f.id === id);
+      followUps = followUps.filter((f) => f.id !== id);
+      if (currentRingingId === id) {
+        dismissAlarmUI();
+      }
+      if (item) {
+        showToast(`Deleted reminder for ${item.client}.`, 'info');
+      }
+      render();
+    };
+
+    document.getElementById('btnClearDone').addEventListener('click', () => {
+      const doneCount = followUps.filter((f) => f.status === 'done').length;
+      if (doneCount === 0) {
+        showToast('No completed tasks to clear.', 'info');
+        return;
+      }
+      followUps = followUps.filter((f) => f.status !== 'done');
+      showToast(`Cleared ${doneCount} completed task(s).`, 'success');
+      render();
+    });
+
+    /**
+     * Trigger Ringing Alarm Modal, Audio Chime, Desktop Notification & Tab Title Flash
+     */
+    function triggerAlarm(item) {
+      currentRingingId = item.id;
+      item.rung = true;
+      saveFollowUps();
+
+      alarmMessage.textContent = item.client;
+      alarmSubject.textContent = item.subject;
+      modalSnoozeMins.textContent = item.snooze || 5;
+
+      if (item.notes) {
+        alarmNotes.textContent = item.notes;
+        alarmNotes.classList.remove('hidden');
+      } else {
+        alarmNotes.classList.add('hidden');
+      }
+
+      alarmModal.classList.remove('opacity-0', 'pointer-events-none');
+      alarmModalBox.classList.remove('scale-95');
+      alarmModalBox.classList.add('scale-100');
+
+      systemStatus.classList.add('alarm-active-badge');
+      systemStatusText.textContent = 'Reminder Ringing!';
+
+      startAlarmSoundLoop();
+      sendDesktopNotification(item);
+
+      // Flash browser tab title
+      if (titleFlashTimer) clearInterval(titleFlashTimer);
+      let toggle = false;
+      titleFlashTimer = setInterval(() => {
+        document.title = toggle ? `🔔 REMINDER: ${item.client}` : originalTitle;
+        toggle = !toggle;
+      }, 1000);
+    }
+
+    /**
+     * Cleanly dismiss visual & audio alarm state without mutating task status
+     */
+    function dismissAlarmUI() {
+      stopAlarmSoundLoop();
+
+      if (titleFlashTimer) {
+        clearInterval(titleFlashTimer);
+        titleFlashTimer = null;
+      }
+      document.title = originalTitle;
+
+      alarmModal.classList.add('opacity-0', 'pointer-events-none');
+      alarmModalBox.classList.remove('scale-100');
+      alarmModalBox.classList.add('scale-95');
+
+      systemStatus.classList.remove('alarm-active-badge');
+      systemStatusText.textContent = 'Monitoring Active';
+      currentRingingId = null;
+    }
+
+    function completeFromAlarm() {
+      const item = followUps.find((f) => f.id === currentRingingId);
+      if (item) {
+        item.status = 'done';
+        showToast(`Completed follow-up with ${item.client}.`, 'success');
+      }
+      dismissAlarmUI();
+      render();
+    }
+
+    function snoozeFromAlarm() {
+      const item = followUps.find((f) => f.id === currentRingingId);
+      if (item) {
+        const mins = item.snooze || 5;
+        const nextTime = new Date(Date.now() + mins * 60000);
+        item.date = getLocalDateString(nextTime);
+        item.time = getLocalTimeString(nextTime);
+        item.rung = false;
+        item.status = 'snoozed';
+        showToast(`Snoozed for ${mins} min (until ${formatDisplayTime(item.time)}).`, 'info');
+      }
+      dismissAlarmUI();
+      render();
+    }
+
+    // Modal Button Listeners
+    document.getElementById('btnStop').addEventListener('click', completeFromAlarm);
+    document.getElementById('btnSnooze').addEventListener('click', snoozeFromAlarm);
+
+    // Header Action Listeners
+    document.getElementById('btnTestAudio').addEventListener('click', () => {
+      ensureAudioContext();
+      playChimeBurst();
+      document.getElementById('audioBtnLabel').textContent = 'Audio Ready';
+      showToast('Chime played! Browser audio is unlocked.', 'success');
+    });
+
+    document.getElementById('btnNotifyPerm').addEventListener('click', async () => {
+      if (!('Notification' in window)) {
+        showToast('Desktop notifications are not supported in this browser.', 'warn');
+        return;
+      }
+      const perm = await Notification.requestPermission();
+      updateNotificationButtonUI();
+      if (perm === 'granted') {
+        showToast('Desktop alerts enabled!', 'success');
+      } else {
+        showToast('Desktop alerts permission was not granted.', 'warn');
+      }
+    });
+
+    // Search & Filter Listeners
+    searchInput.addEventListener('input', render);
+    statusFilter.addEventListener('change', render);
+
+    /**
+     * Real-Time Clock & Reminder Monitoring Loop (1s interval)
+     */
+    function tick() {
+      const now = new Date();
+      document.getElementById('liveClock').textContent = now.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+
+      // Only trigger if no modal is currently blocking
+      if (currentRingingId === null) {
+        for (const item of followUps) {
+          if (!item.rung && item.status !== 'done') {
+            const due = parseScheduledDateTime(item.date, item.time);
+            if (now >= due) {
+              triggerAlarm(item);
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    // Initialize Application
+    loadFollowUps();
+    setDefaultFormDateTime();
+    updateNotificationButtonUI();
+    render();
+    tick();
+    setInterval(tick, 1000);
+  </script>
 </body>
 </html>
