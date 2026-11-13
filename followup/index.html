@@ -7,7 +7,8 @@
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-
+  <!-- Tag Logo -->
+<link rel="icon" type="image/png" href="../assets/img/tab.png">
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -418,8 +419,7 @@
   <script>
     /**
      * Follow-Up & Reminder Portal
-     * Self-contained application with Web Audio API chime synthesis,
-     * local timezone scheduling, browser desktop notifications, and localStorage persistence.
+     * Uses your custom uploaded audio file (Test Ringtone.mp3) for audio alerts.
      */
 
     const STORAGE_KEY = 'moon_followup_v3';
@@ -432,8 +432,10 @@
     let titleFlashTimer = null;
     const originalTitle = document.title;
 
-    // Web Audio API Context (Lazy initialized on user interaction or alarm)
-    let audioCtx = null;
+    // Custom Audio Element for Your Ringtone
+    const customAlarmAudio = new Audio('Test Ringtone.mp3');
+    customAlarmAudio.loop = true;
+    customAlarmAudio.preload = 'auto';
 
     // DOM Elements
     const tableBody = document.getElementById('tableBody');
@@ -525,63 +527,25 @@
     }
 
     /**
-     * Web Audio API Synthesizer: Plays a pleasant harmonic chime sequence
-     * Works offline with zero external MP3 dependencies.
+     * Play Custom Ringtone
      */
-    function ensureAudioContext() {
-      if (!audioCtx) {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (AudioContextClass) {
-          audioCtx = new AudioContextClass();
-        }
-      }
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume().catch(() => {});
-      }
-      return audioCtx;
-    }
-
-    function playChimeBurst() {
+    function playCustomRingtone() {
       try {
-        const ctx = ensureAudioContext();
-        if (!ctx) return;
-
-        const now = ctx.currentTime;
-        // Harmonic notes: C5, E5, G5, B5 (Major 7th celestial chime)
-        const notes = [523.25, 659.25, 783.99, 987.77];
-
-        notes.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + idx * 0.14);
-
-          gain.gain.setValueAtTime(0.001, now + idx * 0.14);
-          gain.gain.exponentialRampToValueAtTime(0.18, now + idx * 0.14 + 0.04);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.14 + 0.9);
-
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-
-          osc.start(now + idx * 0.14);
-          osc.stop(now + idx * 0.14 + 0.95);
+        customAlarmAudio.currentTime = 0;
+        customAlarmAudio.play().catch(err => {
+          console.warn("Audio playback prevented or restricted by browser policy:", err);
         });
       } catch (err) {
-        console.warn('Web Audio playback warning:', err);
+        console.warn('Audio playback error:', err);
       }
     }
 
-    function startAlarmSoundLoop() {
-      stopAlarmSoundLoop();
-      playChimeBurst();
-      alarmLoopTimer = setInterval(playChimeBurst, 2800);
-    }
-
-    function stopAlarmSoundLoop() {
-      if (alarmLoopTimer) {
-        clearInterval(alarmLoopTimer);
-        alarmLoopTimer = null;
+    function stopCustomRingtone() {
+      try {
+        customAlarmAudio.pause();
+        customAlarmAudio.currentTime = 0;
+      } catch (err) {
+        console.warn('Audio stop error:', err);
       }
     }
 
@@ -625,7 +589,7 @@
     }
 
     /**
-     * Load & Save Data (with seamless migration from v2 if present)
+     * Load & Save Data
      */
     function loadFollowUps() {
       try {
@@ -669,7 +633,7 @@
     }
 
     /**
-     * Render Table Rows with Filtering, Sorting, and Overdue Indicators
+     * Render Table Rows
      */
     function render() {
       updateStats();
@@ -679,7 +643,6 @@
       const filterVal = statusFilter.value;
       const now = new Date();
 
-      // Filter
       const filtered = followUps.filter((f) => {
         const matchesStatus = filterVal === 'all' || f.status === filterVal;
         const matchesQuery =
@@ -690,7 +653,6 @@
         return matchesStatus && matchesQuery;
       });
 
-      // Sort: Active (pending/snoozed) chronologically first, then completed
       filtered.sort((a, b) => {
         const aDone = a.status === 'done' ? 1 : 0;
         const bDone = b.status === 'done' ? 1 : 0;
@@ -762,11 +724,10 @@
     }
 
     /**
-     * Form Submit Handler (Create or Update Follow-Up)
+     * Form Submit Handler
      */
     followForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      ensureAudioContext();
 
       const editIdVal = document.getElementById('editId').value;
       const client = document.getElementById('client').value.trim();
@@ -816,7 +777,6 @@
     function setDefaultFormDateTime() {
       const now = new Date();
       document.getElementById('date').value = getLocalDateString(now);
-      // Suggest 15 minutes ahead as convenient default time
       const future = new Date(now.getTime() + 15 * 60000);
       document.getElementById('time').value = getLocalTimeString(future);
       document.getElementById('snoozeMins').value = 5;
@@ -891,7 +851,7 @@
     });
 
     /**
-     * Trigger Ringing Alarm Modal, Audio Chime, Desktop Notification & Tab Title Flash
+     * Trigger Ringing Alarm Modal & Play Custom Ringtone
      */
     function triggerAlarm(item) {
       currentRingingId = item.id;
@@ -916,10 +876,9 @@
       systemStatus.classList.add('alarm-active-badge');
       systemStatusText.textContent = 'Reminder Ringing!';
 
-      startAlarmSoundLoop();
+      playCustomRingtone();
       sendDesktopNotification(item);
 
-      // Flash browser tab title
       if (titleFlashTimer) clearInterval(titleFlashTimer);
       let toggle = false;
       titleFlashTimer = setInterval(() => {
@@ -929,10 +888,10 @@
     }
 
     /**
-     * Cleanly dismiss visual & audio alarm state without mutating task status
+     * Dismiss Alarm UI & Stop Ringtone
      */
     function dismissAlarmUI() {
-      stopAlarmSoundLoop();
+      stopCustomRingtone();
 
       if (titleFlashTimer) {
         clearInterval(titleFlashTimer);
@@ -980,10 +939,9 @@
 
     // Header Action Listeners
     document.getElementById('btnTestAudio').addEventListener('click', () => {
-      ensureAudioContext();
-      playChimeBurst();
+      playCustomRingtone();
       document.getElementById('audioBtnLabel').textContent = 'Audio Ready';
-      showToast('Chime played! Browser audio is unlocked.', 'success');
+      showToast('Custom ringtone played successfully!', 'success');
     });
 
     document.getElementById('btnNotifyPerm').addEventListener('click', async () => {
@@ -1005,7 +963,7 @@
     statusFilter.addEventListener('change', render);
 
     /**
-     * Real-Time Clock & Reminder Monitoring Loop (1s interval)
+     * Real-Time Clock & Reminder Monitoring Loop
      */
     function tick() {
       const now = new Date();
@@ -1015,7 +973,6 @@
         second: '2-digit',
       });
 
-      // Only trigger if no modal is currently blocking
       if (currentRingingId === null) {
         for (const item of followUps) {
           if (!item.rung && item.status !== 'done') {
